@@ -13,11 +13,15 @@ Package.onUse(function(api) {
   api.use('underscore');
   api.use('accounts-base');
   api.use('check');
+  api.use('random');
+  api.use('email');
 
   api.imply('accounts-base');
+  api.imply('session');
 
   api.use('accounts-oauth', {weak: true});
   api.use('accounts-password', {weak: true});
 
-  api.mainModule('main.js');
+  api.mainModule('main_client.js', 'client');
+  api.mainModule('main_server.js', 'server');
 });

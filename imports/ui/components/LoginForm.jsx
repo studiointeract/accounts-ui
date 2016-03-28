@@ -26,7 +26,7 @@ export class LoginForm extends Tracker.Component {
     // Set inital state.
     this.state = {
       message: '',
-      waiting: false,
+      waiting: true,
       formState: Meteor.user() ? STATES.PASSWORD_CHANGE : STATES.SIGN_IN
     };
 
@@ -36,6 +36,10 @@ export class LoginForm extends Tracker.Component {
         user: Meteor.user()
       });
     });
+  }
+
+  componentDidMount() {
+    this.setState({ waiting: false });
   }
 
   validateUsername( username ){
@@ -106,7 +110,7 @@ export class LoginForm extends Tracker.Component {
       hint: t9n('Enter newPassword'),
       label: t9n('newPassword'),
       type: 'password',
-      onChange: this.handleChange.bind(this, 'password')
+      onChange: this.handleChange.bind(this, 'newPassword')
     };
   }
 
@@ -135,11 +139,13 @@ export class LoginForm extends Tracker.Component {
         loginFields.push(this.getUsernameField());
       }
 
-      if (passwordSignupFields() === "EMAIL_ONLY") {
+      if (_.contains(["EMAIL_ONLY", "NO_PASSWORD"], passwordSignupFields())) {
         loginFields.push(this.getEmailField());
       }
 
-      loginFields.push(this.getPasswordField());
+      if (passwordSignupFields() !== "NO_PASSWORD") {
+        loginFields.push(this.getPasswordField());
+      }
     }
 
     if (formState == STATES.SIGN_UP) {
@@ -148,11 +154,13 @@ export class LoginForm extends Tracker.Component {
         loginFields.push(this.getUsernameField());
       }
 
-      if (_.contains(["USERNAME_AND_EMAIL", "EMAIL_ONLY"], passwordSignupFields())) {
+      if (_.contains(["USERNAME_AND_EMAIL", "USERNAME_AND_OPTIONAL_EMAIL", "EMAIL_ONLY", "NO_PASSWORD"], passwordSignupFields())) {
         loginFields.push(this.getEmailField());
       }
 
-      loginFields.push(this.getPasswordField());
+      if (passwordSignupFields() !== "NO_PASSWORD") {
+        loginFields.push(this.getPasswordField());
+      }
     }
 
     if (formState == STATES.PASSWORD_RESET) {
@@ -175,6 +183,7 @@ export class LoginForm extends Tracker.Component {
       loginButtons.push({
         id: 'signOut',
         label: t9n('signOut'),
+        disabled: waiting,
         onClick: this.signOut.bind(this)
       });
     }
@@ -271,7 +280,11 @@ export class LoginForm extends Tracker.Component {
   }
 
   switchToSignUp() {
-    this.setState({ formState: STATES.SIGN_UP, message: '' });
+    this.setState({
+      formState: STATES.SIGN_UP,
+      message: '',
+      email: null
+    });
   }
 
   switchToSignIn() {
@@ -283,7 +296,9 @@ export class LoginForm extends Tracker.Component {
   }
 
   signOut() {
-    Meteor.logout();
+    Meteor.logout(() => {
+      this.setState({ formState: STATES.SIGN_IN });
+    });
   }
 
   signIn() {
@@ -309,6 +324,10 @@ export class LoginForm extends Tracker.Component {
         return;
       }
       else {
+        if (passwordSignupFields() === "NO_PASSWORD") {
+          this.loginWithoutPassword();
+          return;
+        }
         loginSelector = { email };
       }
     }
@@ -331,7 +350,7 @@ export class LoginForm extends Tracker.Component {
         this.showMessage(t9n(`error.accounts.${error.reason}`) || t9n("Unknown error"));
       }
       else {
-        this.setState({ formState: STATES.PASSWORD_CHANGE });
+        this.setState({ formState: STATES.PASSWORD_CHANGE, message: '' });
         loginResultCallback(this.props.redirect);
       }
     });
@@ -364,7 +383,11 @@ export class LoginForm extends Tracker.Component {
       }
     }
 
-    if (!validatePassword(password)) {
+    if (passwordSignupFields() === "NO_PASSWORD") {
+      // Generate a random password.
+      options.password = Meteor.uuid();
+    }
+    else if (!validatePassword(password)) {
       this.showMessage(t9n("error.pwTooShort"));
 
       return;
@@ -389,6 +412,35 @@ export class LoginForm extends Tracker.Component {
 
       this.setState({ waiting: false });
     });
+  }
+
+  loginWithoutPassword(){
+    const {
+      email = '',
+      waiting
+    } = this.state;
+
+    if (waiting) {
+      return;
+    }
+
+    if (email.indexOf('@') !== -1) {
+      this.setState({ waiting: true });
+
+      Accounts.loginWithoutPassword({ email: email }, (error) => {
+        if (error) {
+          this.showMessage(t9n(`error.accounts.${error.reason}`) || t9n("Unknown error"));
+        }
+        else {
+          this.showMessage(t9n("info.emailSent"));
+        }
+
+        this.setState({ waiting: false });
+      });
+    }
+    else {
+      this.showMessage(t9n("error.emailInvalid"));
+    }
   }
 
   passwordReset(){

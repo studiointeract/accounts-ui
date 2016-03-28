@@ -69,7 +69,8 @@ Accounts.ui.config = function(options) {
       "USERNAME_AND_EMAIL",
       "USERNAME_AND_OPTIONAL_EMAIL",
       "USERNAME_ONLY",
-      "EMAIL_ONLY"
+      "EMAIL_ONLY",
+      "NO_PASSWORD"
     ], options.passwordSignupFields)) {
       if (Accounts.ui._options.passwordSignupFields)
         throw new Error("Accounts.ui.config: Can't set `passwordSignupFields` more than once");
