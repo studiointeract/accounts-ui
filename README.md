@@ -11,6 +11,7 @@ Current version 1.0.0
 3. **Components** are everywhere, and extensible by replacing them on Accounts.ui.
 4. **Basic routing** included.
 5. **Unstyled** is the default, no CSS included.
+4. **No password** sign up and sign in are included.
 
 ## Installation
 
@@ -22,7 +23,7 @@ Current version 1.0.0
 
 ### Meteor 1.2
 
-> Not supported.
+> Not supported yet.
 
 ## Example setup using FlowRouter (Meteor 1.3)
 
@@ -36,7 +37,7 @@ import { Accounts, redirect } from 'meteor/studiointeract:react-accounts-ui';
 import React from 'react';
 
 Accounts.ui.config({
-  passwordSignupFields: 'USERNAME_AND_OPTIONAL_EMAIL',
+  passwordSignupFields: 'NO_PASSWORD',
   onSubmitHook(error, state) {
     console.log('onSubmitHook')
   },
@@ -86,6 +87,7 @@ Package.onUse(function(api) {
   api.mainModule('main.jsx');
 });
 ```
+
 ```javascript
 // main.jsx
 
