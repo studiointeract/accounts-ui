@@ -65,7 +65,7 @@ FlowRouter.route("/login", {
 
 > Check back here later for a list of styled version i.e. bootstrap, semantic-ui.
 
-**And to you who are a package author**, its easy to write extensions for `studiointeract:react-accounts-ui by importing and export like the following example:
+**And to you who are a package author**, its easy to write extensions for `studiointeract:react-accounts-ui` by importing and export like the following example:
 
 ```javascript
 // package.js
