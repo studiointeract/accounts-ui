@@ -74,23 +74,29 @@ if (Meteor.isClient){
   let doneCallback;
 
   Accounts.onResetPasswordLink(function (token, done) {
+    Accounts.ui._options.onResetPasswordHook();
+
     Accounts._loginButtonsSession.set("resetPasswordToken", token);
     doneCallback = done;
   });
 
   Accounts.onEnrollmentLink(function (token, done) {
+    Accounts.ui._options.onEnrollAccountHook();
+
     Accounts._loginButtonsSession.set("enrollAccountToken", token);
     doneCallback = done;
   });
 
   Accounts.onEmailVerificationLink(function (token, done) {
+    Accounts.ui._options.onVerifyEmailHook();
+
     Accounts.verifyEmail(token, function (error) {
       if (! error) {
         Accounts._loginButtonsSession.set('justVerifiedEmail', true);
+        Accounts.ui._options.onSignedInHook();
       }
 
       done();
-      // XXX show something if there was an error.
     });
   });
 }

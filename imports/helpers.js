@@ -18,8 +18,8 @@ export function getLoginServices() {
 // requires it.
 this.getLoginServices = getLoginServices;
 
-export function loginResultCallback(redirect) {
-  if (Meteor.isClient){
+export function loginResultCallback(redirect, error) {
+  if (Meteor.isClient) {
     if (typeof redirect === 'string'){
       window.location.href = redirect;
     }
@@ -42,25 +42,10 @@ export function validatePassword(password){
   }
 };
 
-// Helper to dynamically inject react components.
-Global = this;
-export function Inject(component, ...args) {
-  return Global[component] ? React.createElement.apply(React.createElement, [Global[component], ...args]) : '';
-}
-
 export function redirect(path) {
   if (Meteor.isClient) {
     if (window.history) {
       window.history.replaceState( {} , 'redirect', path );
     }
-    else {
-      window.location.href = href;
-    }
   }
 }
-
-// capitalize = function(str){
-//   str = str == null ? '' : String(str);
-//
-//   return str.charAt(0).toUpperCase() + str.slice(1);
-// };

@@ -14,6 +14,7 @@ import {
 const STATES = {
   SIGN_IN: Symbol('SIGN_IN'),
   SIGN_UP: Symbol('SIGN_UP'),
+  SIGN_OUT: Symbol('SIGN_OUT'),
   PASSWORD_CHANGE: Symbol('PASSWORD_CHANGE'),
   PASSWORD_RESET: Symbol('PASSWORD_RESET')
 };
@@ -27,7 +28,7 @@ export class LoginForm extends Tracker.Component {
     this.state = {
       message: '',
       waiting: true,
-      formState: Meteor.user() ? STATES.PASSWORD_CHANGE : STATES.SIGN_IN
+      formState: Meteor.user() ? STATES.SIGN_OUT : STATES.SIGN_IN
     };
 
     // Listen reactively.
@@ -179,7 +180,7 @@ export class LoginForm extends Tracker.Component {
     const { formState, waiting, user } = this.state;
     let loginButtons = [];
 
-    if (user) {
+    if (user && formState == STATES.SIGN_OUT) {
       loginButtons.push({
         id: 'signOut',
         label: t9n('signOut'),
@@ -212,6 +213,15 @@ export class LoginForm extends Tracker.Component {
         label: t9n('resetYourPassword'),
         type: 'link',
         onClick: this.switchToPasswordReset.bind(this)
+      });
+    }
+
+    if (user && formState == STATES.SIGN_OUT && Package['accounts-password']) {
+      loginButtons.push({
+        id: 'switchToChangePassword',
+        label: t9n('changeYourPassword'),
+        type: 'link',
+        onClick: this.switchToChangePassword.bind(this)
       });
     }
 
@@ -249,6 +259,7 @@ export class LoginForm extends Tracker.Component {
       loginButtons.push({
         id: 'changePassword',
         label: t9n('changePassword'),
+        type: 'submit',
         disabled: waiting,
         onClick: this.passwordChange.bind(this)
       });
@@ -263,7 +274,7 @@ export class LoginForm extends Tracker.Component {
   }
 
   showPasswordChangeForm() {
-    return(getLoginServices().indexOf('password') != -1
+    return(Package['accounts-password']
       && this.state.formState == STATES.PASSWORD_CHANGE);
   }
 
@@ -295,9 +306,13 @@ export class LoginForm extends Tracker.Component {
     this.setState({ formState: STATES.PASSWORD_RESET, message: '' });
   }
 
+  switchToChangePassword() {
+    this.setState({ formState: STATES.PASSWORD_CHANGE, message: '' });
+  }
+
   signOut() {
     Meteor.logout(() => {
-      this.setState({ formState: STATES.SIGN_IN });
+      this.setState({ formState: STATES.SIGN_IN, message: '' });
     });
   }
 
@@ -350,7 +365,7 @@ export class LoginForm extends Tracker.Component {
         this.showMessage(t9n(`error.accounts.${error.reason}`) || t9n("Unknown error"));
       }
       else {
-        this.setState({ formState: STATES.PASSWORD_CHANGE, message: '' });
+        this.setState({ formState: STATES.SIGN_OUT, message: '' });
         loginResultCallback(this.props.redirect);
       }
     });
@@ -404,7 +419,7 @@ export class LoginForm extends Tracker.Component {
       }
       else {
         this.setState({
-          formState: STATES.PASSWORD_CHANGE,
+          formState: STATES.SIGN_OUT,
           message: ''
         });
         loginResultCallback(this.props.redirect);
