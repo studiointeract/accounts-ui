@@ -12,52 +12,6 @@ Current version 1.0.0
 4. **Basic routing** included.
 5. **Unstyled** is the default, no CSS included.
 
-### Styled version
-
-> Check back here later for styled version i.e. bootstrap, semantic-ui.
-
-We're hoping package developers write extensions for these by importing and
-export like the following example:
-
-```javascript
-import { Accounts } from 'meteor/studiointeract:react-accounts-ui';
-
-/**
- * Form.propTypes = {
- *   fields: React.PropTypes.object.isRequired,
- *   buttons: React.PropTypes.object.isRequired,
- *   error: React.PropTypes.string,
- *   ready: React.PropTypes.bool
- * };
- */
-class Form extends Accounts.ui.Form {
-  render() {
-    const { fields, buttons, error, message, ready = true} = this.props;
-    return (
-      <form className={ready ? "ready" : null} onSubmit={ evt => evt.preventDefault() } className="accounts-ui">
-        <Accounts.ui.Fields fields={ fields } />
-        <Accounts.ui.Buttons buttons={ buttons } />
-        <Accounts.ui.FormMessage message={ message } />
-      </form>
-    );
-  }
-}
-// Overwrite provided form.
-Accounts.ui.Form = Form;
-exports default Accounts;
-
-```
-
-### Available components
-
-* Accounts.ui.LoginForm
-  * Accounts.ui.Form
-    * Accounts.ui.Fields
-      * Accounts.ui.Field
-    * Accounts.ui.Buttons
-      * Accounts.ui.Button
-    * Accounts.ui.FormMessage
-
 ## Installation
 
 ### Meteor 1.3
@@ -105,3 +59,85 @@ FlowRouter.route("/login", {
 });
 
 ```
+
+## Styled versions
+
+> Check back here later for a list of styled version i.e. bootstrap, semantic-ui.
+
+**And to you who are a package author**, its easy to write extensions for `studiointeract:react-accounts-ui by importing and export like the following example:
+
+```javascript
+// package.js
+
+Package.describe({
+  name: 'author:react-accounts-ui-bootstrap',
+  version: '1.0.0',
+  summary: 'Bootstrap – Accounts UI for React in Meteor 1.3',
+  git: 'https://github.com/author/react-accounts-ui-bootstrap',
+  documentation: 'README.md'
+});
+
+Package.onUse(function(api) {
+  api.versionsFrom('1.3-rc.1');
+  api.use('ecmascript');
+  api.use('studiointeract:react-accounts-ui');
+  api.imply('studiointeract:react-accounts-ui');
+
+  api.mainModule('main.jsx');
+});
+```
+```javascript
+// main.jsx
+
+import { Accounts } from 'meteor/studiointeract:react-accounts-ui';
+
+/**
+ * Form.propTypes = {
+ *   fields: React.PropTypes.object.isRequired,
+ *   buttons: React.PropTypes.object.isRequired,
+ *   error: React.PropTypes.string,
+ *   ready: React.PropTypes.bool
+ * };
+ */
+class Form extends Accounts.ui.Form {
+  render() {
+    const { fields, buttons, error, message, ready = true} = this.props;
+    return (
+      <form className={ready ? "ready" : null} onSubmit={ evt => evt.preventDefault() } className="accounts-ui">
+        <Accounts.ui.Fields fields={ fields } />
+        <Accounts.ui.Buttons buttons={ buttons } />
+        <Accounts.ui.FormMessage message={ message } />
+      </form>
+    );
+  }
+}
+
+class Buttons extends Accounts.ui.Buttons {}
+class Button extends Accounts.ui.Button {}
+class Fields extends Accounts.ui.Fields {}
+class Field extends Accounts.ui.Field {}
+class FormMessage extends Accounts.ui.FormMessage {}
+// Notice! Accounts.ui.LoginForm manages all state logic at the moment, so avoid
+// overwriting this one, but have a look at it and learn how it works. And pull
+// requests altering how that works are welcome.
+
+// Alter provided default unstyled UI.
+Accounts.ui.Form = Form;
+Accounts.ui.Buttons = Buttons;
+Accounts.ui.Button = Button;
+Accounts.ui.Fields = Fields;
+Accounts.ui.Field = Field;
+Accounts.ui.FormMessage = FormMessage;
+exports default Accounts;
+
+```
+
+### Available components
+
+* Accounts.ui.LoginForm
+  * Accounts.ui.Form
+    * Accounts.ui.Fields
+      * Accounts.ui.Field
+    * Accounts.ui.Buttons
+      * Accounts.ui.Button
+    * Accounts.ui.FormMessage
