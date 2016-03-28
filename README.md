@@ -14,9 +14,10 @@ Current version 1.0.0
 
 ### Styled version
 
-* Check back here later for styled version i.e. bootstrap, semantic-ui.
+> Check back here later for styled version i.e. bootstrap, semantic-ui.
 
-We're hoping package developers write extensions for these by importing like this:
+We're hoping package developers write extensions for these by importing and
+export like the following example:
 
 ```javascript
 import { Accounts } from 'meteor/studiointeract:react-accounts-ui';
@@ -71,13 +72,13 @@ exports default Accounts;
 
 ## Example setup using FlowRouter (Meteor 1.3)
 
-`meteor add accounts-password`
+`meteor add accounts-password`  
 `meteor add studiointeract:react-accounts-ui`
 
 ```javascript
 
 import { FlowRouter } from 'meteor/kadira:flow-router-ssr';
-import { Accounts } from 'meteor/studiointeract:react-accounts';
+import { Accounts, redirect } from 'meteor/studiointeract:react-accounts-ui';
 import React from 'react';
 
 Accounts.ui.config({
