@@ -28,7 +28,8 @@ Current version 1.0.0
 ## Example setup using FlowRouter (Meteor 1.3)
 
 `meteor add accounts-password`  
-`meteor add studiointeract:react-accounts-ui`
+`meteor add studiointeract:react-accounts-ui`  
+`meteor add kadira:flow-router-ssr`
 
 ```javascript
 
@@ -38,15 +39,6 @@ import React from 'react';
 
 Accounts.ui.config({
   passwordSignupFields: 'NO_PASSWORD',
-  onSubmitHook(error, state) {
-    console.log('onSubmitHook')
-  },
-  preSignUpHook(password, info) {
-    console.log('preSignUpHook')
-  },
-  postSignUpHook(userId, info) {
-    console.log('postSignUpHook')
-  },
   onSignedInHook: () => redirect('/general'),
   onSignedOutHook: () => redirect('/')
 });
