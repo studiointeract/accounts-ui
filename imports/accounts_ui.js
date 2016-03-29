@@ -16,7 +16,6 @@ Accounts.ui._options = {
   onSubmitHook: () => {},
   preSignUpHook: () => new Promise(resolve => resolve()),
   postSignUpHook: () => {},
-  loginHook: () => redirect(`${Accounts.ui._options.loginPath}`),
   signUpHook: () => redirect(`${Accounts.ui._options.loginPath}`),
   resetPasswordHook: () => redirect(`${Accounts.ui._options.loginPath}`),
   changePasswordHook: () => redirect(`${Accounts.ui._options.loginPath}`),
@@ -42,13 +41,11 @@ Accounts.ui.config = function(options) {
     'passwordSignupFields',
     'requestPermissions',
     'requestOfflineToken',
-    'forceApprovalPrompt',
+    'forbidClientAccountCreation',
     'loginPath',
     'onSubmitHook',
     'preSignUpHook',
     'postSignUpHook',
-    'loginHook',
-    'signUpHook',
     'resetPasswordHook',
     'changePasswordHook',
     'onEnrollAccountHook',
@@ -151,8 +148,6 @@ Accounts.ui.config = function(options) {
 
   // deal with redirect hooks.
   for (let hook of [
-      'loginHook',
-      'signUpHook',
       'resetPasswordHook',
       'changePasswordHook',
       'onEnrollAccountHook',

@@ -75,29 +75,30 @@ if (Meteor.isClient){
   let doneCallback;
 
   Accounts.onResetPasswordLink(function (token, done) {
-    Accounts.ui._options.onResetPasswordHook();
-
     Accounts._loginButtonsSession.set('resetPasswordToken', token);
     Session.set(KEY_PREFIX + 'state', 'resetPasswordToken');
     doneCallback = done;
+
+    Accounts.ui._options.onResetPasswordHook();
   });
 
   Accounts.onEnrollmentLink(function (token, done) {
-    Accounts.ui._options.onEnrollAccountHook();
-
     Accounts._loginButtonsSession.set('enrollAccountToken', token);
     Session.set(KEY_PREFIX + 'state', 'enrollAccountToken');
     doneCallback = done;
+
+    Accounts.ui._options.onEnrollAccountHook();
   });
 
   Accounts.onEmailVerificationLink(function (token, done) {
-    Accounts.ui._options.onVerifyEmailHook();
-
     Accounts.verifyEmail(token, function (error) {
       if (! error) {
         Accounts._loginButtonsSession.set('justVerifiedEmail', true);
         Session.set(KEY_PREFIX + 'state', 'justVerifiedEmail');
         Accounts.ui._options.onSignedInHook();
+      }
+      else {
+        Accounts.ui._options.onVerifyEmailHook();
       }
 
       done();

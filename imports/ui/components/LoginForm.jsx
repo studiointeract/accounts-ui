@@ -396,7 +396,9 @@ export class LoginForm extends Tracker.Component {
       }
       else {
         this.setState({ formState: STATES.SIGN_OUT, message: '' });
-        loginResultCallback(Accounts.ui._options.onSignedInHook);
+        loginResultCallback(() => {
+          Meteor.setTimeout(() => Accounts.ui._options.onSignedInHook, 100);
+        });
       }
     });
   }
@@ -445,7 +447,7 @@ export class LoginForm extends Tracker.Component {
     this.setState({waiting: true});
 
     const SignUp = () => {
-      Accounts.createUser(options, (error)=>{
+      Accounts.createUser(options, (error) => {
         if (error) {
           this.showMessage(T9n.get(`error.accounts.${error.reason}`) || T9n.get("Unknown error"));
           if (T9n.get(`error.accounts.${error.reason}`)) {

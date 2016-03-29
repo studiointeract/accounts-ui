@@ -46,10 +46,20 @@ export function validatePassword(password){
   }
 };
 
-export function redirect(path) {
+export function redirect(redirect) {
   if (Meteor.isClient) {
     if (window.history) {
-      window.history.replaceState( {} , 'redirect', path );
+      Meteor.setTimeout(() => {
+        if (Package['kadira:flow-router']) {
+          Package['kadira:flow-router'].FlowRouter.go(redirect);
+        }
+        else if (Package['kadira:flow-router-ssr']) {
+          Package['kadira:flow-router-ssr'].FlowRouter.go(redirect);
+        }
+        else {
+          window.history.pushState( {} , 'redirect', redirect );
+        }
+      }, 500);
     }
   }
 }
