@@ -13,9 +13,9 @@ Accounts.ui._options = {
   requestOfflineToken: {},
   forceApprovalPrompt: {},
   loginPath: '/login',
-  onSubmitHook: [],
-  preSignUpHook: [],
-  postSignUpHook: [],
+  onSubmitHook: () => {},
+  preSignUpHook: () => new Promise(resolve => resolve()),
+  postSignUpHook: () => {},
   loginHook: () => redirect(`${Accounts.ui._options.loginPath}`),
   signUpHook: () => redirect(`${Accounts.ui._options.loginPath}`),
   resetPasswordHook: () => redirect(`${Accounts.ui._options.loginPath}`),
@@ -134,18 +134,18 @@ Accounts.ui.config = function(options) {
         throw new Error(`Accounts.ui.config: "${hook}" not a function`);
       }
       else {
-        Accounts.ui._options[hook].push(options[hook]);
+        Accounts.ui._options[hook] = options[hook];
       }
     }
   }
 
-  // deal with `forceApprovalPrompt`.
+  // deal with `loginPath`.
   if (options.loginPath) {
     if (typeof options.loginPath != 'string') {
-      Accounts.ui._options.loginPath = options.loginPath;
+      throw new Error(`Accounts.ui.config: "loginPath" not an absolute or relative path`);
     }
     else {
-      throw new Error(`Accounts.ui.config: "loginPath" not an absolute or relative path`);
+      Accounts.ui._options.loginPath = options.loginPath;
     }
   }
 
@@ -165,9 +165,7 @@ Accounts.ui.config = function(options) {
         Accounts.ui._options[hook] = options[hook];
       }
       else if (typeof options[hook] == 'string') {
-        Accounts.ui._options[hook] = () => {
-          location.href = options[hook];
-        };
+        Accounts.ui._options[hook] = () => redirect(options[hook]);
       }
       else {
         throw new Error(`Accounts.ui.config: "${hook}" not a function or an absolute or relative path`);

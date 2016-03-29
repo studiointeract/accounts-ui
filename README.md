@@ -34,13 +34,14 @@ Current version 1.0.0
 ```javascript
 
 import { FlowRouter } from 'meteor/kadira:flow-router-ssr';
-import { Accounts, redirect } from 'meteor/studiointeract:react-accounts-ui';
+import { Accounts } from 'meteor/studiointeract:react-accounts-ui';
 import React from 'react';
 
 Accounts.ui.config({
   passwordSignupFields: 'NO_PASSWORD',
-  onSignedInHook: () => redirect('/general'),
-  onSignedOutHook: () => redirect('/')
+  loginPath: '/login',
+  onSignedInHook: () => FlowRouter.go('/general'),
+  onSignedOutHook: () => FlowRouter.go('/')
 });
 
 FlowRouter.route("/login", {

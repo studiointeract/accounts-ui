@@ -58,6 +58,9 @@ export class LoginForm extends Tracker.Component {
     }
     else {
       this.showMessage( T9n.get("error.usernameTooShort") );
+      if (formState == STATES.SIGN_UP) {
+        Accounts.ui._options.onSubmitHook("error.usernameTooShort", formState);
+      }
 
       return false;
     }
@@ -72,6 +75,9 @@ export class LoginForm extends Tracker.Component {
     }
     else {
       this.showMessage(T9n.get("error.emailInvalid"));
+      if (formState == STATES.SIGN_UP) {
+        Accounts.ui._options.onSubmitHook("error.emailInvalid", formState);
+      }
 
       return false;
     }
@@ -336,6 +342,7 @@ export class LoginForm extends Tracker.Component {
   signOut() {
     Meteor.logout(() => {
       this.setState({ formState: STATES.SIGN_IN, message: '' });
+      Accounts.ui._options.onSignedOutHook();
     });
   }
 
@@ -389,7 +396,7 @@ export class LoginForm extends Tracker.Component {
       }
       else {
         this.setState({ formState: STATES.SIGN_OUT, message: '' });
-        loginResultCallback(this.props.redirect);
+        loginResultCallback(Accounts.ui._options.onSignedInHook);
       }
     });
   }
@@ -400,7 +407,8 @@ export class LoginForm extends Tracker.Component {
       username = null,
       email = null,
       usernameOrEmail = null,
-      password
+      password,
+      formState
     } = this.state;
 
     if (username !== null) {
@@ -427,7 +435,7 @@ export class LoginForm extends Tracker.Component {
     }
     else if (!validatePassword(password)) {
       this.showMessage(T9n.get("error.pwTooShort"));
-
+      Accounts.ui._options.onSubmitHook("error.pwTooShort", formState);
       return;
     }
     else {
@@ -436,20 +444,37 @@ export class LoginForm extends Tracker.Component {
 
     this.setState({waiting: true});
 
-    Accounts.createUser(options, (error)=>{
-      if (error) {
-        this.showMessage(T9n.get(`error.accounts.${error.reason}`) || T9n.get("Unknown error"));
-      }
-      else {
-        this.setState({
-          formState: STATES.SIGN_OUT,
-          message: ''
-        });
-        loginResultCallback(this.props.redirect);
-      }
+    const SignUp = () => {
+      Accounts.createUser(options, (error)=>{
+        if (error) {
+          this.showMessage(T9n.get(`error.accounts.${error.reason}`) || T9n.get("Unknown error"));
+          if (T9n.get(`error.accounts.${error.reason}`)) {
+            Accounts.ui._options.onSubmitHook(`error.accounts.${error.reason}`, formState);
+          }
+          else {
+            Accounts.ui._options.onSubmitHook("Unknown error", formState);
+          }
+        }
+        else {
+          this.setState({
+            formState: STATES.SIGN_OUT,
+            message: ''
+          });
+          loginResultCallback(Accounts.ui._options.postSignUpHook);
+        }
 
-      this.setState({ waiting: false });
-    });
+        this.setState({ waiting: false });
+      });
+    };
+
+    // Allow for Promises to return.
+    let promise = Accounts.ui._options.preSignUpHook(options);
+    if (promise instanceof Promise) {
+      promise.then(SignUp);
+    }
+    else {
+      SignUp();
+    }
   }
 
   loginWithoutPassword(){
