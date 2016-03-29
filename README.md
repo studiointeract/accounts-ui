@@ -74,6 +74,8 @@ Package.onUse(function(api) {
   api.use('ecmascript');
   api.use('studiointeract:react-accounts-ui');
 
+  api.imply('session');
+
   api.mainModule('main.jsx');
 });
 ```
@@ -116,6 +118,7 @@ To install the dependencies added in package.json run:
 ```javascript
 // main.jsx
 
+import React from 'react';
 import { Accounts } from 'meteor/studiointeract:react-accounts-ui';
 
 /**
@@ -157,7 +160,7 @@ Accounts.ui.Field = Field;
 Accounts.ui.FormMessage = FormMessage;
 
 // Export the themed version.
-exports default Accounts;
+export { Accounts as default };
 
 ```
 
