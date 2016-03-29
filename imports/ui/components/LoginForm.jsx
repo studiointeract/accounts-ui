@@ -1,25 +1,17 @@
 import React from 'react';
 import Tracker from 'tracker-component';
 import { Accounts } from 'meteor/accounts-base';
+import { T9n } from 'meteor/softwarerero:accounts-t9n';
+import { KEY_PREFIX } from '../../login_session.js';
 import './Form.jsx';
 
 import {
+  STATES,
   passwordSignupFields,
   validatePassword,
   loginResultCallback,
-  getLoginServices,
-  t9n
+  getLoginServices
 } from '../../helpers.js';
-
-const STATES = {
-  SIGN_IN: Symbol('SIGN_IN'),
-  SIGN_UP: Symbol('SIGN_UP'),
-  SIGN_OUT: Symbol('SIGN_OUT'),
-  PASSWORD_CHANGE: Symbol('PASSWORD_CHANGE'),
-  PASSWORD_RESET: Symbol('PASSWORD_RESET')
-};
-// Expose available states.
-Accounts.ui.STATES = STATES;
 
 export class LoginForm extends Tracker.Component {
   constructor(props) {
@@ -41,6 +33,23 @@ export class LoginForm extends Tracker.Component {
 
   componentDidMount() {
     this.setState({ waiting: false });
+    let changeState = Session.get(KEY_PREFIX + 'state');
+    switch (changeState) {
+      case 'enrollAccountToken':
+      case 'resetPasswordToken':
+        this.setState({
+          formState: STATES.PASSWORD_CHANGE
+        });
+        Session.set(KEY_PREFIX + 'state', null);
+        break;
+
+      case 'justVerifiedEmail':
+        this.setState({
+          formState: STATES.SIGN_OUT
+        });
+        Session.set(KEY_PREFIX + 'state', null);
+        break;
+    }
   }
 
   validateUsername( username ){
@@ -48,7 +57,7 @@ export class LoginForm extends Tracker.Component {
       return true;
     }
     else {
-      this.showMessage( t9n("error.usernameTooShort") );
+      this.showMessage( T9n.get("error.usernameTooShort") );
 
       return false;
     }
@@ -62,7 +71,7 @@ export class LoginForm extends Tracker.Component {
       return true;
     }
     else {
-      this.showMessage(t9n("error.emailInvalid"));
+      this.showMessage(T9n.get("error.emailInvalid"));
 
       return false;
     }
@@ -71,8 +80,8 @@ export class LoginForm extends Tracker.Component {
   getUsernameOrEmailField(){
     return {
       id: 'usernameOrEmail',
-      hint: t9n('Enter username or email'),
-      label: t9n('usernameOrEmail'),
+      hint: T9n.get('Enter username or email'),
+      label: T9n.get('usernameOrEmail'),
       onChange: this.handleChange.bind(this, 'usernameOrEmail')
     };
   }
@@ -80,8 +89,8 @@ export class LoginForm extends Tracker.Component {
   getUsernameField(){
     return {
       id: 'username',
-      hint: t9n('Enter username'),
-      label: t9n('username'),
+      hint: T9n.get('Enter username'),
+      label: T9n.get('username'),
       onChange: this.handleChange.bind(this, 'username')
     };
   }
@@ -89,8 +98,8 @@ export class LoginForm extends Tracker.Component {
   getEmailField(){
     return {
       id: 'email',
-      hint: t9n('Enter email'),
-      label: t9n('email'),
+      hint: T9n.get('Enter email'),
+      label: T9n.get('email'),
       onChange: this.handleChange.bind(this, 'email')
     };
   }
@@ -98,8 +107,8 @@ export class LoginForm extends Tracker.Component {
   getPasswordField(){
     return {
       id: 'password',
-      hint: t9n('Enter password'),
-      label: t9n('password'),
+      hint: T9n.get('Enter password'),
+      label: T9n.get('password'),
       type: 'password',
       onChange: this.handleChange.bind(this, 'password')
     };
@@ -108,8 +117,8 @@ export class LoginForm extends Tracker.Component {
   getNewPasswordField(){
     return {
       id: 'newPassword',
-      hint: t9n('Enter newPassword'),
-      label: t9n('newPassword'),
+      hint: T9n.get('Enter newPassword'),
+      label: T9n.get('newPassword'),
       type: 'password',
       onChange: this.handleChange.bind(this, 'newPassword')
     };
@@ -169,7 +178,10 @@ export class LoginForm extends Tracker.Component {
     }
 
     if (this.showPasswordChangeForm()) {
-      loginFields.push(this.getPasswordField());
+      if (Meteor.isClient && !Accounts._loginButtonsSession.get('resetPasswordToken')
+        && !Accounts._loginButtonsSession.get('enrollAccountToken')) {
+        loginFields.push(this.getPasswordField());
+      }
       loginFields.push(this.getNewPasswordField());
     }
 
@@ -183,7 +195,7 @@ export class LoginForm extends Tracker.Component {
     if (user && formState == STATES.SIGN_OUT) {
       loginButtons.push({
         id: 'signOut',
-        label: t9n('signOut'),
+        label: T9n.get('signOut'),
         disabled: waiting,
         onClick: this.signOut.bind(this)
       });
@@ -192,7 +204,7 @@ export class LoginForm extends Tracker.Component {
     if (this.showCreateAccountLink()) {
       loginButtons.push({
         id: 'switchToSignUp',
-        label: t9n('signUp'),
+        label: T9n.get('signUp'),
         type: 'link',
         onClick: this.switchToSignUp.bind(this)
       });
@@ -201,7 +213,7 @@ export class LoginForm extends Tracker.Component {
     if (formState == STATES.SIGN_UP || formState == STATES.PASSWORD_RESET) {
       loginButtons.push({
         id: 'switchToSignIn',
-        label: t9n('signIn'),
+        label: T9n.get('signIn'),
         type: 'link',
         onClick: this.switchToSignIn.bind(this)
       });
@@ -210,7 +222,7 @@ export class LoginForm extends Tracker.Component {
     if (this.showForgotPasswordLink()) {
       loginButtons.push({
         id: 'switchToPasswordReset',
-        label: t9n('resetYourPassword'),
+        label: T9n.get('resetYourPassword'),
         type: 'link',
         onClick: this.switchToPasswordReset.bind(this)
       });
@@ -219,7 +231,7 @@ export class LoginForm extends Tracker.Component {
     if (user && formState == STATES.SIGN_OUT && Package['accounts-password']) {
       loginButtons.push({
         id: 'switchToChangePassword',
-        label: t9n('changeYourPassword'),
+        label: T9n.get('changeYourPassword'),
         type: 'link',
         onClick: this.switchToChangePassword.bind(this)
       });
@@ -228,7 +240,7 @@ export class LoginForm extends Tracker.Component {
     if (formState == STATES.SIGN_UP) {
       loginButtons.push({
         id: 'signUp',
-        label: t9n('signUp'),
+        label: T9n.get('signUp'),
         type: 'submit',
         disabled: waiting,
         onClick: this.signUp.bind(this)
@@ -238,7 +250,7 @@ export class LoginForm extends Tracker.Component {
     if (formState == STATES.SIGN_IN) {
       loginButtons.push({
         id: 'signIn',
-        label: t9n('signIn'),
+        label: T9n.get('signIn'),
         type: 'submit',
         disabled: waiting,
         onClick: this.signIn.bind(this)
@@ -248,7 +260,7 @@ export class LoginForm extends Tracker.Component {
     if (formState == STATES.PASSWORD_RESET) {
       loginButtons.push({
         id: 'emailResetLink',
-        label: t9n('emailResetLink'),
+        label: T9n.get('emailResetLink'),
         type: 'submit',
         disabled: waiting,
         onClick: this.passwordReset.bind(this)
@@ -258,10 +270,17 @@ export class LoginForm extends Tracker.Component {
     if (this.showPasswordChangeForm()) {
       loginButtons.push({
         id: 'changePassword',
-        label: t9n('changePassword'),
+        label: T9n.get('changePassword'),
         type: 'submit',
         disabled: waiting,
         onClick: this.passwordChange.bind(this)
+      });
+
+      loginButtons.push({
+        id: 'switchToSignOut',
+        label: T9n.get('cancel'),
+        type: 'link',
+        onClick: this.switchToSignOut.bind(this)
       });
     }
 
@@ -308,6 +327,10 @@ export class LoginForm extends Tracker.Component {
 
   switchToChangePassword() {
     this.setState({ formState: STATES.PASSWORD_CHANGE, message: '' });
+  }
+
+  switchToSignOut() {
+    this.setState({ formState: STATES.SIGN_OUT, message: '' });
   }
 
   signOut() {
@@ -362,7 +385,7 @@ export class LoginForm extends Tracker.Component {
 
     Meteor.loginWithPassword(loginSelector, password, (error, result) => {
       if (error) {
-        this.showMessage(t9n(`error.accounts.${error.reason}`) || t9n("Unknown error"));
+        this.showMessage(T9n.get(`error.accounts.${error.reason}`) || T9n.get("Unknown error"));
       }
       else {
         this.setState({ formState: STATES.SIGN_OUT, message: '' });
@@ -403,7 +426,7 @@ export class LoginForm extends Tracker.Component {
       options.password = Meteor.uuid();
     }
     else if (!validatePassword(password)) {
-      this.showMessage(t9n("error.pwTooShort"));
+      this.showMessage(T9n.get("error.pwTooShort"));
 
       return;
     }
@@ -415,7 +438,7 @@ export class LoginForm extends Tracker.Component {
 
     Accounts.createUser(options, (error)=>{
       if (error) {
-        this.showMessage(t9n(`error.accounts.${error.reason}`) || t9n("Unknown error"));
+        this.showMessage(T9n.get(`error.accounts.${error.reason}`) || T9n.get("Unknown error"));
       }
       else {
         this.setState({
@@ -444,17 +467,17 @@ export class LoginForm extends Tracker.Component {
 
       Accounts.loginWithoutPassword({ email: email }, (error) => {
         if (error) {
-          this.showMessage(t9n(`error.accounts.${error.reason}`) || t9n("Unknown error"));
+          this.showMessage(T9n.get(`error.accounts.${error.reason}`) || T9n.get("Unknown error"));
         }
         else {
-          this.showMessage(t9n("info.emailSent"));
+          this.showMessage(T9n.get("info.emailSent"), 5000);
         }
 
         this.setState({ waiting: false });
       });
     }
     else {
-      this.showMessage(t9n("error.emailInvalid"));
+      this.showMessage(T9n.get("error.emailInvalid"));
     }
   }
 
@@ -473,17 +496,17 @@ export class LoginForm extends Tracker.Component {
 
       Accounts.forgotPassword({ email: email }, (error) => {
         if (error) {
-          this.showMessage(t9n(`error.accounts.${error.reason}`) || t9n("Unknown error"));
+          this.showMessage(T9n.get(`error.accounts.${error.reason}`) || T9n.get("Unknown error"));
         }
         else {
-          this.showMessage(t9n("info.emailSent"));
+          this.showMessage(T9n.get("info.emailSent"), 5000);
         }
 
         this.setState({ waiting: false });
       });
     }
     else {
-      this.showMessage(t9n("error.emailInvalid"));
+      this.showMessage(T9n.get("error.emailInvalid"));
     }
   }
 
@@ -494,26 +517,51 @@ export class LoginForm extends Tracker.Component {
     } = this.state;
 
     if ( !validatePassword(newPassword) ){
-      this.showMessage(t9n("error.pwTooShort"));
+      this.showMessage(T9n.get("error.pwTooShort"));
 
       return;
     }
 
-    Accounts.changePassword(password, newPassword, (error) => {
-      if (error) {
-        this.showMessage(t9n(`error.accounts.${error.reason}`) || t9n("Unknown error"));
-      }
-      else {
-        this.showMessage(t9n('info.passwordChanged'));
-      }
-    });
+    let token = Accounts._loginButtonsSession.get('resetPasswordToken');
+    if (!token) {
+      token = Accounts._loginButtonsSession.get('enrollAccountToken');
+    }
+    if (token) {
+      Accounts.resetPassword(token, newPassword, (error) => {
+        if (error) {
+          this.showMessage(T9n.get(`error.accounts.${error.reason}`) || T9n.get("Unknown error"));
+        }
+        else {
+          this.showMessage(T9n.get('info.passwordChanged'), 5000);
+          this.setState({ formState: STATES.SIGN_OUT });
+          Accounts._loginButtonsSession.set('resetPasswordToken', null);
+          Accounts._loginButtonsSession.set('enrollAccountToken', null);
+        }
+      });
+    }
+    else {
+      Accounts.changePassword(password, newPassword, (error) => {
+        if (error) {
+          this.showMessage(T9n.get(`error.accounts.${error.reason}`) || T9n.get("Unknown error"));
+        }
+        else {
+          this.showMessage(T9n.get('info.passwordChanged'), 5000);
+          this.setState({ formState: STATES.SIGN_OUT });
+        }
+      });
+    }
   }
 
-  showMessage(message){
+  showMessage(message, clearTimeout){
     message = message.trim();
 
     if (message){
       this.setState({ message: message });
+      if (clearTimeout) {
+        Meteor.setTimeout(() => {
+          this.setState({ message: '' });
+        }, clearTimeout);
+      }
     }
   }
 

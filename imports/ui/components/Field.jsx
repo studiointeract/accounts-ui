@@ -17,7 +17,7 @@ export class Field extends React.Component {
     return (
       <div className="field">
         <label htmlFor={ id }>{ label }</label>
-        <input id={ id } type={ type } onChange={ onChange } placeholder={ hint } />
+        <input id={ id } type={ type } onChange={ onChange } placeholder={ hint } defaultValue="" />
       </div>
     );
   }

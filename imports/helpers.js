@@ -1,5 +1,9 @@
-export function t9n(str) {
-  return str;
+export const STATES = {
+  SIGN_IN: Symbol('SIGN_IN'),
+  SIGN_UP: Symbol('SIGN_UP'),
+  SIGN_OUT: Symbol('SIGN_OUT'),
+  PASSWORD_CHANGE: Symbol('PASSWORD_CHANGE'),
+  PASSWORD_RESET: Symbol('PASSWORD_RESET')
 };
 
 export function getLoginServices() {

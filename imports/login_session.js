@@ -1,5 +1,6 @@
 import {Accounts} from 'meteor/accounts-base';
 import {
+  STATES,
   loginResultCallback,
   getLoginServices
 } from './helpers.js';
@@ -28,12 +29,12 @@ const VALID_KEYS = [
   'configureOnDesktopVisible'
 ];
 
-const validateKey = function (key) {
+export const validateKey = function (key) {
   if (!_.contains(VALID_KEYS, key))
     throw new Error("Invalid key in loginButtonsSession: " + key);
 };
 
-const KEY_PREFIX = "Meteor.loginButtons.";
+export const KEY_PREFIX = "Meteor.loginButtons.";
 
 // XXX This should probably be package scope rather than exported
 // (there was even a comment to that effect here from before we had
@@ -76,14 +77,16 @@ if (Meteor.isClient){
   Accounts.onResetPasswordLink(function (token, done) {
     Accounts.ui._options.onResetPasswordHook();
 
-    Accounts._loginButtonsSession.set("resetPasswordToken", token);
+    Accounts._loginButtonsSession.set('resetPasswordToken', token);
+    Session.set(KEY_PREFIX + 'state', 'resetPasswordToken');
     doneCallback = done;
   });
 
   Accounts.onEnrollmentLink(function (token, done) {
     Accounts.ui._options.onEnrollAccountHook();
 
-    Accounts._loginButtonsSession.set("enrollAccountToken", token);
+    Accounts._loginButtonsSession.set('enrollAccountToken', token);
+    Session.set(KEY_PREFIX + 'state', 'enrollAccountToken');
     doneCallback = done;
   });
 
@@ -93,6 +96,7 @@ if (Meteor.isClient){
     Accounts.verifyEmail(token, function (error) {
       if (! error) {
         Accounts._loginButtonsSession.set('justVerifiedEmail', true);
+        Session.set(KEY_PREFIX + 'state', 'justVerifiedEmail');
         Accounts.ui._options.onSignedInHook();
       }
 
