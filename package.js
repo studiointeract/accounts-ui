@@ -19,7 +19,7 @@ Package.onUse(function(api) {
 
   api.imply('accounts-base');
   api.imply('session');
-  api.imply('softwarerero:accounts-t9n');
+  api.imply('softwarerero:accounts-t9n@0.0.20');
 
   api.use('accounts-oauth', {weak: true});
   api.use('accounts-password', {weak: true});
