@@ -2,11 +2,9 @@
 
 Current version 1.0.0
 
-> NOTICE! Work in progress here.
-
 ## Features
 
-1. **Easy to use**, mixing the ideas of useraccounts configuration and accounts-ui that everyone already knows.
+1. **Easy to use**, mixing the ideas of useraccounts configuration and accounts-ui that everyone already knows and loves.
 2. **Server Side Rendering** are supported, trough FlowRouter (SSR).
 3. **Components** are everywhere, and extensible by replacing them on Accounts.ui.
 4. **Basic routing** included.
@@ -75,13 +73,14 @@ Package.onUse(function(api) {
   api.versionsFrom('1.3');
   api.use('ecmascript');
   api.use('studiointeract:react-accounts-ui');
-  api.imply('studiointeract:react-accounts-ui');
 
   api.mainModule('main.jsx');
 });
 ```
 
 ```javascript
+// package.json
+
 {
   "name": "react-accounts-ui-bootstrap",
   "version": "1.0.0",
@@ -110,6 +109,9 @@ Package.onUse(function(api) {
 }
 
 ```
+
+To install the dependencies added in package.json run:  
+`npm i`
 
 ```javascript
 // main.jsx
@@ -153,6 +155,8 @@ Accounts.ui.Button = Button;
 Accounts.ui.Fields = Fields;
 Accounts.ui.Field = Field;
 Accounts.ui.FormMessage = FormMessage;
+
+// Export the themed version.
 exports default Accounts;
 
 ```
