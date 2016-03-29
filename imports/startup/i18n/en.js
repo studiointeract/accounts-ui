@@ -1,5 +1,8 @@
 T9n.map('en', {
   cancel: 'Cancel',
+  error: {
+    pwTooShort: 'Password to short'
+  },
   'Enter password': 'Enter password',
   'Enter newPassword': 'Enter new password',
   'Enter email': 'Enter email',
