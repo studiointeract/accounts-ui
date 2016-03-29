@@ -85,7 +85,6 @@ Package.onUse(function(api) {
 
 {
   "name": "react-accounts-ui-bootstrap",
-  "version": "1.0.0",
   "description": "Bootstrap – Accounts UI for React in Meteor 1.3",
   "repository": {
     "type": "git",
