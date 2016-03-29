@@ -74,7 +74,7 @@ export class LoginForm extends Tracker.Component {
       return true;
     }
     else {
-      this.showMessage(T9n.get("error.emailInvalid"));
+      this.showMessage(T9n.get("error.accounts.Invalid email"));
       if (formState == STATES.SIGN_UP) {
         Accounts.ui._options.onSubmitHook("error.emailInvalid", formState);
       }
@@ -437,8 +437,8 @@ export class LoginForm extends Tracker.Component {
       options.password = Meteor.uuid();
     }
     else if (!validatePassword(password)) {
-      this.showMessage(T9n.get("error.pwTooShort"));
-      Accounts.ui._options.onSubmitHook("error.pwTooShort", formState);
+      this.showMessage(T9n.get("error.minChar"));
+      Accounts.ui._options.onSubmitHook("error.minChar", formState);
       return;
     }
     else {
