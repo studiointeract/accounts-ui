@@ -3,11 +3,11 @@ import { Accounts } from 'meteor/accounts-base';
 
 export class Button extends React.Component {
   render () {
-    const { label, type, disabled = false, onClick } = this.props;
+    const { label, type, disabled = false, onClick, className } = this.props;
     return type == 'link' ? (
-      <a onClick={ onClick }>{ label }</a>
+      <a className={ className } onClick={ onClick }>{ label }</a>
     ) : (
-      <button type={type} disabled={ disabled }
+      <button className={ className } type={type} disabled={ disabled }
         onClick={ onClick }>{ label }</button>
     );
   }

@@ -4,9 +4,9 @@ import './Field.jsx';
 
 export class Fields extends React.Component {
   render () {
-    let { fields = {} } = this.props;
+    let { fields = {}, className = "fields" } = this.props;
     return (
-      <div className="fields">
+      <div className={ className }>
         {Object.keys(fields).map((id, i) =>
           <Accounts.ui.Field {...fields[id]} key={i} />
         )}

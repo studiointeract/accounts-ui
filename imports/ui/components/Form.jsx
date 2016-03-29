@@ -6,9 +6,10 @@ import './FormMessage.jsx';
 
 export class Form extends React.Component {
   render() {
-    const { fields, buttons, error, message, ready = true} = this.props;
+    const { fields, buttons, error, message, ready = true, className } = this.props;
     return (
-      <form className={ready ? "ready" : null} onSubmit={ evt => evt.preventDefault() } className="accounts-ui">
+      <form className={[className, ready ? "ready" : null].join(' ')}
+        onSubmit={ evt => evt.preventDefault() } className="accounts-ui">
         <Accounts.ui.Fields fields={ fields } />
         <Accounts.ui.Buttons buttons={ buttons } />
         <Accounts.ui.FormMessage message={ message } />

@@ -13,9 +13,9 @@ export class Field extends React.Component {
   }
 
   render() {
-    const { id, hint, label, type = 'text', onChange } = this.props;
+    const { id, hint, label, type = 'text', onChange, className = "field" } = this.props;
     return (
-      <div className="field">
+      <div className={ className }>
         <label htmlFor={ id }>{ label }</label>
         <input id={ id } type={ type } onChange={ onChange } placeholder={ hint } defaultValue="" />
       </div>

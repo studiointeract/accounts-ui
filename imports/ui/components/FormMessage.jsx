@@ -3,9 +3,9 @@ import { Accounts } from 'meteor/accounts-base';
 
 export class FormMessage extends React.Component {
   render () {
-    let { message } = this.props;
+    let { message, className = "message" } = this.props;
     return message ? (
-      <div className="message">{ message }</div>
+      <div className={ className }>{ message }</div>
     ) : null;
   }
 }
