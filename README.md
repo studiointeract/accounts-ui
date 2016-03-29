@@ -1,6 +1,6 @@
 # React Accounts UI for Meteor 1.3
 
-Current version 1.0.0
+Current version 1.0.3
 
 ## Features
 
