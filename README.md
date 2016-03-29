@@ -81,6 +81,36 @@ Package.onUse(function(api) {
 ```
 
 ```javascript
+{
+  "name": "react-accounts-ui-bootstrap",
+  "version": "1.0.0",
+  "description": "Bootstrap – Accounts UI for React in Meteor 1.3",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/author/react-accounts-ui-bootstrap.git"
+  },
+  "keywords": [
+    "react",
+    "meteor",
+    "accounts",
+    "tracker"
+  ],
+  "author": "author",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/author/react-accounts-ui-bootstrap/issues"
+  },
+  "homepage": "https://github.com/author/react-accounts-ui-bootstrap",
+  "dependencies": {
+    "react": "^15.x",
+    "react-dom": "^15.x",
+    "tracker-component": "^1.3.3"
+  }
+}
+
+```
+
+```javascript
 // main.jsx
 
 import { Accounts } from 'meteor/studiointeract:react-accounts-ui';

@@ -222,7 +222,7 @@ export class LoginForm extends Tracker.Component {
     if (this.showForgotPasswordLink()) {
       loginButtons.push({
         id: 'switchToPasswordReset',
-        label: T9n.get('resetYourPassword'),
+        label: T9n.get('forgotPassword'),
         type: 'link',
         onClick: this.switchToPasswordReset.bind(this)
       });
@@ -231,7 +231,7 @@ export class LoginForm extends Tracker.Component {
     if (user && formState == STATES.SIGN_OUT && Package['accounts-password']) {
       loginButtons.push({
         id: 'switchToChangePassword',
-        label: T9n.get('changeYourPassword'),
+        label: T9n.get('changePassword'),
         type: 'link',
         onClick: this.switchToChangePassword.bind(this)
       });
@@ -260,7 +260,7 @@ export class LoginForm extends Tracker.Component {
     if (formState == STATES.PASSWORD_RESET) {
       loginButtons.push({
         id: 'emailResetLink',
-        label: T9n.get('emailResetLink'),
+        label: T9n.get('resetYourPassword'),
         type: 'submit',
         disabled: waiting,
         onClick: this.passwordReset.bind(this)
