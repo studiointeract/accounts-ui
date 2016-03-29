@@ -11,10 +11,11 @@ Current version 1.0.5
 5. **Unstyled** is the default, no CSS included.
 4. **No password** sign up and sign in are included.
 
-### Existing styled (Use these for a complete solution):
+### Existing styles (Use these for a complete solution):
 
 * [Basic](https://atmospherejs.com/studiointeract/react-accounts-ui-basic)
-* Read more down below how you create your own styling (it's super easy!) ;)
+
+> Create your own styling, se section below on extending and styling.
 
 ## Installation
 
