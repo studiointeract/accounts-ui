@@ -173,3 +173,7 @@ export { Accounts as default };
     * Accounts.ui.Buttons
       * Accounts.ui.Button
     * Accounts.ui.FormMessage
+
+## Credits
+
+Thx to the Folks at [Studio Interact](http://studiointeract.se)
