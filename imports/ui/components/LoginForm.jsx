@@ -75,8 +75,8 @@ export class LoginForm extends Tracker.Component {
     }
     else {
       this.showMessage(T9n.get("error.accounts.Invalid email"));
-      if (formState == STATES.SIGN_UP) {
-        Accounts.ui._options.onSubmitHook("error.emailInvalid", formState);
+      if (this.state.formState == STATES.SIGN_UP) {
+        Accounts.ui._options.onSubmitHook("error.emailInvalid", this.state.formState);
       }
 
       return false;
