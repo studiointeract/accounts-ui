@@ -106,6 +106,7 @@ export class LoginForm extends Tracker.Component {
       id: 'email',
       hint: T9n.get('Enter email'),
       label: T9n.get('email'),
+      type: 'email',
       onChange: this.handleChange.bind(this, 'email')
     };
   }
