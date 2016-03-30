@@ -11,15 +11,13 @@ Current version 1.0.11
 6. **[No password](#no-password-required)** sign up and sign in are included.
 7. **[Extra fields](#extra-fields)** is now supported.
 8. **[Server Side Rendering](#server-side-rendering)** are supported, trough FlowRouter (SSR).
-9. **[Extending](#styled-versions)** to make your own package, all components can be extended and customized.
+9. **[Extending](#create-your-own-styled-version)** to make your own package, all components can be extended and customized.
 
 ## Styling
 
 This package does not by standard come with any styling, you can easily [extend and make your own](#styled-versions), here are a couple versions we've made for the typical use case:
 
 * [Basic](https://atmospherejs.com/studiointeract/react-accounts-ui-basic)
-* [Bootstrap](https://atmospherejs.com/studiointeract/react-accounts-ui-bootstrap)
-* [Semantic UI](https://atmospherejs.com/studiointeract/react-accounts-ui-bootstrap)
 
 * Add your styled version here [Learn how](#styled-versions)
 
@@ -28,7 +26,7 @@ This package does not by standard come with any styling, you can easily [extend 
 We support the standard [configuration in the account-ui package](http://docs.meteor.com/#/full/accounts_ui_config). But have extended with some new options.
 
 
-#### Accounts.ui.config(options)
+### Accounts.ui.config(options)
 
 `import { Accounts } from 'meteor/studiointeract:react-accounts-ui`
 
