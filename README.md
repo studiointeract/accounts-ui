@@ -21,10 +21,13 @@ This package does not by standard come with any styling, you can easily [extend 
 
 * Add your styled version here [Learn how](#styled-versions)
 
+## Installation
+
+`meteor add studiointeract:react-accounts-ui`
+
 ## Configuration
 
 We support the standard [configuration in the account-ui package](http://docs.meteor.com/#/full/accounts_ui_config). But have extended with some new options.
-
 
 ### Accounts.ui.config(options)
 
@@ -84,12 +87,6 @@ Configure the behavior of `<Accounts.ui.LoginForm />`
 This package provides a state that makes it possible to create and manage accounts without a password. The idea is simple, you always verify your email, so to login you enter your mail and the system emails you a link to login. The mail that is sent can be changed if needed, just [how you alter the email templates in accounts-base](http://docs.meteor.com/#/full/accounts_emailtemplates).
 
 This is the default setting for **passwordSignupFields** in the [configuration](#configuration).
-
-## Installation
-
-`meteor add studiointeract:react-accounts-ui`
-
-> Configuration instructions coming shortly! In the meantime check the example below, and for full details about configuration options check in `./lib/accounts_ui.js`
 
 ## Using React Accounts UI
 
