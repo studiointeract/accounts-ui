@@ -1,5 +1,9 @@
 # ChangeLog
 
+### v1.0.11
+
+* Bump version of Tracker.Component
+
 ### v1.0.10
 
 * Support for extending with more fields.
