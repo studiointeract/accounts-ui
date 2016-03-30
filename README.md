@@ -185,6 +185,8 @@ export { Accounts as default };
 > Example provided by [@radzom](https://github.com/radzom).
 
 ```javascript
+import { Accounts, STATES } from 'meteor/react-accounts-ui';
+
 class NewLogin extends Accounts.ui.LoginForm {
   fields() {
     const { formState } = this.state;
