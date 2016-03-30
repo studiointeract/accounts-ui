@@ -191,7 +191,7 @@ Package.onUse(function(api) {
   "dependencies": {
     "react": "^15.x",
     "react-dom": "^15.x",
-    "tracker-component": "^1.3.3"
+    "tracker-component": "^1.3.13"
   }
 }
 
