@@ -398,7 +398,7 @@ export class LoginForm extends Tracker.Component {
       else {
         this.setState({ formState: STATES.SIGN_OUT, message: '' });
         loginResultCallback(() => {
-          Meteor.setTimeout(() => Accounts.ui._options.onSignedInHook, 100);
+          Meteor.setTimeout(() => Accounts.ui._options.onSignedInHook(), 100);
         });
       }
     });
