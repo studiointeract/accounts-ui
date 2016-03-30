@@ -9,7 +9,8 @@ Current version 1.0.8
 3. **Components** are everywhere, and extensible by replacing them on Accounts.ui.
 4. **Basic routing** included.
 5. **Unstyled** is the default, no CSS included.
-4. **No password** sign up and sign in are included.
+6. **No password** sign up and sign in are included.
+7. **[Extra fields](#extra-fields)** is now supported.
 
 ### Existing styles (Use these for a complete solution):
 
@@ -178,6 +179,41 @@ export { Accounts as default };
     * Accounts.ui.Buttons
       * Accounts.ui.Button
     * Accounts.ui.FormMessage
+
+## Extra fields
+
+> Example provided by [@radzom](https://github.com/radzom).
+
+```javascript
+class NewLogin extends Accounts.ui.LoginForm {
+  fields() {
+    const { formState } = this.state;
+    if (formState == STATES.SIGN_UP) {
+      return {
+        firstname: {
+          id: 'firstname',
+          hint: 'Enter firstname',
+          label: 'firstname',
+          onChange: this.handleChange.bind(this, 'firstname')
+        },
+        ...super.fields()
+      };
+    }
+    return super.fields();
+  }
+
+  signUp(options = {}) {
+    const { firstname = null } = this.state;
+    if (firstname !== null) {
+      options.profile = Object.assign(options.profile || {}, {
+        firstname: firstname
+      });
+    }
+    super.signUp(options);
+  }
+}
+```
+
 
 ## Credits
 

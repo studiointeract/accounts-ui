@@ -404,8 +404,7 @@ export class LoginForm extends Tracker.Component {
     });
   }
 
-  signUp() {
-    const options = {}; // to be passed to Accounts.createUser
+  signUp(options = {}) {
     const {
       username = null,
       email = null,
