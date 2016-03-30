@@ -181,4 +181,4 @@ export { Accounts as default };
 
 ## Credits
 
-Thx to the Folks at [Studio Interact](http://studiointeract.se)
+Made by the [creative folks at Studio Interact](http://studiointeract.com)
