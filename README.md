@@ -1,36 +1,122 @@
-# React Accounts UI for Meteor 1.3
+# React Accounts UI
 
 Current version 1.0.11
 
 ## Features
 
-1. **Easy to use**, mixing the ideas of useraccounts configuration and accounts-ui that everyone already knows and loves.
-2. **Server Side Rendering** are supported, trough FlowRouter (SSR).
-3. **Components** are everywhere, and extensible by replacing them on Accounts.ui.
-4. **Basic routing** included.
-5. **Unstyled** is the default, no CSS included.
-6. **No password** sign up and sign in are included.
+1. **[Easy to use](#using-react-accounts-ui)**, mixing the ideas of useraccounts configuration and accounts-ui that everyone already knows and loves.
+3. **[Components](#components-available)** are everywhere, and extensible by replacing them on Accounts.ui.
+4. **[Basic routing](#configuration)** included, redirections when the user clicks a link in an email or when signing in or out.
+5. **[Unstyled](#styling)** is the default, no CSS included.
+6. **[No password](#no-password-required)** sign up and sign in are included.
 7. **[Extra fields](#extra-fields)** is now supported.
+8. **[Server Side Rendering](#server-side-rendering)** are supported, trough FlowRouter (SSR).
+9. **[Extending](#styled-versions)** to make your own package, all components can be extended and customized.
 
-### Existing styles (Use these for a complete solution):
+## Styling
+
+This package does not by standard come with any styling, you can easily [extend and make your own](#styled-versions), here are a couple versions we've made for the typical use case:
 
 * [Basic](https://atmospherejs.com/studiointeract/react-accounts-ui-basic)
+* [Bootstrap](https://atmospherejs.com/studiointeract/react-accounts-ui-bootstrap)
+* [Semantic UI](https://atmospherejs.com/studiointeract/react-accounts-ui-bootstrap)
 
-> Create your own styling, se section below on extending and styling.
+* Add your styled version here [Learn how](#styled-versions)
+
+## Configuration
+
+We support the standard [configuration in the account-ui package](http://docs.meteor.com/#/full/accounts_ui_config). But have extended with some new options.
+
+
+#### Accounts.ui.config(options)
+
+`import { Accounts } from 'meteor/studiointeract:react-accounts-ui`
+
+Configure the behavior of `<Accounts.ui.LoginForm />`
+
+**_Options:_**
+
+* **requestPermissions**&nbsp;&nbsp;&nbsp; Object  
+  Which [permissions](http://docs.meteor.com/#requestpermissions) to request from the user for each external service.
+
+* **requestOfflineToken**&nbsp;&nbsp;&nbsp; Object  
+  To ask the user for permission to act on their behalf when offline, map the relevant external service to true. Currently only supported with Google. See [Meteor.loginWithExternalService](http://docs.meteor.com/#meteor_loginwithexternalservice) for more details.
+
+* **forceApprovalPrompt**&nbsp;&nbsp;&nbsp; Object  
+  If true, forces the user to approve the app's permissions, even if previously approved. Currently only supported with Google.
+
+* **passwordSignupFields**&nbsp;&nbsp;&nbsp; String  
+  Which fields to display in the user creation form. One of `'USERNAME_AND_EMAIL'`, `'USERNAME_AND_OPTIONAL_EMAIL'`, `'USERNAME_ONLY'`, or `'EMAIL_ONLY'`, **`'NO_PASSWORD'`** (**default**).
+
+* **loginPath**&nbsp;&nbsp;&nbsp; String  
+  Change the default path a user should be redirected to after a clicking a link in a mail provided to them from the accounts system, it could be a mail set to them when they have reset their password, verifying their email if the setting for `sendVerificationEmail` is turned on ([read more on accounts configuration ](http://docs.meteor.com/#/full/accounts_config)).
+
+* **homeRoutePath**&nbsp;&nbsp;&nbsp; String  
+  Set the path to where you would like the user to be redirected after a successful login or sign out.
+
+* **onSubmitHook**&nbsp;&nbsp;&nbsp; function(error, state)  
+  Called when the LoginForm is being submitted: allows for custom actions to be taken on form submission. error contains possible errors occurred during the submission process, state specifies the LoginForm internal state from which the submission was triggered. A nice use case might be closing the modal or side-menu or dropdown showing LoginForm.
+
+* **preSignUpHook**&nbsp;&nbsp;&nbsp; function(options)  
+  Called just before submitting the LoginForm for sign-up: allows for custom actions on the data being submitted. A nice use could be extending the user profile object accessing options.profile. to be taken on form submission. The plain text password is also provided for any reasonable use. If you return a promise, the submission will wait until you resolve it.
+
+* **postSignUpHook**&nbsp;&nbsp;&nbsp; func(userId, info)&nbsp;&nbsp;&nbsp; **server**  
+  Called server side, just after a successful user account creation, post submitting the pwdForm for sign-up: allows for custom actions on the data being submitted after we are sure a new user was successfully created. A common use might be applying roles to the user, as this is only possible after fully completing user creation in `alanning:roles`. The userId is available as the first parameter, so that user user object may be retrieved.
+
+* **postSignUpHook**&nbsp;&nbsp;&nbsp; func(userId, info)&nbsp;&nbsp;&nbsp; **client**   
+  Called client side, just after a successful user account creation, post submitting the pwdForm for sign-up: allows for custom actions on the data being submitted after we are sure a new user was successfully created. Default is **loginPath**.  
+
+* **resetPasswordHook**&nbsp;&nbsp;&nbsp; function()  
+  Change the default redirect behavior when the user clicks the link to reset their email sent from the system, i.e. you want a custom path for the reset password form. Default is **loginPath**.
+
+* **onEnrollAccountHook**&nbsp;&nbsp;&nbsp; function()  
+  Change the default redirect behavior when the user clicks the link to enroll for an account sent from the system, i.e. you want a custom path for the enrollment form. Learn more about [how to send enrollment emails](http://docs.meteor.com/#/full/accounts_sendenrollmentemail). Default is **loginPath**.
+
+* **onVerifyEmailHook**&nbsp;&nbsp;&nbsp; function()  
+  Change the default redirect behavior when the user clicks the link to verify their email sent from the system, i.e. you want a custom path after the user verifies their email or login with `NO_PASSWORD`. Default is **homeRoutePath**.
+
+* **onSignedInHook**&nbsp;&nbsp;&nbsp; function()  
+  Change the default redirect behavior when the user successfully login to your application, i.e. you want a custom path for the reset password form. Default is **homeRoutePath**.
+
+* **onSignedOutHook**&nbsp;&nbsp;&nbsp; function()  
+  Change the default redirect behavior when the user signs out using the LoginForm, i.e. you want a custom path after the user signs out. Default is **homeRoutePath**.
+
+## No password required
+
+This package provides a state that makes it possible to create and manage accounts without a password. The idea is simple, you always verify your email, so to login you enter your mail and the system emails you a link to login. The mail that is sent can be changed if needed, just [how you alter the email templates in accounts-base](http://docs.meteor.com/#/full/accounts_emailtemplates).
+
+This is the default setting for **passwordSignupFields** in the [configuration](#configuration).
 
 ## Installation
-
-### Meteor 1.3
 
 `meteor add studiointeract:react-accounts-ui`
 
 > Configuration instructions coming shortly! In the meantime check the example below, and for full details about configuration options check in `./lib/accounts_ui.js`
 
-### Meteor 1.2
+## Using React Accounts UI
 
-> Not supported yet.
+### Example setup (Meteor 1.3)
 
-## Example setup using FlowRouter (Meteor 1.3)
+`meteor add accounts-password`  
+`meteor add studiointeract:react-accounts-ui`
+
+```javascript
+
+import React from 'react';
+import { Accounts } from 'meteor/studiointeract:react-accounts-ui';
+
+Accounts.ui.config({
+  passwordSignupFields: 'NO_PASSWORD',
+  loginPath: '/',
+});
+
+if (Meteor.isClient) {
+  ReactDOM.render(<Accounts.ui.LoginForm />, document.body)
+}
+
+```
+
+### Example setup using FlowRouter (Meteor 1.3)
 
 `meteor add accounts-password`  
 `meteor add studiointeract:react-accounts-ui`  
@@ -38,9 +124,9 @@ Current version 1.0.11
 
 ```javascript
 
-import { FlowRouter } from 'meteor/kadira:flow-router-ssr';
-import { Accounts } from 'meteor/studiointeract:react-accounts-ui';
 import React from 'react';
+import { Accounts } from 'meteor/studiointeract:react-accounts-ui';
+import { FlowRouter } from 'meteor/kadira:flow-router-ssr';
 
 Accounts.ui.config({
   passwordSignupFields: 'NO_PASSWORD',
@@ -59,11 +145,9 @@ FlowRouter.route("/login", {
 
 ```
 
-## Styled versions
+## Create your own styled version
 
-> Check back here later for a list of styled version i.e. bootstrap, semantic-ui.
-
-**And to you who are a package author**, its easy to write extensions for `studiointeract:react-accounts-ui` by importing and export like the following example:
+**To you who are a package author**, its easy to write extensions for `studiointeract:react-accounts-ui` by importing and export like the following example:
 
 ```javascript
 // package.js
@@ -118,7 +202,7 @@ Package.onUse(function(api) {
 
 ```
 
-To install the dependencies added in package.json run:  
+To install the dependencies added in your package.json run:  
 `npm i`
 
 ```javascript
@@ -153,8 +237,9 @@ class Button extends Accounts.ui.Button {}
 class Fields extends Accounts.ui.Fields {}
 class Field extends Accounts.ui.Field {}
 class FormMessage extends Accounts.ui.FormMessage {}
-// Notice! Accounts.ui.LoginForm manages all state logic at the moment, so avoid
-// overwriting this one, but have a look at it and learn how it works. And pull
+// Notice! Accounts.ui.LoginForm manages all state logic
+// at the moment, so avoid overwriting this one, but have
+// a look at it and learn how it works. And pull
 // requests altering how that works are welcome.
 
 // Alter provided default unstyled UI.

@@ -12,7 +12,9 @@ Accounts.ui._options = {
   requestPermissions: {},
   requestOfflineToken: {},
   forceApprovalPrompt: {},
+  passwordSignupFields: 'NO_PASSWORD',
   loginPath: '/login',
+  homeRoutePath: '/',
   onSubmitHook: () => {},
   preSignUpHook: () => new Promise(resolve => resolve()),
   postSignUpHook: () => {},
@@ -21,19 +23,19 @@ Accounts.ui._options = {
   changePasswordHook: () => redirect(`${Accounts.ui._options.loginPath}`),
   onEnrollAccountHook: () => redirect(`${Accounts.ui._options.loginPath}`),
   onResetPasswordHook: () => redirect(`${Accounts.ui._options.loginPath}`),
-  onVerifyEmailHook: () => redirect(`${Accounts.ui._options.loginPath}`),
-  onSignedInHook: () => redirect('/'),
-  onSignedOutHook: () => redirect('/')
+  onVerifyEmailHook: () => redirect(`${Accounts.ui._options.homeRoutePath}`),
+  onSignedInHook: () => redirect(`${Accounts.ui._options.homeRoutePath}`),
+  onSignedOutHook: () => redirect(`${Accounts.ui._options.homeRoutePath}`)
 };
 
 /**
- * @summary Configure the behavior of [`{{> loginButtons}}`](#accountsui).
- * @locus Client
+ * @summary Configure the behavior of [`<Accounts.ui.LoginForm />`](#react-accounts-ui).
+ * @anywhere
  * @param {Object} options
  * @param {Object} options.requestPermissions Which [permissions](#requestpermissions) to request from the user for each external service.
  * @param {Object} options.requestOfflineToken To ask the user for permission to act on their behalf when offline, map the relevant external service to `true`. Currently only supported with Google. See [Meteor.loginWithExternalService](#meteor_loginwithexternalservice) for more details.
  * @param {Object} options.forceApprovalPrompt If true, forces the user to approve the app's permissions, even if previously approved. Currently only supported with Google.
- * @param {String} options.passwordSignupFields Which fields to display in the user creation form. One of '`USERNAME_AND_EMAIL`', '`USERNAME_AND_OPTIONAL_EMAIL`', '`USERNAME_ONLY`', or '`EMAIL_ONLY`' (default).
+ * @param {String} options.passwordSignupFields Which fields to display in the user creation form. One of '`USERNAME_AND_EMAIL`', '`USERNAME_AND_OPTIONAL_EMAIL`', '`USERNAME_ONLY`', '`EMAIL_ONLY`', or '`NO_PASSWORD`' (default).
  */
 Accounts.ui.config = function(options) {
   // validate options keys
@@ -47,7 +49,6 @@ Accounts.ui.config = function(options) {
     'preSignUpHook',
     'postSignUpHook',
     'resetPasswordHook',
-    'changePasswordHook',
     'onEnrollAccountHook',
     'onResetPasswordHook',
     'onVerifyEmailHook',
