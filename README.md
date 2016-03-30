@@ -15,11 +15,11 @@ Current version 1.0.11
 
 ## Styling
 
-This package does not by standard come with any styling, you can easily [extend and make your own](#styled-versions), here are a couple versions we've made for the typical use case:
+This package does not by standard come with any styling, you can easily [extend and make your own](#create-your-own-styled-version), here are a couple versions we've made for the typical use case:
 
 * [Basic](https://atmospherejs.com/studiointeract/react-accounts-ui-basic)
 
-* Add your styled version here [Learn how](#styled-versions)
+* Add your styled version here [Learn how](#create-your-own-styled-version)
 
 ## Installation
 
