@@ -11,7 +11,7 @@ Current version 1.0.12
 6. **[No password](#no-password-required)** sign up and sign in are included.
 7. **[Extra fields](#extra-fields)** is now supported.
 8. **[Server Side Rendering](#server-side-rendering)** are supported, trough FlowRouter (SSR).
-9. **[Extending](#create-your-own-styled-version)** to make your own package, all components can be extended and customized.
+9. **[Extending](#create-your-own-styled-version)** to make your own custom form, for your app, or as a package, all components can be extended and customized.
 
 ## Styling
 
