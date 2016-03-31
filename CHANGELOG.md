@@ -1,5 +1,9 @@
 # ChangeLog
 
+### v1.0.16
+
+* Bug fix
+
 ### v1.0.15
 
 * Added required boolean to Fields
