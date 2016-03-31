@@ -18,7 +18,7 @@ export class LoginForm extends Tracker.Component {
     super(props);
     // Set inital state.
     this.state = {
-      message: '',
+      message: null,
       waiting: true,
       formState: Meteor.user() ? STATES.SIGN_OUT : STATES.SIGN_IN
     };
@@ -32,7 +32,7 @@ export class LoginForm extends Tracker.Component {
   }
 
   componentDidMount() {
-    this.setState({ waiting: false });
+    this.setState({ waiting: false, ready: true });
     let changeState = Session.get(KEY_PREFIX + 'state');
     switch (changeState) {
       case 'enrollAccountToken':
@@ -57,7 +57,7 @@ export class LoginForm extends Tracker.Component {
       return true;
     }
     else {
-      this.showMessage( T9n.get("error.usernameTooShort") );
+      this.showMessage(T9n.get("error.usernameTooShort"), 'warning');
       if (formState == STATES.SIGN_UP) {
         Accounts.ui._options.onSubmitHook("error.usernameTooShort", formState);
       }
@@ -74,9 +74,9 @@ export class LoginForm extends Tracker.Component {
       return true;
     }
     else {
-      this.showMessage(T9n.get("error.accounts.Invalid email"));
+      this.showMessage(T9n.get("error.accounts.Invalid email"), 'warning');
       if (this.state.formState == STATES.SIGN_UP) {
-        Accounts.ui._options.onSubmitHook("error.emailInvalid", this.state.formState);
+        Accounts.ui._options.onSubmitHook("error.accounts.Invalid email", this.state.formState);
       }
 
       return false;
@@ -88,6 +88,7 @@ export class LoginForm extends Tracker.Component {
       id: 'usernameOrEmail',
       hint: T9n.get('Enter username or email'),
       label: T9n.get('usernameOrEmail'),
+      required: true,
       onChange: this.handleChange.bind(this, 'usernameOrEmail')
     };
   }
@@ -97,6 +98,7 @@ export class LoginForm extends Tracker.Component {
       id: 'username',
       hint: T9n.get('Enter username'),
       label: T9n.get('username'),
+      required: true,
       onChange: this.handleChange.bind(this, 'username')
     };
   }
@@ -107,6 +109,7 @@ export class LoginForm extends Tracker.Component {
       hint: T9n.get('Enter email'),
       label: T9n.get('email'),
       type: 'email',
+      required: true,
       onChange: this.handleChange.bind(this, 'email')
     };
   }
@@ -117,6 +120,7 @@ export class LoginForm extends Tracker.Component {
       hint: T9n.get('Enter password'),
       label: T9n.get('password'),
       type: 'password',
+      required: true,
       onChange: this.handleChange.bind(this, 'password')
     };
   }
@@ -127,6 +131,7 @@ export class LoginForm extends Tracker.Component {
       hint: T9n.get('Enter newPassword'),
       label: T9n.get('newPassword'),
       type: 'password',
+      required: true,
       onChange: this.handleChange.bind(this, 'newPassword')
     };
   }
@@ -171,8 +176,12 @@ export class LoginForm extends Tracker.Component {
         loginFields.push(this.getUsernameField());
       }
 
-      if (_.contains(["USERNAME_AND_EMAIL", "USERNAME_AND_OPTIONAL_EMAIL", "EMAIL_ONLY", "NO_PASSWORD"], passwordSignupFields())) {
-        loginFields.push(this.getEmailField());
+      if (_.contains(["USERNAME_AND_EMAIL", "EMAIL_ONLY", "NO_PASSWORD"], passwordSignupFields())) {
+        loginFields.push(Object.assign(this.getEmailField()));
+      }
+
+      if (passwordSignupFields() !== "USERNAME_AND_OPTIONAL_EMAIL") {
+        loginFields.push(Object.assign(this.getEmailField(), {required: false}));
       }
 
       if (passwordSignupFields() !== "NO_PASSWORD") {
@@ -319,30 +328,30 @@ export class LoginForm extends Tracker.Component {
   switchToSignUp() {
     this.setState({
       formState: STATES.SIGN_UP,
-      message: '',
+      message: null,
       email: null
     });
   }
 
   switchToSignIn() {
-    this.setState({ formState: STATES.SIGN_IN, message: '' });
+    this.setState({ formState: STATES.SIGN_IN, message: null });
   }
 
   switchToPasswordReset() {
-    this.setState({ formState: STATES.PASSWORD_RESET, message: '' });
+    this.setState({ formState: STATES.PASSWORD_RESET, message: null });
   }
 
   switchToChangePassword() {
-    this.setState({ formState: STATES.PASSWORD_CHANGE, message: '' });
+    this.setState({ formState: STATES.PASSWORD_CHANGE, message: null });
   }
 
   switchToSignOut() {
-    this.setState({ formState: STATES.SIGN_OUT, message: '' });
+    this.setState({ formState: STATES.SIGN_OUT, message: null });
   }
 
   signOut() {
     Meteor.logout(() => {
-      this.setState({ formState: STATES.SIGN_IN, message: '' });
+      this.setState({ formState: STATES.SIGN_IN, message: null });
       Accounts.ui._options.onSignedOutHook();
     });
   }
@@ -393,10 +402,10 @@ export class LoginForm extends Tracker.Component {
 
     Meteor.loginWithPassword(loginSelector, password, (error, result) => {
       if (error) {
-        this.showMessage(T9n.get(`error.accounts.${error.reason}`) || T9n.get("Unknown error"));
+        this.showMessage(T9n.get(`error.accounts.${error.reason}`) || T9n.get("Unknown error"), 'error');
       }
       else {
-        this.setState({ formState: STATES.SIGN_OUT, message: '' });
+        this.setState({ formState: STATES.SIGN_OUT, message: null });
         loginResultCallback(() => {
           Meteor.setTimeout(() => Accounts.ui._options.onSignedInHook(), 100);
         });
@@ -436,7 +445,7 @@ export class LoginForm extends Tracker.Component {
       options.password = Meteor.uuid();
     }
     else if (!validatePassword(password)) {
-      this.showMessage(T9n.get("error.minChar"));
+      this.showMessage(T9n.get("error.minChar"), 'warning');
       Accounts.ui._options.onSubmitHook("error.minChar", formState);
       return;
     }
@@ -449,7 +458,7 @@ export class LoginForm extends Tracker.Component {
     const SignUp = () => {
       Accounts.createUser(options, (error) => {
         if (error) {
-          this.showMessage(T9n.get(`error.accounts.${error.reason}`) || T9n.get("Unknown error"));
+          this.showMessage(T9n.get(`error.accounts.${error.reason}`) || T9n.get("Unknown error"), 'error');
           if (T9n.get(`error.accounts.${error.reason}`)) {
             Accounts.ui._options.onSubmitHook(`error.accounts.${error.reason}`, formState);
           }
@@ -460,7 +469,7 @@ export class LoginForm extends Tracker.Component {
         else {
           this.setState({
             formState: STATES.SIGN_OUT,
-            message: ''
+            message: null
           });
           loginResultCallback(Accounts.ui._options.postSignUpHook);
         }
@@ -494,17 +503,17 @@ export class LoginForm extends Tracker.Component {
 
       Accounts.loginWithoutPassword({ email: email }, (error) => {
         if (error) {
-          this.showMessage(T9n.get(`error.accounts.${error.reason}`) || T9n.get("Unknown error"));
+          this.showMessage(T9n.get(`error.accounts.${error.reason}`) || T9n.get("Unknown error"), 'error');
         }
         else {
-          this.showMessage(T9n.get("info.emailSent"), 5000);
+          this.showMessage(T9n.get("info.emailSent"), 'success', 5000);
         }
 
         this.setState({ waiting: false });
       });
     }
     else {
-      this.showMessage(T9n.get("error.emailInvalid"));
+      this.showMessage(T9n.get("error.accounts.Invalid email"), 'warning');
     }
   }
 
@@ -523,17 +532,17 @@ export class LoginForm extends Tracker.Component {
 
       Accounts.forgotPassword({ email: email }, (error) => {
         if (error) {
-          this.showMessage(T9n.get(`error.accounts.${error.reason}`) || T9n.get("Unknown error"));
+          this.showMessage(T9n.get(`error.accounts.${error.reason}`) || T9n.get("Unknown error"), 'error');
         }
         else {
-          this.showMessage(T9n.get("info.emailSent"), 5000);
+          this.showMessage(T9n.get("info.emailSent"), 'success', 5000);
         }
 
         this.setState({ waiting: false });
       });
     }
     else {
-      this.showMessage(T9n.get("error.emailInvalid"));
+      this.showMessage(T9n.get("error.accounts.Invalid email"), 'warning');
     }
   }
 
@@ -544,7 +553,7 @@ export class LoginForm extends Tracker.Component {
     } = this.state;
 
     if ( !validatePassword(newPassword) ){
-      this.showMessage(T9n.get("error.pwTooShort"));
+      this.showMessage(T9n.get("error.minChar"), 'warning');
 
       return;
     }
@@ -556,10 +565,10 @@ export class LoginForm extends Tracker.Component {
     if (token) {
       Accounts.resetPassword(token, newPassword, (error) => {
         if (error) {
-          this.showMessage(T9n.get(`error.accounts.${error.reason}`) || T9n.get("Unknown error"));
+          this.showMessage(T9n.get(`error.accounts.${error.reason}`) || T9n.get("Unknown error"), 'error');
         }
         else {
-          this.showMessage(T9n.get('info.passwordChanged'), 5000);
+          this.showMessage(T9n.get('info.passwordChanged'), 'success', 5000);
           this.setState({ formState: STATES.SIGN_OUT });
           Accounts._loginButtonsSession.set('resetPasswordToken', null);
           Accounts._loginButtonsSession.set('enrollAccountToken', null);
@@ -569,24 +578,24 @@ export class LoginForm extends Tracker.Component {
     else {
       Accounts.changePassword(password, newPassword, (error) => {
         if (error) {
-          this.showMessage(T9n.get(`error.accounts.${error.reason}`) || T9n.get("Unknown error"));
+          this.showMessage(T9n.get(`error.accounts.${error.reason}`) || T9n.get("Unknown error"), 'error');
         }
         else {
-          this.showMessage(T9n.get('info.passwordChanged'), 5000);
+          this.showMessage(T9n.get('info.passwordChanged'), 'success', 5000);
           this.setState({ formState: STATES.SIGN_OUT });
         }
       });
     }
   }
 
-  showMessage(message, clearTimeout){
+  showMessage(message, type, clearTimeout){
     message = message.trim();
 
     if (message){
-      this.setState({ message: message });
+      this.setState({ message: { message: message, type: type } });
       if (clearTimeout) {
         Meteor.setTimeout(() => {
-          this.setState({ message: '' });
+          this.setState({ message: null });
         }, clearTimeout);
       }
     }

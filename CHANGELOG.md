@@ -1,5 +1,15 @@
 # ChangeLog
 
+### v1.0.15
+
+* Added required boolean to Fields
+* Added type to message and changed to Object type
+* Added ready boolean to form.
+
+### v1.0.12-14
+
+* Bug fixes
+
 ### v1.0.11
 
 * Bump version of Tracker.Component

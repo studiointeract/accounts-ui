@@ -9,7 +9,7 @@ export class Form extends React.Component {
     const { fields, buttons, error, message, ready = true, className } = this.props;
     return (
       <form className={[className, ready ? "ready" : null].join(' ')}
-        onSubmit={ evt => evt.preventDefault() } className="accounts-ui">
+        onSubmit={ evt => evt.persist() } className="accounts-ui">
         <Accounts.ui.Fields fields={ fields } />
         <Accounts.ui.Buttons buttons={ buttons } />
         <Accounts.ui.FormMessage message={ message } />

@@ -39,7 +39,7 @@ export function passwordSignupFields() {
 };
 
 export function validatePassword(password){
-  if (password.length >= 6) {
+  if (password.length >= 7) {
     return true;
   } else {
     return false;
