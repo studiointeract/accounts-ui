@@ -260,6 +260,8 @@ export { Accounts as default };
     * Accounts.ui.Buttons
       * Accounts.ui.Button
     * Accounts.ui.FormMessage
+    * Accounts.ui.PasswordOrService
+    * Accounts.ui.SocialButtons
 
 ## Extra fields
 
