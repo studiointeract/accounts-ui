@@ -355,7 +355,7 @@ export class LoginForm extends Tracker.Component {
 
   signOut() {
     Meteor.logout(() => {
-      this.setState({ formState: STATES.SIGN_IN, message: null });
+      this.setState({ formState: STATES.SIGN_IN, message: null, password: null });
       Accounts.ui._options.onSignedOutHook();
     });
   }
@@ -409,7 +409,7 @@ export class LoginForm extends Tracker.Component {
         this.showMessage(T9n.get(`error.accounts.${error.reason}`) || T9n.get("Unknown error"), 'error');
       }
       else {
-        this.setState({ formState: STATES.SIGN_OUT, message: null });
+        this.setState({ formState: STATES.SIGN_OUT, message: null, password: null });
         loginResultCallback(() => {
           Meteor.setTimeout(() => Accounts.ui._options.onSignedInHook(), 100);
         });
@@ -473,7 +473,8 @@ export class LoginForm extends Tracker.Component {
         else {
           this.setState({
             formState: STATES.SIGN_OUT,
-            message: null
+            message: null,
+            password: null
           });
           loginResultCallback(Accounts.ui._options.postSignUpHook);
         }

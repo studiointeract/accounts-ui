@@ -1,5 +1,9 @@
 # ChangeLog
 
+### v1.0.20
+
+* Clear the password when logging in or out.
+
 ### v1.0.19
 
 * Added defaultValue to fields, so that when switching formState the form keeps the value it had from the other form. Which has always been a really great experience with Meteor accounts-ui.
