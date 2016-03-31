@@ -297,6 +297,19 @@ class NewLogin extends Accounts.ui.LoginForm {
 }
 ```
 
+And on the server you can store the extra fields like this:
+
+```javascript
+// server/accounts.js
+
+import { Accounts } from 'meteor/accounts-base';
+
+Accounts.onCreateUser(function (options, user) {
+  user.profile = options.profile || {};
+  user.roles = {};
+  return user;
+});
+```
 
 ## Credits
 
