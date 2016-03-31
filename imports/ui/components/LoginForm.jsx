@@ -89,6 +89,7 @@ export class LoginForm extends Tracker.Component {
       hint: T9n.get('Enter username or email'),
       label: T9n.get('usernameOrEmail'),
       required: true,
+      defaultValue: this.state.username || "",
       onChange: this.handleChange.bind(this, 'usernameOrEmail')
     };
   }
@@ -99,6 +100,7 @@ export class LoginForm extends Tracker.Component {
       hint: T9n.get('Enter username'),
       label: T9n.get('username'),
       required: true,
+      defaultValue: this.state.username || "",
       onChange: this.handleChange.bind(this, 'username')
     };
   }
@@ -110,6 +112,7 @@ export class LoginForm extends Tracker.Component {
       label: T9n.get('email'),
       type: 'email',
       required: true,
+      defaultValue: this.state.email || "",
       onChange: this.handleChange.bind(this, 'email')
     };
   }
@@ -121,6 +124,7 @@ export class LoginForm extends Tracker.Component {
       label: T9n.get('password'),
       type: 'password',
       required: true,
+      defaultValue: this.state.password || "",
       onChange: this.handleChange.bind(this, 'password')
     };
   }
@@ -598,6 +602,14 @@ export class LoginForm extends Tracker.Component {
           this.setState({ message: null });
         }, clearTimeout);
       }
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (!prevState.user !== !this.state.user) {
+      this.setState({
+        formState: this.state.user ? STATES.SIGN_OUT : STATES.SIGN_IN
+      });
     }
   }
 

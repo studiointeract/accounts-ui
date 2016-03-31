@@ -1,5 +1,17 @@
 # ChangeLog
 
+### v1.0.19
+
+* Added defaultValue to fields, so that when switching formState the form keeps the value it had from the other form. Which has always been a really great experience with Meteor accounts-ui.
+
+### v1.0.18
+
+* Bug fixes
+
+### v1.0.17
+
+* Added so that the formState responds to user logout from the terminal.
+
 ### v1.0.16
 
 * Bug fix
