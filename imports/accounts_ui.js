@@ -9,7 +9,7 @@ import { redirect } from './helpers.js';
 Accounts.ui = {};
 
 Accounts.ui._options = {
-  requestPermissions: {},
+  requestPermissions: [],
   requestOfflineToken: {},
   forceApprovalPrompt: {},
   passwordSignupFields: 'NO_PASSWORD',
