@@ -442,7 +442,7 @@ export class LoginForm extends Tracker.Component {
       return service.charAt(0).toUpperCase() + service.slice(1);
     }
     login = Meteor["loginWith" + capitalService()];
-    login({requestPermissions: [ 'email' ]}, (error) => {
+    login({requestPermissions: Accounts.ui._options.requestPermissions}, (error) => {
       if (error) {
         this.showMessage(T9n.get(`error.accounts.${error.reason}`) || T9n.get("Unknown error"));
       } else {
