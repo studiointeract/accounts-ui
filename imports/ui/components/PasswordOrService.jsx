@@ -23,7 +23,7 @@ export class PasswordOrService extends React.Component {
       labels = [];
     }
 
-    if (hasPasswordService) {
+    if (hasPasswordService && Object.keys(oauthServices).length > 0) {
       return (
         <div style={ style } className={ className }>
           { `${T9n.get('or use')} ${ labels.join(' / ') }` }

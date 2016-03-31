@@ -7,7 +7,9 @@ T9n.map('en', {
   'Enter username or email': 'Enter username or email',
   error: {
     accounts: {
-      "Invalid email or username": "Invalid email or username"
+      "Invalid email or username": "Invalid email or username",
+      "Internal server error": "Internal server error",
+      "undefined": "Service not configured"
     }
   },
   'or use': 'Or use'

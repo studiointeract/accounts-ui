@@ -18,11 +18,19 @@ import {
 export class LoginForm extends Tracker.Component {
   constructor(props) {
     super(props);
+    let {
+      formState = STATES.SIGN_IN,
+      loginPath,
+      signUpPath,
+      resetPasswordPath,
+      profilePath,
+      changePasswordPath
+    } = this.props;
     // Set inital state.
     this.state = {
       message: null,
       waiting: true,
-      formState: Meteor.user() ? STATES.SIGN_OUT : STATES.SIGN_IN
+      formState: Meteor.user() ? STATES.SIGN_OUT : formState
     };
 
     // Listen reactively.
@@ -54,21 +62,21 @@ export class LoginForm extends Tracker.Component {
     }
   }
 
-  validateUsername( username ){
-    if ( username.length >= 3 ) {
+  validateUsername( username ) {
+    if ( username ) {
       return true;
     }
     else {
-      this.showMessage(T9n.get("error.usernameTooShort"), 'warning');
-      if (formState == STATES.SIGN_UP) {
-        Accounts.ui._options.onSubmitHook("error.usernameTooShort", formState);
+      this.showMessage(T9n.get("error.usernameRequired"), 'warning');
+      if (this.state.formState == STATES.SIGN_UP) {
+        Accounts.ui._options.onSubmitHook("error.accounts.usernameRequired", this.state.formState);
       }
 
       return false;
     }
   }
 
-  validateEmail( email ){
+  validateEmail( email ) {
     if (passwordSignupFields() === "USERNAME_AND_OPTIONAL_EMAIL" && email === '')
       return true;
 
@@ -85,7 +93,7 @@ export class LoginForm extends Tracker.Component {
     }
   }
 
-  getUsernameOrEmailField(){
+  getUsernameOrEmailField() {
     return {
       id: 'usernameOrEmail',
       hint: T9n.get('Enter username or email'),
@@ -96,7 +104,7 @@ export class LoginForm extends Tracker.Component {
     };
   }
 
-  getUsernameField(){
+  getUsernameField() {
     return {
       id: 'username',
       hint: T9n.get('Enter username'),
@@ -107,7 +115,7 @@ export class LoginForm extends Tracker.Component {
     };
   }
 
-  getEmailField(){
+  getEmailField() {
     return {
       id: 'email',
       hint: T9n.get('Enter email'),
@@ -119,7 +127,7 @@ export class LoginForm extends Tracker.Component {
     };
   }
 
-  getPasswordField(){
+  getPasswordField() {
     return {
       id: 'password',
       hint: T9n.get('Enter password'),
@@ -131,7 +139,7 @@ export class LoginForm extends Tracker.Component {
     };
   }
 
-  getNewPasswordField(){
+  getNewPasswordField() {
     return {
       id: 'newPassword',
       hint: T9n.get('Enter newPassword'),
@@ -249,6 +257,7 @@ export class LoginForm extends Tracker.Component {
         id: 'switchToSignUp',
         label: T9n.get('signUp'),
         type: 'link',
+        href: this.props.signUpPath,
         onClick: this.switchToSignUp.bind(this)
       });
     }
@@ -258,6 +267,7 @@ export class LoginForm extends Tracker.Component {
         id: 'switchToSignIn',
         label: T9n.get('signIn'),
         type: 'link',
+        href: this.props.loginPath,
         onClick: this.switchToSignIn.bind(this)
       });
     }
@@ -267,6 +277,7 @@ export class LoginForm extends Tracker.Component {
         id: 'switchToPasswordReset',
         label: T9n.get('forgotPassword'),
         type: 'link',
+        href: this.props.passwordResetPath,
         onClick: this.switchToPasswordReset.bind(this)
       });
     }
@@ -276,6 +287,7 @@ export class LoginForm extends Tracker.Component {
         id: 'switchToChangePassword',
         label: T9n.get('changePassword'),
         type: 'link',
+        href: this.props.changePasswordPath,
         onClick: this.switchToChangePassword.bind(this)
       });
     }
@@ -325,6 +337,7 @@ export class LoginForm extends Tracker.Component {
         id: 'switchToSignOut',
         label: T9n.get('cancel'),
         type: 'link',
+        href: this.props.profilePath,
         onClick: this.switchToSignOut.bind(this)
       });
     }
@@ -405,7 +418,7 @@ export class LoginForm extends Tracker.Component {
         loginSelector = { username: username };
       }
     }
-    else if (email !== null) {
+    else if (email !== null && usernameOrEmail == null) {
       if (!this.validateEmail(email)) {
         return;
       }
@@ -502,6 +515,14 @@ export class LoginForm extends Tracker.Component {
       }
       else {
         options.username = username;
+      }
+    }
+    else {
+      if (_.contains([
+        "USERNAME_AND_EMAIL",
+        "USERNAME_AND_EMAIL_NO_PASSWORD"
+      ], passwordSignupFields()) && !this.validateUsername(username) ) {
+        return;
       }
     }
 
@@ -714,6 +735,6 @@ export class LoginForm extends Tracker.Component {
                              buttons={this.buttons()}
                              {...this.state} />;
   }
-}
+};
 
 Accounts.ui.LoginForm = LoginForm;
