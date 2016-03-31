@@ -4,5 +4,11 @@ T9n.map('en', {
   'Enter newPassword': 'Enter new password',
   'Enter email': 'Enter email',
   'Enter username': 'Enter username',
-  'Enter username or email': 'Enter username or email'
+  'Enter username or email': 'Enter username or email',
+  error: {
+    accounts: {
+      "Invalid email or username": "Invalid email or username"
+    }
+  },
+  'or use': 'Or use'
 });

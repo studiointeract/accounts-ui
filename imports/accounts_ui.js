@@ -68,7 +68,8 @@ Accounts.ui.config = function(options) {
       "USERNAME_AND_OPTIONAL_EMAIL",
       "USERNAME_ONLY",
       "EMAIL_ONLY",
-      "NO_PASSWORD"
+      "EMAIL_ONLY_NO_PASSWORD",
+      "USERNAME_AND_EMAIL_NO_PASSWORD"
     ], options.passwordSignupFields)) {
       Accounts.ui._options.passwordSignupFields = options.passwordSignupFields;
     }

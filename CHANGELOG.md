@@ -1,5 +1,11 @@
 # ChangeLog
 
+### v1.0.21
+
+* Buttons for oauth services
+* Option for "NO_PASSWORD" changed to "EMAIL_ONLY_NO_PASSWORD"
+* Added new options to accounts-password "USERNAME_AND_EMAIL_NO_PASSWORD".
+
 ### v1.0.20
 
 * Clear the password when logging in or out.

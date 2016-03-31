@@ -16,5 +16,4 @@ export class SocialButtons extends React.Component {
   }
 }
 
-
 Accounts.ui.SocialButtons = SocialButtons;
