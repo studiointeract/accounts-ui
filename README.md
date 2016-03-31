@@ -1,6 +1,6 @@
 # React Accounts UI
 
-Current version 1.0.19
+Current version 1.0.20
 
 ## Features
 
@@ -18,7 +18,6 @@ Current version 1.0.19
 This package does not by standard come with any styling, you can easily [extend and make your own](#create-your-own-styled-version), here are a couple versions we've made for the typical use case:
 
 * [**Basic**](https://atmospherejs.com/studiointeract/react-accounts-ui-basic)  `studiointeract:react-accounts-ui-basic`
-* [**Semantic UI**](https://atmospherejs.com/studiointeract/react-accounts-ui-semantic-ui)  `studiointeract:react-accounts-ui-semantic-ui`
 
 * Add your styled version here [Learn how](#create-your-own-styled-version)
 
