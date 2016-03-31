@@ -1,6 +1,6 @@
 # React Accounts UI
 
-Current version 1.0.13
+Current version 1.0.20
 
 ## Features
 
@@ -10,7 +10,7 @@ Current version 1.0.13
 5. **[Unstyled](#styling)** is the default, no CSS included.
 6. **[No password](#no-password-required)** sign up and sign in are included.
 7. **[Extra fields](#extra-fields)** is now supported.
-8. **[Server Side Rendering](#server-side-rendering)** are supported, trough FlowRouter (SSR).
+8. **[Server Side Rendering](#example-setup-using-flowrouter-meteor-13)** are supported, trough FlowRouter (SSR).
 9. **[Extending](#create-your-own-styled-version)** to make your own custom form, for your app, or as a package, all components can be extended and customized.
 
 ## Styling
@@ -18,6 +18,7 @@ Current version 1.0.13
 This package does not by standard come with any styling, you can easily [extend and make your own](#create-your-own-styled-version), here are a couple versions we've made for the typical use case:
 
 * [**Basic**](https://atmospherejs.com/studiointeract/react-accounts-ui-basic)  `studiointeract:react-accounts-ui-basic`
+* [**Semantic UI**](https://atmospherejs.com/studiointeract/react-accounts-ui-semantic-ui)  `studiointeract:react-accounts-ui-semantic-ui`
 
 * Add your styled version here [Learn how](#create-your-own-styled-version)
 
