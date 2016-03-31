@@ -404,6 +404,44 @@ export class LoginForm extends Tracker.Component {
     });
   }
 
+  oauthButtons() {
+    const { formState, waiting } = this.state;
+    let oauthButtons = [];
+    if (formState == STATES.SIGN_IN || formState == STATES.SIGN_UP ) {
+      if(Accounts.oauth) {
+        Accounts.oauth.serviceNames().map((service) => {
+          oauthButtons.push({
+            id: service,
+            label: service,
+            disabled: waiting,
+            type: 'submit',
+            onClick: this.oauthSignIn.bind(this, service)
+          });
+        });
+      }
+    }
+    return _.indexBy(oauthButtons, 'id');
+  }
+  oauthSignIn(service) {
+    const { formState, waiting, user } = this.state;
+    //Thanks Josh Owens for this one.
+    function capitalService() {
+      return service.charAt(0).toUpperCase() + service.slice(1);
+    }
+    login = Meteor["loginWith" + capitalService()];
+    login({requestPermissions: [ 'email' ]}, (error) => {
+      if (error) {
+        this.showMessage(T9n.get(`error.accounts.${error.reason}`) || T9n.get("Unknown error"));
+      } else {
+        this.setState({ formState: STATES.SIGN_OUT, message: '' });
+        loginResultCallback(() => {
+          Meteor.setTimeout(() => Accounts.ui._options.onSignedInHook(), 100);
+        });
+      }
+    });
+
+  }
+
   signUp(options = {}) {
     const {
       username = null,
@@ -593,7 +631,11 @@ export class LoginForm extends Tracker.Component {
   }
 
   render() {
-    return <Accounts.ui.Form fields={this.fields()} buttons={this.buttons()} {...this.state} />;
+    this.oauthButtons();
+    return <Accounts.ui.Form oauthServices={this.oauthButtons()}
+                             fields={this.fields()} 
+                             buttons={this.buttons()}
+                             {...this.state} />;
   }
 }
 
