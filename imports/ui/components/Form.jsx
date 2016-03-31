@@ -1,20 +1,31 @@
 import React from 'react';
 import {Accounts} from 'meteor/accounts-base';
-import './SocialButtons.jsx';
 import './Fields.jsx';
 import './Buttons.jsx';
 import './FormMessage.jsx';
+import './PasswordOrService.jsx';
+import './SocialButtons.jsx';
 
 export class Form extends React.Component {
   render() {
-    const { oauthServices, fields, buttons, error, message, ready = true, className } = this.props;
+    const {
+      hasPasswordService,
+      oauthServices,
+      fields,
+      buttons,
+      error,
+      message,
+      ready = true,
+      className
+    } = this.props;
     return (
       <form className={[className, ready ? "ready" : null].join(' ')}
         onSubmit={ evt => evt.preventDefault() } className="accounts-ui">
-        <Accounts.ui.SocialButtons oauthServices={ oauthServices } />
         <Accounts.ui.Fields fields={ fields } />
         <Accounts.ui.Buttons buttons={ buttons } />
-        <Accounts.ui.FormMessage message={ message } />
+        <Accounts.ui.PasswordOrService oauthServices={ oauthServices } />
+        <Accounts.ui.SocialButtons oauthServices={ oauthServices } />
+        <Accounts.ui.FormMessage {...message} />
       </form>
     );
   }

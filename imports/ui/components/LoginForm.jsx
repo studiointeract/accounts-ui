@@ -10,7 +10,9 @@ import {
   passwordSignupFields,
   validatePassword,
   loginResultCallback,
-  getLoginServices
+  getLoginServices,
+  hasPasswordService,
+  capitalize
 } from '../../helpers.js';
 
 export class LoginForm extends Tracker.Component {
@@ -155,9 +157,12 @@ export class LoginForm extends Tracker.Component {
     const loginFields = [];
     const { formState } = this.state;
 
-    if (formState == STATES.SIGN_IN) {
-      if (_.contains(["USERNAME_AND_EMAIL", "USERNAME_AND_OPTIONAL_EMAIL"],
-        passwordSignupFields())) {
+    if (hasPasswordService() && formState == STATES.SIGN_IN) {
+      if (_.contains([
+        "USERNAME_AND_EMAIL",
+        "USERNAME_AND_OPTIONAL_EMAIL",
+        "USERNAME_AND_EMAIL_NO_PASSWORD"
+      ], passwordSignupFields())) {
         loginFields.push(this.getUsernameOrEmailField());
       }
 
@@ -165,30 +170,48 @@ export class LoginForm extends Tracker.Component {
         loginFields.push(this.getUsernameField());
       }
 
-      if (_.contains(["EMAIL_ONLY", "NO_PASSWORD"], passwordSignupFields())) {
+      if (_.contains([
+        "EMAIL_ONLY",
+        "EMAIL_ONLY_NO_PASSWORD"
+      ], passwordSignupFields())) {
         loginFields.push(this.getEmailField());
       }
 
-      if (passwordSignupFields() !== "NO_PASSWORD") {
+      if (!_.contains([
+        "EMAIL_ONLY_NO_PASSWORD",
+        "USERNAME_AND_EMAIL_NO_PASSWORD"
+      ], passwordSignupFields())) {
         loginFields.push(this.getPasswordField());
       }
     }
 
-    if (formState == STATES.SIGN_UP) {
-      if (_.contains(["USERNAME_AND_EMAIL", "USERNAME_AND_OPTIONAL_EMAIL", "USERNAME_ONLY"],
-        passwordSignupFields())) {
+    if (hasPasswordService() && formState == STATES.SIGN_UP) {
+      if (_.contains([
+        "USERNAME_AND_EMAIL",
+        "USERNAME_AND_OPTIONAL_EMAIL",
+        "USERNAME_ONLY",
+        "USERNAME_AND_EMAIL_NO_PASSWORD"
+      ], passwordSignupFields())) {
         loginFields.push(this.getUsernameField());
       }
 
-      if (_.contains(["USERNAME_AND_EMAIL", "EMAIL_ONLY", "NO_PASSWORD"], passwordSignupFields())) {
-        loginFields.push(Object.assign(this.getEmailField()));
+      if (_.contains([
+        "USERNAME_AND_EMAIL",
+        "EMAIL_ONLY",
+        "EMAIL_ONLY_NO_PASSWORD",
+        "USERNAME_AND_EMAIL_NO_PASSWORD"
+      ], passwordSignupFields())) {
+        loginFields.push(this.getEmailField());
       }
 
-      if (passwordSignupFields() !== "USERNAME_AND_OPTIONAL_EMAIL") {
+      if (_.contains(["USERNAME_AND_OPTIONAL_EMAIL"], passwordSignupFields())) {
         loginFields.push(Object.assign(this.getEmailField(), {required: false}));
       }
 
-      if (passwordSignupFields() !== "NO_PASSWORD") {
+      if (!_.contains([
+        "EMAIL_ONLY_NO_PASSWORD",
+        "USERNAME_AND_EMAIL_NO_PASSWORD"
+      ], passwordSignupFields())) {
         loginFields.push(this.getPasswordField());
       }
     }
@@ -261,9 +284,10 @@ export class LoginForm extends Tracker.Component {
       loginButtons.push({
         id: 'signUp',
         label: T9n.get('signUp'),
-        type: 'submit',
+        type: hasPasswordService() ? 'submit' : 'link',
+        className: 'active',
         disabled: waiting,
-        onClick: this.signUp.bind(this)
+        onClick: hasPasswordService() ? this.signUp.bind(this) : null
       });
     }
 
@@ -271,9 +295,10 @@ export class LoginForm extends Tracker.Component {
       loginButtons.push({
         id: 'signIn',
         label: T9n.get('signIn'),
-        type: 'submit',
+        type: hasPasswordService() ? 'submit' : 'link',
+        className: 'active',
         disabled: waiting,
-        onClick: this.signIn.bind(this)
+        onClick: hasPasswordService() ? this.signIn.bind(this) : null
       });
     }
 
@@ -306,6 +331,8 @@ export class LoginForm extends Tracker.Component {
 
     // Sort the button array so that the submit button always comes first.
     loginButtons.sort((a, b) => {
+      return a.label.localeCompare(b.label);
+    }).sort((a, b) => {
       return (b.type == 'submit') - (a.type == 'submit');
     });
 
@@ -383,7 +410,7 @@ export class LoginForm extends Tracker.Component {
         return;
       }
       else {
-        if (passwordSignupFields() === "NO_PASSWORD") {
+        if (_.contains([ "EMAIL_ONLY_NO_PASSWORD" ], passwordSignupFields())) {
           this.loginWithoutPassword();
           return;
         }
@@ -397,6 +424,10 @@ export class LoginForm extends Tracker.Component {
         return;
       }
       else {
+        if (_.contains([ "USERNAME_AND_EMAIL_NO_PASSWORD" ], passwordSignupFields())) {
+          this.loginWithoutPassword();
+          return;
+        }
         loginSelector = usernameOrEmail;
       }
     }
@@ -425,7 +456,7 @@ export class LoginForm extends Tracker.Component {
         Accounts.oauth.serviceNames().map((service) => {
           oauthButtons.push({
             id: service,
-            label: service,
+            label: capitalize(service),
             disabled: waiting,
             type: 'submit',
             onClick: this.oauthSignIn.bind(this, service)
@@ -435,6 +466,7 @@ export class LoginForm extends Tracker.Component {
     }
     return _.indexBy(oauthButtons, 'id');
   }
+
   oauthSignIn(service) {
     const { formState, waiting, user } = this.state;
     //Thanks Josh Owens for this one.
@@ -482,7 +514,10 @@ export class LoginForm extends Tracker.Component {
       }
     }
 
-    if (passwordSignupFields() === "NO_PASSWORD") {
+    if (_.contains([
+      "EMAIL_ONLY_NO_PASSWORD",
+      "USERNAME_AND_EMAIL_NO_PASSWORD"
+    ], passwordSignupFields())) {
       // Generate a random password.
       options.password = Meteor.uuid();
     }
@@ -534,6 +569,7 @@ export class LoginForm extends Tracker.Component {
   loginWithoutPassword(){
     const {
       email = '',
+      usernameOrEmail = '',
       waiting
     } = this.state;
 
@@ -555,8 +591,27 @@ export class LoginForm extends Tracker.Component {
         this.setState({ waiting: false });
       });
     }
+    else if (this.validateUsername(usernameOrEmail)) {
+      this.setState({ waiting: true });
+
+      Accounts.loginWithoutPassword({ email: usernameOrEmail, username: usernameOrEmail }, (error) => {
+        if (error) {
+          this.showMessage(T9n.get(`error.accounts.${error.reason}`) || T9n.get("Unknown error"), 'error');
+        }
+        else {
+          this.showMessage(T9n.get("info.emailSent"), 'success', 5000);
+        }
+
+        this.setState({ waiting: false });
+      });
+    }
     else {
-      this.showMessage(T9n.get("error.accounts.Invalid email"), 'warning');
+      if (_.contains([ "USERNAME_AND_EMAIL_NO_PASSWORD" ], passwordSignupFields())) {
+        this.showMessage(T9n.get("error.accounts.Invalid email or username"), 'warning');
+      }
+      else {
+        this.showMessage(T9n.get("error.accounts.Invalid email"), 'warning');
+      }
     }
   }
 

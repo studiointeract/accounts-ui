@@ -1,6 +1,6 @@
 # React Accounts UI
 
-Current version 1.0.20
+Current version 1.0.21
 
 ## Features
 
@@ -48,7 +48,7 @@ Configure the behavior of `<Accounts.ui.LoginForm />`
   If true, forces the user to approve the app's permissions, even if previously approved. Currently only supported with Google.
 
 * **passwordSignupFields**&nbsp;&nbsp;&nbsp; String  
-  Which fields to display in the user creation form. One of `'USERNAME_AND_EMAIL'`, `'USERNAME_AND_OPTIONAL_EMAIL'`, `'USERNAME_ONLY'`, or `'EMAIL_ONLY'`, **`'NO_PASSWORD'`** (**default**).
+  Which fields to display in the user creation form. One of `'USERNAME_AND_EMAIL'`, `'USERNAME_AND_OPTIONAL_EMAIL'`, `'USERNAME_ONLY'`, `'EMAIL_ONLY'`, `'USERNAME_AND_EMAIL_NO_PASSWORD'`, **`'EMAIL_ONLY_NO_PASSWORD'`** (**default**).
 
 * **loginPath**&nbsp;&nbsp;&nbsp; String  
   Change the default path a user should be redirected to after a clicking a link in a mail provided to them from the accounts system, it could be a mail set to them when they have reset their password, verifying their email if the setting for `sendVerificationEmail` is turned on ([read more on accounts configuration ](http://docs.meteor.com/#/full/accounts_config)).

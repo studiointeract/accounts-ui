@@ -7,14 +7,30 @@ import { Accounts } from 'meteor/accounts-base';
 
 // Method called by a user to request a password reset email. This is
 // the start of the reset process.
-Meteor.methods({loginWithoutPassword: function (options) {
-  check(options, {email: String});
+Meteor.methods({loginWithoutPassword: function ({ email, username = null }) {
+  if (username !== null) {
+    check(username, String);
 
-  var user = Meteor.users.findOne({"emails.address": options.email});
-  if (!user)
-    throw new Meteor.Error(403, "User not found");
+    var user = Meteor.users.findOne({ $or: [{
+        "username": username, "emails.address": { $exists: 1 }
+      }, {
+        "emails.address": email
+      }]
+    });
+    if (!user)
+      throw new Meteor.Error(403, "User not found");
 
-  Accounts.sendLoginEmail(user._id, options.email);
+    email = user.emails[0].address;
+  }
+  else {
+    check(email, String);
+
+    var user = Meteor.users.findOne({ "emails.address": email });
+    if (!user)
+      throw new Meteor.Error(403, "User not found");
+  }
+
+  Accounts.sendLoginEmail(user._id, email);
 }});
 
 /**
@@ -84,17 +100,20 @@ Accounts.sendLoginEmail = function (userId, address) {
   Email.send(options);
 };
 
-Accounts.emailTemplates.loginNoPassword = {
-  subject: function(user) {
-    return "Login on " + Accounts.emailTemplates.siteName;
-  },
-  text: function(user, url) {
-    var greeting = (user.profile && user.profile.name) ?
-          ("Hello " + user.profile.name + ",") : "Hello,";
-    return `${greeting}
+// Check for installed accounts-password dependency.
+if (Accounts.emailTemplates) {
+  Accounts.emailTemplates.loginNoPassword = {
+    subject: function(user) {
+      return "Login on " + Accounts.emailTemplates.siteName;
+    },
+    text: function(user, url) {
+      var greeting = (user.profile && user.profile.name) ?
+            ("Hello " + user.profile.name + ",") : "Hello,";
+      return `${greeting}
 To login, simply click the link below.
 ${url}
 Thanks.
 `;
-  }
-};
+    }
+  };
+}
