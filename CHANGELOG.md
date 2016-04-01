@@ -1,5 +1,9 @@
 # ChangeLog
 
+### v1.1.0
+
+* Renamed package to std:react-accounts-ui
+
 ### v1.0.21
 
 * Buttons for oauth services
