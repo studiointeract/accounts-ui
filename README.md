@@ -1,6 +1,6 @@
 # React Accounts UI
 
-Current version 1.0.21
+Current version 1.1.0
 
 ## Features
 
@@ -17,14 +17,16 @@ Current version 1.0.21
 
 This package does not by standard come with any styling, you can easily [extend and make your own](#create-your-own-styled-version), here are a couple versions we've made for the typical use case:
 
-* [**Basic**](https://atmospherejs.com/studiointeract/react-accounts-ui-basic)  `studiointeract:react-accounts-ui-basic`
-* [**Semantic UI**](https://atmospherejs.com/studiointeract/react-accounts-ui-semantic-ui)  `studiointeract:react-accounts-ui-semantic-ui`
+* [**Basic**](https://atmospherejs.com/studiointeract/react-accounts-ui-basic)  `std:react-accounts-ui-basic`
+* [**Semantic UI**](https://atmospherejs.com/studiointeract/react-accounts-ui-semantic-ui)  `std:react-accounts-ui-semantic-ui`
+* [Bootstrap 3] (help out on this: http://github.com/studiointeract/react-accounts-ui-bootstrap-3)
+* [Material UI] (help out on this: http://github.com/studiointeract/react-accounts-ui-material-ui)
 
 * Add your styled version here [Learn how](#create-your-own-styled-version)
 
 ## Installation
 
-`meteor add studiointeract:react-accounts-ui`
+`meteor add std:react-accounts-ui`
 
 ## Configuration
 
@@ -32,7 +34,7 @@ We support the standard [configuration in the account-ui package](http://docs.me
 
 ### Accounts.ui.config(options)
 
-`import { Accounts } from 'meteor/studiointeract:react-accounts-ui`
+`import { Accounts } from 'meteor/std:react-accounts-ui`
 
 Configure the behavior of `<Accounts.ui.LoginForm />`
 
@@ -94,12 +96,12 @@ This is the default setting for **passwordSignupFields** in the [configuration](
 ### Example setup (Meteor 1.3)
 
 `meteor add accounts-password`  
-`meteor add studiointeract:react-accounts-ui`
+`meteor add std:react-accounts-ui`
 
 ```javascript
 
 import React from 'react';
-import { Accounts } from 'meteor/studiointeract:react-accounts-ui';
+import { Accounts } from 'meteor/std:react-accounts-ui';
 
 Accounts.ui.config({
   passwordSignupFields: 'NO_PASSWORD',
@@ -115,13 +117,13 @@ if (Meteor.isClient) {
 ### Example setup using FlowRouter (Meteor 1.3)
 
 `meteor add accounts-password`  
-`meteor add studiointeract:react-accounts-ui`  
+`meteor add std:react-accounts-ui`  
 `meteor add kadira:flow-router-ssr`
 
 ```javascript
 
 import React from 'react';
-import { Accounts } from 'meteor/studiointeract:react-accounts-ui';
+import { Accounts } from 'meteor/std:react-accounts-ui';
 import { FlowRouter } from 'meteor/kadira:flow-router-ssr';
 
 Accounts.ui.config({
@@ -141,9 +143,55 @@ FlowRouter.route("/login", {
 
 ```
 
+### Example setup using the STATES api.
+
+You can define the inital state you want in your route for the component,
+as set the path where the links in the component link to, for example below we
+have one route for /login and one for /signup.
+
+`meteor add accounts-password`  
+`meteor add std:react-accounts-ui`  
+`meteor add kadira:flow-router-ssr`
+
+```javascript
+T9n.setLanguage('en');
+
+Accounts.config({
+  sendVerificationEmail: true,
+  forbidClientAccountCreation: false
+});
+
+Accounts.ui.config({
+  passwordSignupFields: 'USERNAME_AND_OPTIONAL_EMAIL',
+  loginPath: '/login'
+});
+
+FlowRouter.route("/login", {
+  action(params) {
+    mount(MainLayout, {
+      content: <Accounts.ui.LoginForm {...{
+        formState: STATES.SIGN_IN,
+        signUpPath: '/signup'
+      }} />
+    });
+  }
+});
+
+FlowRouter.route("/signup", {
+  action(params) {
+    mount(MainLayout, {
+      content: <Accounts.ui.LoginForm {...{
+        formState: STATES.SIGN_UP,
+        loginPath: '/login'
+      }} />
+    });
+  }
+});
+```
+
 ## Create your own styled version
 
-**To you who are a package author**, its easy to write extensions for `studiointeract:react-accounts-ui` by importing and export like the following example:
+**To you who are a package author**, its easy to write extensions for `std:react-accounts-ui` by importing and export like the following example:
 
 ```javascript
 // package.js
@@ -159,7 +207,7 @@ Package.describe({
 Package.onUse(function(api) {
   api.versionsFrom('1.3');
   api.use('ecmascript');
-  api.use('studiointeract:react-accounts-ui');
+  api.use('std:react-accounts-ui');
 
   api.imply('session');
 
@@ -205,7 +253,7 @@ To install the dependencies added in your package.json run:
 // main.jsx
 
 import React from 'react';
-import { Accounts } from 'meteor/studiointeract:react-accounts-ui';
+import { Accounts } from 'meteor/std:react-accounts-ui';
 
 /**
  * Form.propTypes = {
