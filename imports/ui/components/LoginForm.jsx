@@ -10,17 +10,27 @@ import {
   passwordSignupFields,
   validatePassword,
   loginResultCallback,
-  getLoginServices
+  getLoginServices,
+  hasPasswordService,
+  capitalize
 } from '../../helpers.js';
 
 export class LoginForm extends Tracker.Component {
   constructor(props) {
     super(props);
+    let {
+      formState = STATES.SIGN_IN,
+      loginPath,
+      signUpPath,
+      resetPasswordPath,
+      profilePath,
+      changePasswordPath
+    } = this.props;
     // Set inital state.
     this.state = {
       message: null,
       waiting: true,
-      formState: Meteor.user() ? STATES.SIGN_OUT : STATES.SIGN_IN
+      formState: Meteor.user() ? STATES.SIGN_OUT : formState
     };
 
     // Listen reactively.
@@ -52,21 +62,21 @@ export class LoginForm extends Tracker.Component {
     }
   }
 
-  validateUsername( username ){
-    if ( username.length >= 3 ) {
+  validateUsername( username ) {
+    if ( username ) {
       return true;
     }
     else {
-      this.showMessage(T9n.get("error.usernameTooShort"), 'warning');
-      if (formState == STATES.SIGN_UP) {
-        Accounts.ui._options.onSubmitHook("error.usernameTooShort", formState);
+      this.showMessage(T9n.get("error.usernameRequired"), 'warning');
+      if (this.state.formState == STATES.SIGN_UP) {
+        Accounts.ui._options.onSubmitHook("error.accounts.usernameRequired", this.state.formState);
       }
 
       return false;
     }
   }
 
-  validateEmail( email ){
+  validateEmail( email ) {
     if (passwordSignupFields() === "USERNAME_AND_OPTIONAL_EMAIL" && email === '')
       return true;
 
@@ -83,7 +93,7 @@ export class LoginForm extends Tracker.Component {
     }
   }
 
-  getUsernameOrEmailField(){
+  getUsernameOrEmailField() {
     return {
       id: 'usernameOrEmail',
       hint: T9n.get('Enter username or email'),
@@ -94,7 +104,7 @@ export class LoginForm extends Tracker.Component {
     };
   }
 
-  getUsernameField(){
+  getUsernameField() {
     return {
       id: 'username',
       hint: T9n.get('Enter username'),
@@ -105,7 +115,7 @@ export class LoginForm extends Tracker.Component {
     };
   }
 
-  getEmailField(){
+  getEmailField() {
     return {
       id: 'email',
       hint: T9n.get('Enter email'),
@@ -117,7 +127,7 @@ export class LoginForm extends Tracker.Component {
     };
   }
 
-  getPasswordField(){
+  getPasswordField() {
     return {
       id: 'password',
       hint: T9n.get('Enter password'),
@@ -129,7 +139,7 @@ export class LoginForm extends Tracker.Component {
     };
   }
 
-  getNewPasswordField(){
+  getNewPasswordField() {
     return {
       id: 'newPassword',
       hint: T9n.get('Enter newPassword'),
@@ -155,9 +165,12 @@ export class LoginForm extends Tracker.Component {
     const loginFields = [];
     const { formState } = this.state;
 
-    if (formState == STATES.SIGN_IN) {
-      if (_.contains(["USERNAME_AND_EMAIL", "USERNAME_AND_OPTIONAL_EMAIL"],
-        passwordSignupFields())) {
+    if (hasPasswordService() && formState == STATES.SIGN_IN) {
+      if (_.contains([
+        "USERNAME_AND_EMAIL",
+        "USERNAME_AND_OPTIONAL_EMAIL",
+        "USERNAME_AND_EMAIL_NO_PASSWORD"
+      ], passwordSignupFields())) {
         loginFields.push(this.getUsernameOrEmailField());
       }
 
@@ -165,30 +178,48 @@ export class LoginForm extends Tracker.Component {
         loginFields.push(this.getUsernameField());
       }
 
-      if (_.contains(["EMAIL_ONLY", "NO_PASSWORD"], passwordSignupFields())) {
+      if (_.contains([
+        "EMAIL_ONLY",
+        "EMAIL_ONLY_NO_PASSWORD"
+      ], passwordSignupFields())) {
         loginFields.push(this.getEmailField());
       }
 
-      if (passwordSignupFields() !== "NO_PASSWORD") {
+      if (!_.contains([
+        "EMAIL_ONLY_NO_PASSWORD",
+        "USERNAME_AND_EMAIL_NO_PASSWORD"
+      ], passwordSignupFields())) {
         loginFields.push(this.getPasswordField());
       }
     }
 
-    if (formState == STATES.SIGN_UP) {
-      if (_.contains(["USERNAME_AND_EMAIL", "USERNAME_AND_OPTIONAL_EMAIL", "USERNAME_ONLY"],
-        passwordSignupFields())) {
+    if (hasPasswordService() && formState == STATES.SIGN_UP) {
+      if (_.contains([
+        "USERNAME_AND_EMAIL",
+        "USERNAME_AND_OPTIONAL_EMAIL",
+        "USERNAME_ONLY",
+        "USERNAME_AND_EMAIL_NO_PASSWORD"
+      ], passwordSignupFields())) {
         loginFields.push(this.getUsernameField());
       }
 
-      if (_.contains(["USERNAME_AND_EMAIL", "EMAIL_ONLY", "NO_PASSWORD"], passwordSignupFields())) {
-        loginFields.push(Object.assign(this.getEmailField()));
+      if (_.contains([
+        "USERNAME_AND_EMAIL",
+        "EMAIL_ONLY",
+        "EMAIL_ONLY_NO_PASSWORD",
+        "USERNAME_AND_EMAIL_NO_PASSWORD"
+      ], passwordSignupFields())) {
+        loginFields.push(this.getEmailField());
       }
 
-      if (passwordSignupFields() !== "USERNAME_AND_OPTIONAL_EMAIL") {
+      if (_.contains(["USERNAME_AND_OPTIONAL_EMAIL"], passwordSignupFields())) {
         loginFields.push(Object.assign(this.getEmailField(), {required: false}));
       }
 
-      if (passwordSignupFields() !== "NO_PASSWORD") {
+      if (!_.contains([
+        "EMAIL_ONLY_NO_PASSWORD",
+        "USERNAME_AND_EMAIL_NO_PASSWORD"
+      ], passwordSignupFields())) {
         loginFields.push(this.getPasswordField());
       }
     }
@@ -226,6 +257,7 @@ export class LoginForm extends Tracker.Component {
         id: 'switchToSignUp',
         label: T9n.get('signUp'),
         type: 'link',
+        href: this.props.signUpPath,
         onClick: this.switchToSignUp.bind(this)
       });
     }
@@ -235,6 +267,7 @@ export class LoginForm extends Tracker.Component {
         id: 'switchToSignIn',
         label: T9n.get('signIn'),
         type: 'link',
+        href: this.props.loginPath,
         onClick: this.switchToSignIn.bind(this)
       });
     }
@@ -244,6 +277,7 @@ export class LoginForm extends Tracker.Component {
         id: 'switchToPasswordReset',
         label: T9n.get('forgotPassword'),
         type: 'link',
+        href: this.props.passwordResetPath,
         onClick: this.switchToPasswordReset.bind(this)
       });
     }
@@ -253,6 +287,7 @@ export class LoginForm extends Tracker.Component {
         id: 'switchToChangePassword',
         label: T9n.get('changePassword'),
         type: 'link',
+        href: this.props.changePasswordPath,
         onClick: this.switchToChangePassword.bind(this)
       });
     }
@@ -261,9 +296,10 @@ export class LoginForm extends Tracker.Component {
       loginButtons.push({
         id: 'signUp',
         label: T9n.get('signUp'),
-        type: 'submit',
+        type: hasPasswordService() ? 'submit' : 'link',
+        className: 'active',
         disabled: waiting,
-        onClick: this.signUp.bind(this)
+        onClick: hasPasswordService() ? this.signUp.bind(this) : null
       });
     }
 
@@ -271,9 +307,10 @@ export class LoginForm extends Tracker.Component {
       loginButtons.push({
         id: 'signIn',
         label: T9n.get('signIn'),
-        type: 'submit',
+        type: hasPasswordService() ? 'submit' : 'link',
+        className: 'active',
         disabled: waiting,
-        onClick: this.signIn.bind(this)
+        onClick: hasPasswordService() ? this.signIn.bind(this) : null
       });
     }
 
@@ -300,12 +337,15 @@ export class LoginForm extends Tracker.Component {
         id: 'switchToSignOut',
         label: T9n.get('cancel'),
         type: 'link',
+        href: this.props.profilePath,
         onClick: this.switchToSignOut.bind(this)
       });
     }
 
     // Sort the button array so that the submit button always comes first.
     loginButtons.sort((a, b) => {
+      return a.label.localeCompare(b.label);
+    }).sort((a, b) => {
       return (b.type == 'submit') - (a.type == 'submit');
     });
 
@@ -378,12 +418,12 @@ export class LoginForm extends Tracker.Component {
         loginSelector = { username: username };
       }
     }
-    else if (email !== null) {
+    else if (email !== null && usernameOrEmail == null) {
       if (!this.validateEmail(email)) {
         return;
       }
       else {
-        if (passwordSignupFields() === "NO_PASSWORD") {
+        if (_.contains([ "EMAIL_ONLY_NO_PASSWORD" ], passwordSignupFields())) {
           this.loginWithoutPassword();
           return;
         }
@@ -397,6 +437,10 @@ export class LoginForm extends Tracker.Component {
         return;
       }
       else {
+        if (_.contains([ "USERNAME_AND_EMAIL_NO_PASSWORD" ], passwordSignupFields())) {
+          this.loginWithoutPassword();
+          return;
+        }
         loginSelector = usernameOrEmail;
       }
     }
@@ -417,6 +461,45 @@ export class LoginForm extends Tracker.Component {
     });
   }
 
+  oauthButtons() {
+    const { formState, waiting } = this.state;
+    let oauthButtons = [];
+    if (formState == STATES.SIGN_IN || formState == STATES.SIGN_UP ) {
+      if(Accounts.oauth) {
+        Accounts.oauth.serviceNames().map((service) => {
+          oauthButtons.push({
+            id: service,
+            label: capitalize(service),
+            disabled: waiting,
+            type: 'submit',
+            onClick: this.oauthSignIn.bind(this, service)
+          });
+        });
+      }
+    }
+    return _.indexBy(oauthButtons, 'id');
+  }
+
+  oauthSignIn(service) {
+    const { formState, waiting, user } = this.state;
+    //Thanks Josh Owens for this one.
+    function capitalService() {
+      return service.charAt(0).toUpperCase() + service.slice(1);
+    }
+    login = Meteor["loginWith" + capitalService()];
+    login({requestPermissions: Accounts.ui._options.requestPermissions}, (error) => {
+      if (error) {
+        this.showMessage(T9n.get(`error.accounts.${error.reason}`) || T9n.get("Unknown error"));
+      } else {
+        this.setState({ formState: STATES.SIGN_OUT, message: '' });
+        loginResultCallback(() => {
+          Meteor.setTimeout(() => Accounts.ui._options.onSignedInHook(), 100);
+        });
+      }
+    });
+
+  }
+
   signUp(options = {}) {
     const {
       username = null,
@@ -434,6 +517,14 @@ export class LoginForm extends Tracker.Component {
         options.username = username;
       }
     }
+    else {
+      if (_.contains([
+        "USERNAME_AND_EMAIL",
+        "USERNAME_AND_EMAIL_NO_PASSWORD"
+      ], passwordSignupFields()) && !this.validateUsername(username) ) {
+        return;
+      }
+    }
 
     if (email !== null) {
       if ( !this.validateEmail(email) ){
@@ -444,7 +535,10 @@ export class LoginForm extends Tracker.Component {
       }
     }
 
-    if (passwordSignupFields() === "NO_PASSWORD") {
+    if (_.contains([
+      "EMAIL_ONLY_NO_PASSWORD",
+      "USERNAME_AND_EMAIL_NO_PASSWORD"
+    ], passwordSignupFields())) {
       // Generate a random password.
       options.password = Meteor.uuid();
     }
@@ -496,6 +590,7 @@ export class LoginForm extends Tracker.Component {
   loginWithoutPassword(){
     const {
       email = '',
+      usernameOrEmail = '',
       waiting
     } = this.state;
 
@@ -517,8 +612,27 @@ export class LoginForm extends Tracker.Component {
         this.setState({ waiting: false });
       });
     }
+    else if (this.validateUsername(usernameOrEmail)) {
+      this.setState({ waiting: true });
+
+      Accounts.loginWithoutPassword({ email: usernameOrEmail, username: usernameOrEmail }, (error) => {
+        if (error) {
+          this.showMessage(T9n.get(`error.accounts.${error.reason}`) || T9n.get("Unknown error"), 'error');
+        }
+        else {
+          this.showMessage(T9n.get("info.emailSent"), 'success', 5000);
+        }
+
+        this.setState({ waiting: false });
+      });
+    }
     else {
-      this.showMessage(T9n.get("error.accounts.Invalid email"), 'warning');
+      if (_.contains([ "USERNAME_AND_EMAIL_NO_PASSWORD" ], passwordSignupFields())) {
+        this.showMessage(T9n.get("error.accounts.Invalid email or username"), 'warning');
+      }
+      else {
+        this.showMessage(T9n.get("error.accounts.Invalid email"), 'warning');
+      }
     }
   }
 
@@ -615,8 +729,12 @@ export class LoginForm extends Tracker.Component {
   }
 
   render() {
-    return <Accounts.ui.Form fields={this.fields()} buttons={this.buttons()} {...this.state} />;
+    this.oauthButtons();
+    return <Accounts.ui.Form oauthServices={this.oauthButtons()}
+                             fields={this.fields()} 
+                             buttons={this.buttons()}
+                             {...this.state} />;
   }
-}
+};
 
 Accounts.ui.LoginForm = LoginForm;

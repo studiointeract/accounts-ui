@@ -4,5 +4,13 @@ T9n.map('en', {
   'Enter newPassword': 'Enter new password',
   'Enter email': 'Enter email',
   'Enter username': 'Enter username',
-  'Enter username or email': 'Enter username or email'
+  'Enter username or email': 'Enter username or email',
+  error: {
+    accounts: {
+      "Invalid email or username": "Invalid email or username",
+      "Internal server error": "Internal server error",
+      "undefined": "Service not configured"
+    }
+  },
+  'or use': 'Or use'
 });

@@ -9,18 +9,19 @@ import { redirect } from './helpers.js';
 Accounts.ui = {};
 
 Accounts.ui._options = {
-  requestPermissions: {},
+  requestPermissions: [],
   requestOfflineToken: {},
   forceApprovalPrompt: {},
   passwordSignupFields: 'NO_PASSWORD',
-  loginPath: '/login',
+  loginPath: '/',
+  signUpPath: null,
+  resetPasswordPath: null,
+  profilePath: null,
+  changePasswordPath: null,
   homeRoutePath: '/',
   onSubmitHook: () => {},
-  preSignUpHook: () => new Promise(resolve => resolve()),
-  postSignUpHook: () => {},
-  signUpHook: () => redirect(`${Accounts.ui._options.loginPath}`),
-  resetPasswordHook: () => redirect(`${Accounts.ui._options.loginPath}`),
-  changePasswordHook: () => redirect(`${Accounts.ui._options.loginPath}`),
+  onPreSignUpHook: () => new Promise(resolve => resolve()),
+  onPostSignUpHook: () => {},
   onEnrollAccountHook: () => redirect(`${Accounts.ui._options.loginPath}`),
   onResetPasswordHook: () => redirect(`${Accounts.ui._options.loginPath}`),
   onVerifyEmailHook: () => redirect(`${Accounts.ui._options.homeRoutePath}`),
@@ -45,10 +46,14 @@ Accounts.ui.config = function(options) {
     'requestOfflineToken',
     'forbidClientAccountCreation',
     'loginPath',
+    'signUpPath',
+    'resetPasswordPath',
+    'profilePath',
+    'changePasswordPath',
+    'homeRoutePath',
     'onSubmitHook',
-    'preSignUpHook',
-    'postSignUpHook',
-    'resetPasswordHook',
+    'onPreSignUpHook',
+    'onPostSignUpHook',
     'onEnrollAccountHook',
     'onResetPasswordHook',
     'onVerifyEmailHook',
@@ -68,7 +73,8 @@ Accounts.ui.config = function(options) {
       "USERNAME_AND_OPTIONAL_EMAIL",
       "USERNAME_ONLY",
       "EMAIL_ONLY",
-      "NO_PASSWORD"
+      "EMAIL_ONLY_NO_PASSWORD",
+      "USERNAME_AND_EMAIL_NO_PASSWORD"
     ], options.passwordSignupFields)) {
       Accounts.ui._options.passwordSignupFields = options.passwordSignupFields;
     }
