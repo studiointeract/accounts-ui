@@ -363,7 +363,7 @@ export class LoginForm extends Tracker.Component {
 
   showForgotPasswordLink() {
     return !this.state.user
-      && this.state.formState != STATES.PASSWORD_RESET
+      && this.state.formState == STATES.SIGN_IN
       && _.contains(
         ["USERNAME_AND_EMAIL", "USERNAME_AND_OPTIONAL_EMAIL", "EMAIL_ONLY"],
         passwordSignupFields());
@@ -543,7 +543,6 @@ export class LoginForm extends Tracker.Component {
       options.password = Meteor.uuid();
     }
     else if (!validatePassword(password)) {
-      this.showMessage(T9n.get("error.minChar"), 'warning');
       Accounts.ui._options.onSubmitHook("error.minChar", formState);
       return;
     }
@@ -578,7 +577,7 @@ export class LoginForm extends Tracker.Component {
     };
 
     // Allow for Promises to return.
-    let promise = Accounts.ui._options.preSignUpHook(options);
+    let promise = Accounts.ui._options.onPreSignUpHook(options);
     if (promise instanceof Promise) {
       promise.then(SignUp);
     }
@@ -672,8 +671,6 @@ export class LoginForm extends Tracker.Component {
     } = this.state;
 
     if ( !validatePassword(newPassword) ){
-      this.showMessage(T9n.get("error.minChar"), 'warning');
-
       return;
     }
 

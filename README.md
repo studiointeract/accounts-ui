@@ -1,6 +1,6 @@
 # React Accounts UI
 
-Current version 1.0.21
+Current version 1.1.1
 
 ## Features
 
@@ -17,14 +17,16 @@ Current version 1.0.21
 
 This package does not by standard come with any styling, you can easily [extend and make your own](#create-your-own-styled-version), here are a couple versions we've made for the typical use case:
 
-* [**Basic**](https://atmospherejs.com/studiointeract/react-accounts-ui-basic)  `studiointeract:react-accounts-ui-basic`
-* [**Semantic UI**](https://atmospherejs.com/studiointeract/react-accounts-ui-semantic-ui)  `studiointeract:react-accounts-ui-semantic-ui`
+* [**Basic**](https://atmospherejs.com/studiointeract/accounts-basic)  `std:accounts-basic`
+* [**Semantic UI**](https://atmospherejs.com/studiointeract/accounts-semantic)  `std:accounts-semantic`
+* [Bootstrap 3] (help out on this: http://github.com/studiointeract/accounts-bootstrap)
+* [Material UI] (help out on this: http://github.com/studiointeract/accounts-material)
 
 * Add your styled version here [Learn how](#create-your-own-styled-version)
 
 ## Installation
 
-`meteor add studiointeract:react-accounts-ui`
+`meteor add std:accounts-ui`
 
 ## Configuration
 
@@ -32,7 +34,7 @@ We support the standard [configuration in the account-ui package](http://docs.me
 
 ### Accounts.ui.config(options)
 
-`import { Accounts } from 'meteor/studiointeract:react-accounts-ui`
+`import { Accounts } from 'meteor/std:accounts-ui`
 
 Configure the behavior of `<Accounts.ui.LoginForm />`
 
@@ -56,19 +58,19 @@ Configure the behavior of `<Accounts.ui.LoginForm />`
 * **homeRoutePath**&nbsp;&nbsp;&nbsp; String  
   Set the path to where you would like the user to be redirected after a successful login or sign out.
 
-* **onSubmitHook**&nbsp;&nbsp;&nbsp; function(error, state)  
+* **onSubmitHook**&nbsp;&nbsp;&nbsp; function(error, state)&nbsp;&nbsp;&nbsp; **client**  
   Called when the LoginForm is being submitted: allows for custom actions to be taken on form submission. error contains possible errors occurred during the submission process, state specifies the LoginForm internal state from which the submission was triggered. A nice use case might be closing the modal or side-menu or dropdown showing LoginForm.
 
-* **preSignUpHook**&nbsp;&nbsp;&nbsp; function(options)  
+* **onPreSignUpHook**&nbsp;&nbsp;&nbsp; function(options)&nbsp;&nbsp;&nbsp; **client**  
   Called just before submitting the LoginForm for sign-up: allows for custom actions on the data being submitted. A nice use could be extending the user profile object accessing options.profile. to be taken on form submission. The plain text password is also provided for any reasonable use. If you return a promise, the submission will wait until you resolve it.
 
-* **postSignUpHook**&nbsp;&nbsp;&nbsp; func(userId, info)&nbsp;&nbsp;&nbsp; **server**  
+* **onPostSignUpHook**&nbsp;&nbsp;&nbsp; func(userId, info)&nbsp;&nbsp;&nbsp; **server**  
   Called server side, just after a successful user account creation, post submitting the pwdForm for sign-up: allows for custom actions on the data being submitted after we are sure a new user was successfully created. A common use might be applying roles to the user, as this is only possible after fully completing user creation in `alanning:roles`. The userId is available as the first parameter, so that user user object may be retrieved.
 
-* **postSignUpHook**&nbsp;&nbsp;&nbsp; func(userId, info)&nbsp;&nbsp;&nbsp; **client**   
+* **onPostSignUpHook**&nbsp;&nbsp;&nbsp; func(userId, info)&nbsp;&nbsp;&nbsp; **client**   
   Called client side, just after a successful user account creation, post submitting the pwdForm for sign-up: allows for custom actions on the data being submitted after we are sure a new user was successfully created. Default is **loginPath**.  
 
-* **resetPasswordHook**&nbsp;&nbsp;&nbsp; function()  
+* **onResetPasswordHook**&nbsp;&nbsp;&nbsp; function()  
   Change the default redirect behavior when the user clicks the link to reset their email sent from the system, i.e. you want a custom path for the reset password form. Default is **loginPath**.
 
 * **onEnrollAccountHook**&nbsp;&nbsp;&nbsp; function()  
@@ -94,12 +96,12 @@ This is the default setting for **passwordSignupFields** in the [configuration](
 ### Example setup (Meteor 1.3)
 
 `meteor add accounts-password`  
-`meteor add studiointeract:react-accounts-ui`
+`meteor add std:accounts-ui`
 
 ```javascript
 
 import React from 'react';
-import { Accounts } from 'meteor/studiointeract:react-accounts-ui';
+import { Accounts } from 'meteor/std:react-accounts-ui';
 
 Accounts.ui.config({
   passwordSignupFields: 'NO_PASSWORD',
@@ -115,13 +117,13 @@ if (Meteor.isClient) {
 ### Example setup using FlowRouter (Meteor 1.3)
 
 `meteor add accounts-password`  
-`meteor add studiointeract:react-accounts-ui`  
+`meteor add std:accounts-ui`  
 `meteor add kadira:flow-router-ssr`
 
 ```javascript
 
 import React from 'react';
-import { Accounts } from 'meteor/studiointeract:react-accounts-ui';
+import { Accounts } from 'meteor/std:accounts-ui';
 import { FlowRouter } from 'meteor/kadira:flow-router-ssr';
 
 Accounts.ui.config({
@@ -141,25 +143,71 @@ FlowRouter.route("/login", {
 
 ```
 
+### Example setup using the STATES api.
+
+You can define the inital state you want in your route for the component,
+as set the path where the links in the component link to, for example below we
+have one route for /login and one for /signup.
+
+`meteor add accounts-password`  
+`meteor add std:accounts-ui`  
+`meteor add kadira:flow-router-ssr`
+
+```javascript
+T9n.setLanguage('en');
+
+Accounts.config({
+  sendVerificationEmail: true,
+  forbidClientAccountCreation: false
+});
+
+Accounts.ui.config({
+  passwordSignupFields: 'USERNAME_AND_OPTIONAL_EMAIL',
+  loginPath: '/login'
+});
+
+FlowRouter.route("/login", {
+  action(params) {
+    mount(MainLayout, {
+      content: <Accounts.ui.LoginForm {...{
+        formState: STATES.SIGN_IN,
+        signUpPath: '/signup'
+      }} />
+    });
+  }
+});
+
+FlowRouter.route("/signup", {
+  action(params) {
+    mount(MainLayout, {
+      content: <Accounts.ui.LoginForm {...{
+        formState: STATES.SIGN_UP,
+        loginPath: '/login'
+      }} />
+    });
+  }
+});
+```
+
 ## Create your own styled version
 
-**To you who are a package author**, its easy to write extensions for `studiointeract:react-accounts-ui` by importing and export like the following example:
+**To you who are a package author**, its easy to write extensions for `std:accounts-ui` by importing and export like the following example:
 
 ```javascript
 // package.js
 
 Package.describe({
-  name: 'author:react-accounts-ui-bootstrap',
+  name: 'author:accounts-bootstrap',
   version: '1.0.0',
   summary: 'Bootstrap – Accounts UI for React in Meteor 1.3',
-  git: 'https://github.com/author/react-accounts-ui-bootstrap',
+  git: 'https://github.com/author/accounts-bootstrap',
   documentation: 'README.md'
 });
 
 Package.onUse(function(api) {
   api.versionsFrom('1.3');
   api.use('ecmascript');
-  api.use('studiointeract:react-accounts-ui');
+  api.use('std:accounts-ui');
 
   api.imply('session');
 
@@ -171,11 +219,11 @@ Package.onUse(function(api) {
 // package.json
 
 {
-  "name": "react-accounts-ui-bootstrap",
+  "name": "accounts-bootstrap",
   "description": "Bootstrap – Accounts UI for React in Meteor 1.3",
   "repository": {
     "type": "git",
-    "url": "https://github.com/author/react-accounts-ui-bootstrap.git"
+    "url": "https://github.com/author/accounts-bootstrap.git"
   },
   "keywords": [
     "react",
@@ -186,9 +234,9 @@ Package.onUse(function(api) {
   "author": "author",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/author/react-accounts-ui-bootstrap/issues"
+    "url": "https://github.com/author/accounts-bootstrap/issues"
   },
-  "homepage": "https://github.com/author/react-accounts-ui-bootstrap",
+  "homepage": "https://github.com/author/accounts-bootstrap",
   "dependencies": {
     "react": "^15.x",
     "react-dom": "^15.x",
@@ -205,7 +253,7 @@ To install the dependencies added in your package.json run:
 // main.jsx
 
 import React from 'react';
-import { Accounts } from 'meteor/studiointeract:react-accounts-ui';
+import { Accounts } from 'meteor/std:accounts-ui';
 
 /**
  * Form.propTypes = {
@@ -268,7 +316,7 @@ export { Accounts as default };
 > Example provided by [@radzom](https://github.com/radzom).
 
 ```javascript
-import { Accounts, STATES } from 'meteor/react-accounts-ui';
+import { Accounts, STATES } from 'meteor/accounts-ui';
 
 class NewLogin extends Accounts.ui.LoginForm {
   fields() {

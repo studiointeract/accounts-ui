@@ -2,23 +2,19 @@ import React from 'react';
 import { Accounts } from 'meteor/accounts-base';
 
 export class Button extends React.Component {
-  handleClick(evt) {
-    let { onClick, href } = this.props;
-    if (!href) {
-      evt.preventDefault();
-      onClick(evt);
-    }
+  shouldComponentUpdate(nextProps) {
+    return this.props.href == nextProps.href;
   }
 
   render () {
-    const { label, href = null, type, disabled = false, className } = this.props;
+    const { label, href = null, type, disabled = false, className, onClick } = this.props;
     return type == 'link' ? (
-      <a href={ href } className={ className } onClick={ this.handleClick.bind(this) }>{ label }</a>
+      <a href={ href } className={ className } onClick={ onClick }>{ label }</a>
     ) : (
       <button className={ className }
               type={type} 
               disabled={ disabled }
-              onClick={ this.handleClick.bind(this) }>{ label }</button>
+              onClick={ onClick }>{ label }</button>
     );
   }
 }
