@@ -1,6 +1,6 @@
 # React Accounts UI
 
-Current version 1.1.1
+Current version 1.1.2
 
 ## Features
 
@@ -17,12 +17,12 @@ Current version 1.1.1
 
 This package does not by standard come with any styling, you can easily [extend and make your own](#create-your-own-styled-version), here are a couple versions we've made for the typical use case:
 
-* [**Basic**](https://atmospherejs.com/studiointeract/accounts-basic)  `std:accounts-basic`
-* [**Semantic UI**](https://atmospherejs.com/studiointeract/accounts-semantic)  `std:accounts-semantic`
+* [**Basic**](https://atmospherejs.com/std/accounts-basic)  `std:accounts-basic`
+* [**Semantic UI**](https://atmospherejs.com/std/accounts-semantic)  `std:accounts-semantic`
 * Bootstrap 3  
-  Help out on this: http://github.com/studiointeract/accounts-bootstrap
+  Help out on this: [http://github.com/studiointeract/accounts-bootstrap](http://github.com/studiointeract/accounts-bootstrap)
 * Material UI  
-  Help out on this: http://github.com/studiointeract/accounts-material
+  Help out on this: [http://github.com/studiointeract/accounts-material](http://github.com/studiointeract/accounts-material)
 
 * Add your styled version here [Learn how](#create-your-own-styled-version)
 
@@ -57,11 +57,23 @@ Configure the behavior of `<Accounts.ui.LoginForm />`
 * **minimumPasswordLength**&nbsp;&nbsp;&nbsp; Number  
   Set the minimum number of password length for your application. Default so **7**.
 
-* **loginPath**&nbsp;&nbsp;&nbsp; String  
-  Change the default path a user should be redirected to after a clicking a link in a mail provided to them from the accounts system, it could be a mail set to them when they have reset their password, verifying their email if the setting for `sendVerificationEmail` is turned on ([read more on accounts configuration ](http://docs.meteor.com/#/full/accounts_config)).
-
 * **homeRoutePath**&nbsp;&nbsp;&nbsp; String  
   Set the path to where you would like the user to be redirected after a successful login or sign out.
+
+* **loginPath**&nbsp;&nbsp;&nbsp; String  
+  Change the default path a user should be redirected to after a clicking a link in a mail provided to them from the accounts system, it could be a mail set to them when they have reset their password, verifying their email if the setting for `sendVerificationEmail` is turned on ([read more on accounts configuration ](http://docs.meteor.com/#/full/accounts_config)). Can also be set as a property to the LoginForm, for i19n routes or other customization.
+
+* **signUpPath**&nbsp;&nbsp;&nbsp; String  
+  Set the path to where you would like the sign up links to link to rather than changing the state on the current page. Can also be set as a property to the LoginForm, for i19n routes or other customization.
+
+* **resetPasswordPath**&nbsp;&nbsp;&nbsp; String  
+  Set the path to where you would like the link to reset password to go to rather than changing the state on the current page. Can also be set as a property to the LoginForm, for i19n routes or other customization.
+
+* **profilePath**&nbsp;&nbsp;&nbsp; String  
+  Set the path to where you would like the link to the profile to go to rather than changing the state on the current page. Can also be set as a property to the LoginForm, for i19n routes or other customization.
+
+* **changePasswordPath**&nbsp;&nbsp;&nbsp; String  
+  Set the path to where you would like the link to change password to go to rather than changing the state on the current page. Can also be set as a property to the LoginForm, for i19n routes or other customization.
 
 * **onSubmitHook**&nbsp;&nbsp;&nbsp; function(error, state)&nbsp;&nbsp;&nbsp; **client**  
   Called when the LoginForm is being submitted: allows for custom actions to be taken on form submission. error contains possible errors occurred during the submission process, state specifies the LoginForm internal state from which the submission was triggered. A nice use case might be closing the modal or side-menu or dropdown showing LoginForm. You can get all the possible states by import `STATES` from this package.
@@ -69,7 +81,7 @@ Configure the behavior of `<Accounts.ui.LoginForm />`
 * **onPreSignUpHook**&nbsp;&nbsp;&nbsp; function(options)&nbsp;&nbsp;&nbsp; **client**  
   Called just before submitting the LoginForm for sign-up: allows for custom actions on the data being submitted. A nice use could be extending the user profile object accessing options.profile. to be taken on form submission. The plain text password is also provided for any reasonable use. If you return a promise, the submission will wait until you resolve it.
 
-* **onPostSignUpHook**&nbsp;&nbsp;&nbsp; func(user)&nbsp;&nbsp;&nbsp; **client**   
+* **onPostSignUpHook**&nbsp;&nbsp;&nbsp; func(options, user)&nbsp;&nbsp;&nbsp; **client**   
   Called client side, just after a successful user account creation, post submitting the form for sign-up: allows for custom actions on the data being submitted after we are sure a new user was successfully created. Default is **loginPath**.
 
 * **onPostSignUpHook**&nbsp;&nbsp;&nbsp; func(options, user)&nbsp;&nbsp;&nbsp; **server**  
@@ -82,10 +94,10 @@ Configure the behavior of `<Accounts.ui.LoginForm />`
   Change the default redirect behavior when the user clicks the link to enroll for an account sent from the system, i.e. you want a custom path for the enrollment form. Learn more about [how to send enrollment emails](http://docs.meteor.com/#/full/accounts_sendenrollmentemail). Default is **loginPath**.
 
 * **onVerifyEmailHook**&nbsp;&nbsp;&nbsp; function()  
-  Change the default redirect behavior when the user clicks the link to verify their email sent from the system, i.e. you want a custom path after the user verifies their email or login with `NO_PASSWORD`. Default is **homeRoutePath**.
+  Change the default redirect behavior when the user clicks the link to verify their email sent from the system, i.e. you want a custom path after the user verifies their email or login with `NO_PASSWORD`. Default is **profilePath**.
 
 * **onSignedInHook**&nbsp;&nbsp;&nbsp; function()  
-  Change the default redirect behavior when the user successfully login to your application, i.e. you want a custom path for the reset password form. Default is **homeRoutePath**.
+  Change the default redirect behavior when the user successfully login to your application, i.e. you want a custom path for the reset password form. Default is **profilePath**.
 
 * **onSignedOutHook**&nbsp;&nbsp;&nbsp; function()  
   Change the default redirect behavior when the user signs out using the LoginForm, i.e. you want a custom path after the user signs out. Default is **homeRoutePath**.
