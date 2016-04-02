@@ -47,7 +47,6 @@ export function validatePassword(password){
   if (password.length >= Accounts.ui._options.minimumPasswordLength) {
     return true;
   } else {
-    this.showMessage(T9n.get("error.minChar").replace(/7/, Accounts.ui._options.minimumPasswordLength), 'warning');
     return false;
   }
 };

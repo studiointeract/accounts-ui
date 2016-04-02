@@ -551,6 +551,7 @@ export class LoginForm extends Tracker.Component {
       options.password = Meteor.uuid();
     }
     else if (!validatePassword(password)) {
+      this.showMessage(T9n.get("error.minChar").replace(/7/, Accounts.ui._options.minimumPasswordLength), 'warning');
       Accounts.ui._options.onSubmitHook("error.minChar", formState);
       return;
     }
@@ -679,6 +680,7 @@ export class LoginForm extends Tracker.Component {
     } = this.state;
 
     if ( !validatePassword(newPassword) ){
+      this.showMessage(T9n.get("error.minChar").replace(/7/, Accounts.ui._options.minimumPasswordLength), 'warning');
       return;
     }
 
