@@ -5,7 +5,7 @@ Current version 1.1.3
 ## Features
 
 1. **[Easy to use](#using-react-accounts-ui)**, mixing the ideas of useraccounts configuration and accounts-ui that everyone already knows and loves.
-3. **[Components](#components-available)** are everywhere, and extensible by replacing them on Accounts.ui.
+3. **[Components](#available-components)** are everywhere, and extensible by replacing them on Accounts.ui.
 4. **[Basic routing](#configuration)** included, redirections when the user clicks a link in an email or when signing in or out.
 5. **[Unstyled](#styling)** is the default, no CSS included.
 6. **[No password](#no-password-required)** sign up and sign in are included.
