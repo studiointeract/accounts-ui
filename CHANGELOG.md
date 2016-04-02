@@ -1,5 +1,9 @@
 # ChangeLog
 
+### v1.1.5
+
+* Improving and removing redundant logging.
+
 ### v1.1.4
 
 * Bugfixes for Telescope Nova
