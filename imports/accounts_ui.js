@@ -141,7 +141,7 @@ Accounts.ui.config = function(options) {
   }
 
   // deal with the hooks.
-  for (let hook of ['onSubmitHook', 'preSignUpHook', 'postSignUpHook']) {
+  for (let hook of ['onSubmitHook', 'onPreSignUpHook', 'onPostSignUpHook']) {
     if (options[hook]) {
       if (typeof options[hook] != 'function') {
         throw new Error(`Accounts.ui.config: "${hook}" not a function`);
@@ -173,8 +173,6 @@ Accounts.ui.config = function(options) {
 
   // deal with redirect hooks.
   for (let hook of [
-      'resetPasswordHook',
-      'changePasswordHook',
       'onEnrollAccountHook',
       'onResetPasswordHook',
       'onVerifyEmailHook',

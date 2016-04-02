@@ -30,16 +30,15 @@ export class LoginForm extends Tracker.Component {
     this.state = {
       message: null,
       waiting: true,
-      formState: Meteor.user() ? STATES.PROFILE : formState
+      formState: Accounts.user() ? STATES.PROFILE : formState
     };
-
-    // Add the services list to the user.
-    this.subscribe('servicesList');
 
     // Listen for the user to login/logout.
     this.autorun(() => {
+      // Add the services list to the user.
+      this.subscribe('servicesList');
       this.setState({
-        user: Meteor.user()
+        user: Accounts.user()
       });
     });
   }
@@ -581,7 +580,8 @@ export class LoginForm extends Tracker.Component {
             message: null,
             password: null
           });
-          loginResultCallback(Accounts.ui._options.postSignUpHook);
+          let user = Accounts.user();
+          loginResultCallback(Accounts.ui._options.onPostSignUpHook.bind(this, options, user));
         }
 
         this.setState({ waiting: false });
