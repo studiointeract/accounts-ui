@@ -33,14 +33,10 @@ export class LoginForm extends Tracker.Component {
       formState: Meteor.user() ? STATES.PROFILE : formState
     };
 
-    //adds the services list to the user document reactively
-    this.autorun(() => {
-      if (Meteor.user()) {
-        Meteor.subscribe('servicesList');
-      }
-    });
+    // Add the services list to the user.
+    this.subscribe('servicesList');
 
-    // Listen reactively.
+    // Listen for the user to login/logout.
     this.autorun(() => {
       this.setState({
         user: Meteor.user()

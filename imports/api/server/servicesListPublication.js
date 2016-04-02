@@ -1,34 +1,13 @@
 import { Meteor } from 'meteor/meteor';
+import { getLoginServices } from '../../helpers.js';
 
 Meteor.publish('servicesList', function() {
-  let startup = true;
-  let cursor = Meteor.users.find({ _id: this.userId }, { fields: {
-    "services": 1
-  }});
-  const publishServices = (user) => {
-    let services = {};
-    Object.keys(user.services || []).forEach(service => {
-      if (!_.contains(['resume', 'email'], service)) {
-        services[service] = {}
-      }
-    });
-    this.added('users', this.userId, { services: services });
-    this.ready();
-  };
-  cursor.observe({
-    changed(user) {
-      !startup && publishServices(user);
-    },
-    removed(userId) {
-      this.stop();
-    }
-  });
-
-  // Publish initial.
-  let user = (cursor.fetch() || [])[0];
-  if (user && user.services) {
-    publishServices(user);
+  let services = getLoginServices();
+  if (Package['accounts-password']) {
+    services.push({name: 'password'});
   }
-  startup = false;
-  return;
+  let fields = {};
+  // Publish the existing services for a user, only name or nothing else.
+  services.forEach(service => fields[`services.${service.name}.name`] = 1);
+  return Meteor.users.find({ _id: this.userId }, { fields: fields});
 });
