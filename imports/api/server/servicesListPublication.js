@@ -16,11 +16,10 @@ Meteor.publish('servicesList', function() {
     this.ready();
   };
   cursor.observe({
-    changed(userId, user)  {
+    changed(user) {
       !startup && publishServices(user);
     },
     removed(userId) {
-      console.log(user);
       this.stop();
     }
   });
