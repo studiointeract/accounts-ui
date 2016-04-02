@@ -508,7 +508,7 @@ export class LoginForm extends Tracker.Component {
 
   }
 
-  signUp(options = {}) {
+  signUp(event, options = {}) {
     const {
       username = null,
       email = null,
