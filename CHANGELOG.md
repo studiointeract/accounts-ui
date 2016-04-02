@@ -1,5 +1,9 @@
 # ChangeLog
 
+### v1.1.1
+
+* Bugfixes
+
 ### v1.1.0
 
 * Renamed package to std:accounts-ui
