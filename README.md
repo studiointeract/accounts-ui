@@ -17,16 +17,16 @@ Current version 1.1.0
 
 This package does not by standard come with any styling, you can easily [extend and make your own](#create-your-own-styled-version), here are a couple versions we've made for the typical use case:
 
-* [**Basic**](https://atmospherejs.com/studiointeract/react-accounts-ui-basic)  `std:react-accounts-ui-basic`
-* [**Semantic UI**](https://atmospherejs.com/studiointeract/react-accounts-ui-semantic-ui)  `std:react-accounts-ui-semantic-ui`
-* [Bootstrap 3] (help out on this: http://github.com/studiointeract/react-accounts-ui-bootstrap-3)
-* [Material UI] (help out on this: http://github.com/studiointeract/react-accounts-ui-material-ui)
+* [**Basic**](https://atmospherejs.com/studiointeract/accounts-basic)  `std:accounts-basic`
+* [**Semantic UI**](https://atmospherejs.com/studiointeract/accounts-semantic)  `std:accounts-semantic`
+* [Bootstrap 3] (help out on this: http://github.com/studiointeract/accounts-bootstrap)
+* [Material UI] (help out on this: http://github.com/studiointeract/accounts-material)
 
 * Add your styled version here [Learn how](#create-your-own-styled-version)
 
 ## Installation
 
-`meteor add std:react-accounts-ui`
+`meteor add std:accounts-ui`
 
 ## Configuration
 
@@ -34,7 +34,7 @@ We support the standard [configuration in the account-ui package](http://docs.me
 
 ### Accounts.ui.config(options)
 
-`import { Accounts } from 'meteor/std:react-accounts-ui`
+`import { Accounts } from 'meteor/std:accounts-ui`
 
 Configure the behavior of `<Accounts.ui.LoginForm />`
 
@@ -96,7 +96,7 @@ This is the default setting for **passwordSignupFields** in the [configuration](
 ### Example setup (Meteor 1.3)
 
 `meteor add accounts-password`  
-`meteor add std:react-accounts-ui`
+`meteor add std:accounts-ui`
 
 ```javascript
 
@@ -117,13 +117,13 @@ if (Meteor.isClient) {
 ### Example setup using FlowRouter (Meteor 1.3)
 
 `meteor add accounts-password`  
-`meteor add std:react-accounts-ui`  
+`meteor add std:accounts-ui`  
 `meteor add kadira:flow-router-ssr`
 
 ```javascript
 
 import React from 'react';
-import { Accounts } from 'meteor/std:react-accounts-ui';
+import { Accounts } from 'meteor/std:accounts-ui';
 import { FlowRouter } from 'meteor/kadira:flow-router-ssr';
 
 Accounts.ui.config({
@@ -150,7 +150,7 @@ as set the path where the links in the component link to, for example below we
 have one route for /login and one for /signup.
 
 `meteor add accounts-password`  
-`meteor add std:react-accounts-ui`  
+`meteor add std:accounts-ui`  
 `meteor add kadira:flow-router-ssr`
 
 ```javascript
@@ -191,23 +191,23 @@ FlowRouter.route("/signup", {
 
 ## Create your own styled version
 
-**To you who are a package author**, its easy to write extensions for `std:react-accounts-ui` by importing and export like the following example:
+**To you who are a package author**, its easy to write extensions for `std:accounts-ui` by importing and export like the following example:
 
 ```javascript
 // package.js
 
 Package.describe({
-  name: 'author:react-accounts-ui-bootstrap',
+  name: 'author:accounts-bootstrap',
   version: '1.0.0',
   summary: 'Bootstrap – Accounts UI for React in Meteor 1.3',
-  git: 'https://github.com/author/react-accounts-ui-bootstrap',
+  git: 'https://github.com/author/accounts-bootstrap',
   documentation: 'README.md'
 });
 
 Package.onUse(function(api) {
   api.versionsFrom('1.3');
   api.use('ecmascript');
-  api.use('std:react-accounts-ui');
+  api.use('std:accounts-ui');
 
   api.imply('session');
 
@@ -219,11 +219,11 @@ Package.onUse(function(api) {
 // package.json
 
 {
-  "name": "react-accounts-ui-bootstrap",
+  "name": "accounts-bootstrap",
   "description": "Bootstrap – Accounts UI for React in Meteor 1.3",
   "repository": {
     "type": "git",
-    "url": "https://github.com/author/react-accounts-ui-bootstrap.git"
+    "url": "https://github.com/author/accounts-bootstrap.git"
   },
   "keywords": [
     "react",
@@ -234,9 +234,9 @@ Package.onUse(function(api) {
   "author": "author",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/author/react-accounts-ui-bootstrap/issues"
+    "url": "https://github.com/author/accounts-bootstrap/issues"
   },
-  "homepage": "https://github.com/author/react-accounts-ui-bootstrap",
+  "homepage": "https://github.com/author/accounts-bootstrap",
   "dependencies": {
     "react": "^15.x",
     "react-dom": "^15.x",
@@ -253,7 +253,7 @@ To install the dependencies added in your package.json run:
 // main.jsx
 
 import React from 'react';
-import { Accounts } from 'meteor/std:react-accounts-ui';
+import { Accounts } from 'meteor/std:accounts-ui';
 
 /**
  * Form.propTypes = {
@@ -316,7 +316,7 @@ export { Accounts as default };
 > Example provided by [@radzom](https://github.com/radzom).
 
 ```javascript
-import { Accounts, STATES } from 'meteor/react-accounts-ui';
+import { Accounts, STATES } from 'meteor/accounts-ui';
 
 class NewLogin extends Accounts.ui.LoginForm {
   fields() {

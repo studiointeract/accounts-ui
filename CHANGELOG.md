@@ -2,7 +2,7 @@
 
 ### v1.1.0
 
-* Renamed package to std:react-accounts-ui
+* Renamed package to std:accounts-ui
 
 ### v1.0.21
 
