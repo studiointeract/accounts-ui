@@ -75,3 +75,11 @@ export function capitalize(string) {
     return word.charAt(0).toUpperCase() + word.slice(1);
   }).join(' ');
 }
+
+export function getUserServices() {
+  if(Meteor.user() && Meteor.user().services) {
+    return Object.keys(Meteor.user().services);
+  } else {
+    return [];
+  }
+}
