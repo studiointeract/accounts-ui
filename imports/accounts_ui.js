@@ -46,6 +46,7 @@ Accounts.ui.config = function(options) {
     'requestPermissions',
     'requestOfflineToken',
     'forbidClientAccountCreation',
+    'minimumPasswordLength',
     'loginPath',
     'signUpPath',
     'resetPasswordPath',
@@ -129,6 +130,16 @@ Accounts.ui.config = function(options) {
     });
   }
 
+  // deal with `minimumPasswordLength`
+  if (options.minimumPasswordLength) {
+    if (typeof options.minimumPasswordLength != 'number') {
+      throw new Error(`Accounts.ui.config: "minimumPasswordLength" not a number`);
+    }
+    else {
+      Accounts.ui._options.minimumPasswordLength = options.minimumPasswordLength;
+    }
+  }
+
   // deal with the hooks.
   for (let hook of ['onSubmitHook', 'preSignUpHook', 'postSignUpHook']) {
     if (options[hook]) {
@@ -141,13 +152,22 @@ Accounts.ui.config = function(options) {
     }
   }
 
-  // deal with `loginPath`.
-  if (options.loginPath) {
-    if (typeof options.loginPath != 'string') {
-      throw new Error(`Accounts.ui.config: "loginPath" not an absolute or relative path`);
-    }
-    else {
-      Accounts.ui._options.loginPath = options.loginPath;
+  // deal with the paths.
+  for (let path of [
+    'loginPath',
+    'signUpPath',
+    'resetPasswordPath',
+    'profilePath',
+    'changePasswordPath',
+    'homeRoutePath'
+  ]) {
+    if (options[path]) {
+      if (typeof options[path] != 'string') {
+        throw new Error(`Accounts.ui.config: ${path} is not a string`);
+      }
+      else {
+        Accounts.ui._options[path] = options[path];
+      }
     }
   }
 

@@ -1,7 +1,7 @@
 export const STATES = {
   SIGN_IN: Symbol('SIGN_IN'),
   SIGN_UP: Symbol('SIGN_UP'),
-  SIGN_OUT: Symbol('SIGN_OUT'),
+  PROFILE: Symbol('PROFILE'),
   PASSWORD_CHANGE: Symbol('PASSWORD_CHANGE'),
   PASSWORD_RESET: Symbol('PASSWORD_RESET')
 };

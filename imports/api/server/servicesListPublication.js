@@ -7,15 +7,20 @@ Meteor.publish('servicesList', function() {
   }});
   const publishServices = (user) => {
     let services = {};
-    Object.keys(user.services || []).forEach(service => services[service] = {});
-    this.changed('users', this.userId, { services: services });
+    Object.keys(user.services || []).forEach(service => {
+      if (!_.contains(['resume', 'email'], service)) {
+        services[service] = {}
+      }
+    });
+    this.added('users', this.userId, { services: services });
     this.ready();
   };
   cursor.observe({
-    changed(user)  {
-      publishServices(user);
+    changed(userId, user)  {
+      !startup && publishServices(user);
     },
-    removed(user) {
+    removed(userId) {
+      console.log(user);
       this.stop();
     }
   });
