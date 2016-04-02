@@ -104,7 +104,7 @@ This is the default setting for **passwordSignupFields** in the [configuration](
 ```javascript
 
 import React from 'react';
-import { Accounts } from 'meteor/std:react-accounts-ui';
+import { Accounts } from 'meteor/std:accounts-ui';
 
 Accounts.ui.config({
   passwordSignupFields: 'NO_PASSWORD',
