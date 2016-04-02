@@ -581,7 +581,7 @@ export class LoginForm extends Tracker.Component {
             password: null
           });
           let user = Accounts.user();
-          loginResultCallback(Accounts.ui._options.onPostSignUpHook.bind(this, user));
+          loginResultCallback(Accounts.ui._options.onPostSignUpHook.bind(this, options, user));
         }
 
         this.setState({ waiting: false });
