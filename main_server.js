@@ -3,6 +3,7 @@ import './imports/accounts_ui.js';
 import './imports/login_session.js';
 import { redirect, STATES } from './imports/helpers.js';
 import './imports/api/server/loginWithoutPassword.js';
+import './imports/api/server/onPostSignUpHook.js';
 import './imports/api/server/servicesListPublication.js';
 import './imports/startup/extra_translations.js';
 

@@ -1,7 +1,7 @@
 export const STATES = {
   SIGN_IN: Symbol('SIGN_IN'),
   SIGN_UP: Symbol('SIGN_UP'),
-  SIGN_OUT: Symbol('SIGN_OUT'),
+  PROFILE: Symbol('PROFILE'),
   PASSWORD_CHANGE: Symbol('PASSWORD_CHANGE'),
   PASSWORD_RESET: Symbol('PASSWORD_RESET')
 };
@@ -47,7 +47,6 @@ export function validatePassword(password){
   if (password.length >= Accounts.ui._options.minimumPasswordLength) {
     return true;
   } else {
-    this.showMessage(T9n.get("error.minChar").replace(/7/, Accounts.ui._options.minimumPasswordLength), 'warning');
     return false;
   }
 };
@@ -74,12 +73,4 @@ export function capitalize(string) {
   return string.replace(/\-/, ' ').split(' ').map(word => {
     return word.charAt(0).toUpperCase() + word.slice(1);
   }).join(' ');
-}
-
-export function getUserServices() {
-  if(Meteor.user() && Meteor.user().services) {
-    return Object.keys(Meteor.user().services);
-  } else {
-    return [];
-  }
 }

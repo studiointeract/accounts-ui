@@ -17,7 +17,7 @@ Accounts.ui._options = {
   loginPath: '/',
   signUpPath: null,
   resetPasswordPath: null,
-  profilePath: null,
+  profilePath: '/',
   changePasswordPath: null,
   homeRoutePath: '/',
   onSubmitHook: () => {},
@@ -25,8 +25,8 @@ Accounts.ui._options = {
   onPostSignUpHook: () => {},
   onEnrollAccountHook: () => redirect(`${Accounts.ui._options.loginPath}`),
   onResetPasswordHook: () => redirect(`${Accounts.ui._options.loginPath}`),
-  onVerifyEmailHook: () => redirect(`${Accounts.ui._options.homeRoutePath}`),
-  onSignedInHook: () => redirect(`${Accounts.ui._options.homeRoutePath}`),
+  onVerifyEmailHook: () => redirect(`${Accounts.ui._options.profilePath}`),
+  onSignedInHook: () => redirect(`${Accounts.ui._options.profilePath}`),
   onSignedOutHook: () => redirect(`${Accounts.ui._options.homeRoutePath}`)
 };
 
@@ -46,6 +46,7 @@ Accounts.ui.config = function(options) {
     'requestPermissions',
     'requestOfflineToken',
     'forbidClientAccountCreation',
+    'minimumPasswordLength',
     'loginPath',
     'signUpPath',
     'resetPasswordPath',
@@ -129,8 +130,18 @@ Accounts.ui.config = function(options) {
     });
   }
 
+  // deal with `minimumPasswordLength`
+  if (options.minimumPasswordLength) {
+    if (typeof options.minimumPasswordLength != 'number') {
+      throw new Error(`Accounts.ui.config: "minimumPasswordLength" not a number`);
+    }
+    else {
+      Accounts.ui._options.minimumPasswordLength = options.minimumPasswordLength;
+    }
+  }
+
   // deal with the hooks.
-  for (let hook of ['onSubmitHook', 'preSignUpHook', 'postSignUpHook']) {
+  for (let hook of ['onSubmitHook', 'onPreSignUpHook', 'onPostSignUpHook']) {
     if (options[hook]) {
       if (typeof options[hook] != 'function') {
         throw new Error(`Accounts.ui.config: "${hook}" not a function`);
@@ -141,20 +152,27 @@ Accounts.ui.config = function(options) {
     }
   }
 
-  // deal with `loginPath`.
-  if (options.loginPath) {
-    if (typeof options.loginPath != 'string') {
-      throw new Error(`Accounts.ui.config: "loginPath" not an absolute or relative path`);
-    }
-    else {
-      Accounts.ui._options.loginPath = options.loginPath;
+  // deal with the paths.
+  for (let path of [
+    'loginPath',
+    'signUpPath',
+    'resetPasswordPath',
+    'profilePath',
+    'changePasswordPath',
+    'homeRoutePath'
+  ]) {
+    if (options[path]) {
+      if (typeof options[path] != 'string') {
+        throw new Error(`Accounts.ui.config: ${path} is not a string`);
+      }
+      else {
+        Accounts.ui._options[path] = options[path];
+      }
     }
   }
 
   // deal with redirect hooks.
   for (let hook of [
-      'resetPasswordHook',
-      'changePasswordHook',
       'onEnrollAccountHook',
       'onResetPasswordHook',
       'onVerifyEmailHook',

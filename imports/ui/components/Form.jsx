@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import {Accounts} from 'meteor/accounts-base';
 import './Fields.jsx';
 import './Buttons.jsx';
@@ -7,6 +8,13 @@ import './PasswordOrService.jsx';
 import './SocialButtons.jsx';
 
 export class Form extends React.Component {
+  componentDidMount() {
+    let node = ReactDOM.findDOMNode(this);
+    node.addEventListener('submit', (e) => {
+      e.preventDefault();
+    });
+  }
+
   render() {
     const {
       hasPasswordService,
@@ -19,8 +27,7 @@ export class Form extends React.Component {
       className
     } = this.props;
     return (
-      <form className={[className, ready ? "ready" : null].join(' ')}
-        onSubmit={ evt => evt.preventDefault() } className="accounts-ui">
+      <form className={[className, ready ? "ready" : null].join(' ')} className="accounts-ui">
         <Accounts.ui.Fields fields={ fields } />
         <Accounts.ui.Buttons buttons={ buttons } />
         <Accounts.ui.PasswordOrService oauthServices={ oauthServices } />
