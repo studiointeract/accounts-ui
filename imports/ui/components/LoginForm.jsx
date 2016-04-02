@@ -12,8 +12,7 @@ import {
   loginResultCallback,
   getLoginServices,
   hasPasswordService,
-  capitalize,
-  getUserServices
+  capitalize
 } from '../../helpers.js';
 
 export class LoginForm extends Tracker.Component {
@@ -36,7 +35,7 @@ export class LoginForm extends Tracker.Component {
 
     //adds the services list to the user document reactively
     this.autorun(() => {
-      if(Meteor.user()) {
+      if (Meteor.user()) {
         Meteor.subscribe('servicesList');
       }
     });
@@ -290,7 +289,7 @@ export class LoginForm extends Tracker.Component {
       });
     }
 
-    if (user && formState == STATES.PROFILE && Package['accounts-password'] && getUserServices().indexOf("password") >= 0) {
+    if (user && formState == STATES.PROFILE && (user && 'password' in user.services)) {
       loginButtons.push({
         id: 'switchToChangePassword',
         label: T9n.get('changePassword'),
@@ -353,8 +352,6 @@ export class LoginForm extends Tracker.Component {
     // Sort the button array so that the submit button always comes first, and
     // buttons should also come before links.
     loginButtons.sort((a, b) => {
-      return a.label.localeCompare(b.label);
-    }).sort((a, b) => {
       return (
         b.type == 'submit' &&
         a.type != undefined) - (
@@ -382,7 +379,8 @@ export class LoginForm extends Tracker.Component {
         passwordSignupFields());
   }
 
-  switchToSignUp() {
+  switchToSignUp(event) {
+    event.preventDefault();
     this.setState({
       formState: STATES.SIGN_UP,
       message: null,
@@ -390,19 +388,23 @@ export class LoginForm extends Tracker.Component {
     });
   }
 
-  switchToSignIn() {
+  switchToSignIn(event) {
+    event.preventDefault();
     this.setState({ formState: STATES.SIGN_IN, message: null });
   }
 
-  switchToPasswordReset() {
+  switchToPasswordReset(event) {
+    event.preventDefault();
     this.setState({ formState: STATES.PASSWORD_RESET, message: null });
   }
 
-  switchToChangePassword() {
+  switchToChangePassword(event) {
+    event.preventDefault();
     this.setState({ formState: STATES.PASSWORD_CHANGE, message: null });
   }
 
-  switchToSignOut() {
+  switchToSignOut(event) {
+    event.preventDefault();
     this.setState({ formState: STATES.PROFILE, message: null });
   }
 
@@ -649,7 +651,7 @@ export class LoginForm extends Tracker.Component {
     }
   }
 
-  passwordReset(){
+  passwordReset() {
     const {
       email = '',
       waiting

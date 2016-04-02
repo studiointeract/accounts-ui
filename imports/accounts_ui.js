@@ -17,7 +17,7 @@ Accounts.ui._options = {
   loginPath: '/',
   signUpPath: null,
   resetPasswordPath: null,
-  profilePath: null,
+  profilePath: '/',
   changePasswordPath: null,
   homeRoutePath: '/',
   onSubmitHook: () => {},
@@ -25,8 +25,8 @@ Accounts.ui._options = {
   onPostSignUpHook: () => {},
   onEnrollAccountHook: () => redirect(`${Accounts.ui._options.loginPath}`),
   onResetPasswordHook: () => redirect(`${Accounts.ui._options.loginPath}`),
-  onVerifyEmailHook: () => redirect(`${Accounts.ui._options.homeRoutePath}`),
-  onSignedInHook: () => redirect(`${Accounts.ui._options.homeRoutePath}`),
+  onVerifyEmailHook: () => redirect(`${Accounts.ui._options.profilePath}`),
+  onSignedInHook: () => redirect(`${Accounts.ui._options.profilePath}`),
   onSignedOutHook: () => redirect(`${Accounts.ui._options.homeRoutePath}`)
 };
 
