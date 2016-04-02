@@ -1,6 +1,6 @@
 # React Accounts UI
 
-Current version 1.1.1
+Current version 1.1.2
 
 ## Features
 
@@ -17,8 +17,8 @@ Current version 1.1.1
 
 This package does not by standard come with any styling, you can easily [extend and make your own](#create-your-own-styled-version), here are a couple versions we've made for the typical use case:
 
-* [**Basic**](https://atmospherejs.com/studiointeract/accounts-basic)  `std:accounts-basic`
-* [**Semantic UI**](https://atmospherejs.com/studiointeract/accounts-semantic)  `std:accounts-semantic`
+* [**Basic**](https://atmospherejs.com/std/accounts-basic)  `std:accounts-basic`
+* [**Semantic UI**](https://atmospherejs.com/std/accounts-semantic)  `std:accounts-semantic`
 * Bootstrap 3  
   Help out on this: http://github.com/studiointeract/accounts-bootstrap
 * Material UI  
