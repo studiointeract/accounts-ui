@@ -12,7 +12,8 @@ import {
   loginResultCallback,
   getLoginServices,
   hasPasswordService,
-  capitalize
+  capitalize,
+  getUserServices
 } from '../../helpers.js';
 
 export class LoginForm extends Tracker.Component {
@@ -32,6 +33,13 @@ export class LoginForm extends Tracker.Component {
       waiting: true,
       formState: Meteor.user() ? STATES.SIGN_OUT : formState
     };
+
+    //adds the services list to the user document reactively
+    this.autorun(() => {
+      if(Meteor.user()) {
+        Meteor.subscribe('servicesList');
+      }
+    });
 
     // Listen reactively.
     this.autorun(() => {
@@ -282,7 +290,7 @@ export class LoginForm extends Tracker.Component {
       });
     }
 
-    if (user && formState == STATES.SIGN_OUT && Package['accounts-password']) {
+    if (user && formState == STATES.SIGN_OUT && Package['accounts-password'] && getUserServices().indexOf("password") >= 0) {
       loginButtons.push({
         id: 'switchToChangePassword',
         label: T9n.get('changePassword'),
@@ -471,7 +479,7 @@ export class LoginForm extends Tracker.Component {
             id: service,
             label: capitalize(service),
             disabled: waiting,
-            type: 'submit',
+            type: 'link',
             onClick: this.oauthSignIn.bind(this, service)
           });
         });

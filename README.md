@@ -46,11 +46,14 @@ Configure the behavior of `<Accounts.ui.LoginForm />`
 * **requestOfflineToken**&nbsp;&nbsp;&nbsp; Object  
   To ask the user for permission to act on their behalf when offline, map the relevant external service to true. Currently only supported with Google. See [Meteor.loginWithExternalService](http://docs.meteor.com/#meteor_loginwithexternalservice) for more details.
 
-* **forceApprovalPrompt**&nbsp;&nbsp;&nbsp; Object  
+* **forceApprovalPrompt**&nbsp;&nbsp;&nbsp; Boolean  
   If true, forces the user to approve the app's permissions, even if previously approved. Currently only supported with Google.
 
 * **passwordSignupFields**&nbsp;&nbsp;&nbsp; String  
   Which fields to display in the user creation form. One of `'USERNAME_AND_EMAIL'`, `'USERNAME_AND_OPTIONAL_EMAIL'`, `'USERNAME_ONLY'`, `'EMAIL_ONLY'`, `'USERNAME_AND_EMAIL_NO_PASSWORD'`, **`'EMAIL_ONLY_NO_PASSWORD'`** (**default**).
+
+* **minimumPasswordLength**&nbsp;&nbsp;&nbsp; Number  
+  Set the minimum number of password length for your application. Default so **7**.
 
 * **loginPath**&nbsp;&nbsp;&nbsp; String  
   Change the default path a user should be redirected to after a clicking a link in a mail provided to them from the accounts system, it could be a mail set to them when they have reset their password, verifying their email if the setting for `sendVerificationEmail` is turned on ([read more on accounts configuration ](http://docs.meteor.com/#/full/accounts_config)).
