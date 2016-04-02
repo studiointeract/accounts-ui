@@ -189,9 +189,14 @@ have one route for /login and one for /signup.
 
 `meteor add accounts-password`  
 `meteor add std:accounts-ui`  
+`meteor add softwarerero:accounts-t9n`  
 `meteor add kadira:flow-router-ssr`
 
 ```javascript
+import React from 'react';
+import { Accounts, STATES } from 'meteor/std:accounts-ui';
+import { T9n } from 'meteor/softwarerero:accounts-t9n';
+
 T9n.setLanguage('en');
 
 Accounts.config({
