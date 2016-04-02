@@ -471,7 +471,6 @@ export class LoginForm extends Tracker.Component {
             id: service,
             label: capitalize(service),
             disabled: waiting,
-            type: 'submit',
             onClick: this.oauthSignIn.bind(this, service)
           });
         });
