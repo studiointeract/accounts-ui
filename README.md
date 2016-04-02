@@ -71,7 +71,7 @@ Configure the behavior of `<Accounts.ui.LoginForm />`
   Called client side, just after a successful user account creation, post submitting the form for sign-up: allows for custom actions on the data being submitted after we are sure a new user was successfully created. Default is **loginPath**.
 
 * **onPostSignUpHook**&nbsp;&nbsp;&nbsp; func(options, user)&nbsp;&nbsp;&nbsp; **server**  
-  Called server side, just after a successful user account creation, post submitting the pwdForm for sign-up: allows for custom actions on the data being submitted after we are sure a new user was successfully created. A common use might be applying roles to the user, as this is only possible after fully completing user creation in `alanning:roles`. The userId is available as the first parameter, so that user user object may be retrieved.
+  Called server side, just after a successful user account creation, post submitting the pwdForm for sign-up: allows for custom actions on the data being submitted after we are sure a new user was successfully created. A common use might be applying roles to the user, as this is only possible after fully completing user creation in `alanning:roles`. Any extra fields added to the form is available as the first parameter, and the user is available as the second argument. *If you return the user object, this will also update the user document.*
 
 * **onResetPasswordHook**&nbsp;&nbsp;&nbsp; function()  
   Change the default redirect behavior when the user clicks the link to reset their email sent from the system, i.e. you want a custom path for the reset password form. Default is **loginPath**.
