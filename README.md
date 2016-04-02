@@ -19,8 +19,10 @@ This package does not by standard come with any styling, you can easily [extend 
 
 * [**Basic**](https://atmospherejs.com/studiointeract/accounts-basic)  `std:accounts-basic`
 * [**Semantic UI**](https://atmospherejs.com/studiointeract/accounts-semantic)  `std:accounts-semantic`
-* [Bootstrap 3] (help out on this: http://github.com/studiointeract/accounts-bootstrap)
-* [Material UI] (help out on this: http://github.com/studiointeract/accounts-material)
+* Bootstrap 3  
+  Help out on this: http://github.com/studiointeract/accounts-bootstrap
+* Material UI  
+  Help out on this: http://github.com/studiointeract/accounts-material
 
 * Add your styled version here [Learn how](#create-your-own-styled-version)
 
@@ -104,7 +106,7 @@ This is the default setting for **passwordSignupFields** in the [configuration](
 ```javascript
 
 import React from 'react';
-import { Accounts } from 'meteor/std:react-accounts-ui';
+import { Accounts } from 'meteor/std:accounts-ui';
 
 Accounts.ui.config({
   passwordSignupFields: 'NO_PASSWORD',
@@ -256,7 +258,7 @@ To install the dependencies added in your package.json run:
 // main.jsx
 
 import React from 'react';
-import { Accounts } from 'meteor/std:accounts-ui';
+import { Accounts, STATES } from 'meteor/std:accounts-ui';
 
 /**
  * Form.propTypes = {
@@ -298,7 +300,8 @@ Accounts.ui.Field = Field;
 Accounts.ui.FormMessage = FormMessage;
 
 // Export the themed version.
-export { Accounts as default };
+export { Accounts, STATES };
+export default Accounts;
 
 ```
 
