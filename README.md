@@ -374,14 +374,14 @@ class NewLogin extends Accounts.ui.LoginForm {
     return super.fields();
   }
 
-  signUp(event, options = {}) {
+  signUp(options = {}) {
     const { firstname = null } = this.state;
     if (firstname !== null) {
       options.profile = Object.assign(options.profile || {}, {
         firstname: firstname
       });
     }
-    super.signUp(event, options);
+    super.signUp(options);
   }
 }
 ```
