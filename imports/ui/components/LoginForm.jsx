@@ -570,7 +570,7 @@ export class LoginForm extends Tracker.Component {
             message: null,
             password: null
           });
-          loginResultCallback(Accounts.ui._options.postSignUpHook);
+          loginResultCallback(Accounts.ui._options.onPostSignUpHook);
         }
 
         this.setState({ waiting: false });
@@ -578,7 +578,7 @@ export class LoginForm extends Tracker.Component {
     };
 
     // Allow for Promises to return.
-    let promise = Accounts.ui._options.preSignUpHook(options);
+    let promise = Accounts.ui._options.onPreSignUpHook(options);
     if (promise instanceof Promise) {
       promise.then(SignUp);
     }
