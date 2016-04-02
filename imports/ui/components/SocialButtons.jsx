@@ -5,7 +5,7 @@ import {Accounts} from 'meteor/accounts-base';
 
 export class SocialButtons extends React.Component {
   render() {
-    let { oauthServices = {}, className = "social_buttons" } = this.props;
+    let { oauthServices = {}, className = "social-buttons" } = this.props;
     return(
       <div className={ className }>
         {Object.keys(oauthServices).map((id, i) => {

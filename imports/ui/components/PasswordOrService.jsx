@@ -7,23 +7,22 @@ export class PasswordOrService extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      hasPasswordService: hasPasswordService()
+      hasPasswordService: hasPasswordService(),
+      services: Object.keys(props.oauthServices).map(service => {
+        return props.oauthServices[service].label
+      })
     };
   }
 
   render () {
-    let {
-      oauthServices = {},
-      className,
-      style = {}
-    } = this.props;
-    let { hasPasswordService } = this.state;
-    let labels = Object.keys(oauthServices).map(service => oauthServices[service].label);
-    if (labels.length > 2) {
+    let { className, style = {} } = this.props;
+    let { hasPasswordService, services } = this.state;
+    labels = services;
+    if (services.length > 2) {
       labels = [];
     }
 
-    if (hasPasswordService && Object.keys(oauthServices).length > 0) {
+    if (hasPasswordService && services.length > 0) {
       return (
         <div style={ style } className={ className }>
           { `${T9n.get('or use')} ${ labels.join(' / ') }` }
@@ -33,5 +32,8 @@ export class PasswordOrService extends React.Component {
     return null;
   }
 }
+PasswordOrService.propTypes = {
+  oauthServices: React.PropTypes.object
+};
 
 Accounts.ui.PasswordOrService = PasswordOrService;

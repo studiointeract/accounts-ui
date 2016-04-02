@@ -258,7 +258,7 @@ To install the dependencies added in your package.json run:
 // main.jsx
 
 import React from 'react';
-import { Accounts } from 'meteor/std:accounts-ui';
+import { Accounts, STATES } from 'meteor/std:accounts-ui';
 
 /**
  * Form.propTypes = {
@@ -300,7 +300,8 @@ Accounts.ui.Field = Field;
 Accounts.ui.FormMessage = FormMessage;
 
 // Export the themed version.
-export { Accounts as default };
+export { Accounts, STATES };
+export default Accounts;
 
 ```
 
