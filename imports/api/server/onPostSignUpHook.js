@@ -1,6 +1,7 @@
 Accounts.onCreateUser(function(options, user) {
   if (Accounts.ui._options.onPostSignUpHook) {
-    return Accounts.ui._options.onPostSignUpHook(options, user);
+    let _user = Accounts.ui._options.onPostSignUpHook(options, user);
+    return _user || user;
   }
   return user;
 });
