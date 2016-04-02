@@ -12,6 +12,7 @@ Current version 1.1.3
 7. **[Extra fields](#extra-fields)** is now supported.
 8. **[Server Side Rendering](#example-setup-using-flowrouter-meteor-13)** are supported, trough FlowRouter (SSR).
 9. **[Extending](#create-your-own-styled-version)** to make your own custom form, for your app, or as a package, all components can be extended and customized.
+10. **[States API](#example-setup-using-the-states-api)** makes it possible to use the form on different routes, say you want the login on one route and signup on another, just set the inital state and the links (either globally or per component by using the props).
 
 ## Styling
 
