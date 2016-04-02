@@ -350,11 +350,16 @@ export class LoginForm extends Tracker.Component {
       });
     }
 
-    // Sort the button array so that the submit button always comes first.
+    // Sort the button array so that the submit button always comes first, and
+    // buttons should also come before links.
     loginButtons.sort((a, b) => {
       return a.label.localeCompare(b.label);
     }).sort((a, b) => {
-      return (b.type == 'submit') - (a.type == 'submit');
+      return (
+        b.type == 'submit' &&
+        a.type != undefined) - (
+          a.type == 'submit' &&
+          b.type != undefined);
     });
 
     return _.indexBy(loginButtons, 'id');
