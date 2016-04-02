@@ -61,19 +61,19 @@ Configure the behavior of `<Accounts.ui.LoginForm />`
   Set the path to where you would like the user to be redirected after a successful login or sign out.
 
 * **loginPath**&nbsp;&nbsp;&nbsp; String  
-  Change the default path a user should be redirected to after a clicking a link in a mail provided to them from the accounts system, it could be a mail set to them when they have reset their password, verifying their email if the setting for `sendVerificationEmail` is turned on ([read more on accounts configuration ](http://docs.meteor.com/#/full/accounts_config)). Can also be set as a property to the LoginForm, for i19n routes or other customization.
+  Change the default path a user should be redirected to after a clicking a link in a mail provided to them from the accounts system, it could be a mail set to them when they have reset their password, verifying their email if the setting for `sendVerificationEmail` is turned on ([read more on accounts configuration ](http://docs.meteor.com/#/full/accounts_config)). Can also be set as a property to the LoginForm, for i18n routes or other customization.
 
 * **signUpPath**&nbsp;&nbsp;&nbsp; String  
-  Set the path to where you would like the sign up links to link to rather than changing the state on the current page. Can also be set as a property to the LoginForm, for i19n routes or other customization.
+  Set the path to where you would like the sign up links to link to rather than changing the state on the current page. Can also be set as a property to the LoginForm, for i18n routes or other customization.
 
 * **resetPasswordPath**&nbsp;&nbsp;&nbsp; String  
-  Set the path to where you would like the link to reset password to go to rather than changing the state on the current page. Can also be set as a property to the LoginForm, for i19n routes or other customization.
+  Set the path to where you would like the link to reset password to go to rather than changing the state on the current page. Can also be set as a property to the LoginForm, for i18n routes or other customization.
 
 * **profilePath**&nbsp;&nbsp;&nbsp; String  
-  Set the path to where you would like the link to the profile to go to rather than changing the state on the current page. Can also be set as a property to the LoginForm, for i19n routes or other customization.
+  Set the path to where you would like the link to the profile to go to rather than changing the state on the current page. Can also be set as a property to the LoginForm, for i18n routes or other customization.
 
 * **changePasswordPath**&nbsp;&nbsp;&nbsp; String  
-  Set the path to where you would like the link to change password to go to rather than changing the state on the current page. Can also be set as a property to the LoginForm, for i19n routes or other customization.
+  Set the path to where you would like the link to change password to go to rather than changing the state on the current page. Can also be set as a property to the LoginForm, for i18n routes or other customization.
 
 * **onSubmitHook**&nbsp;&nbsp;&nbsp; function(error, state)&nbsp;&nbsp;&nbsp; **client**  
   Called when the LoginForm is being submitted: allows for custom actions to be taken on form submission. error contains possible errors occurred during the submission process, state specifies the LoginForm internal state from which the submission was triggered. A nice use case might be closing the modal or side-menu or dropdown showing LoginForm. You can get all the possible states by import `STATES` from this package.
