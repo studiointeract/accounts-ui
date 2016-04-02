@@ -7,5 +7,5 @@ try {
     return user;
   });
 } catch(e) {
-  console.log('You\'ve implemented Accounts.onCreateUser elsewhere in your application, you can therefor not us Accounts.ui.config({ onPostSignUpHook }) on the server.');
+  console.log('You\'ve implemented Accounts.onCreateUser elsewhere in your application, you can therefor not use Accounts.ui.config({ onPostSignUpHook }) on the server.');
 }

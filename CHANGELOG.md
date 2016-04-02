@@ -1,6 +1,10 @@
 # ChangeLog
 
-### v1.1.1-2
+### v1.1.4
+
+* Bugfixes for Telescope Nova
+
+### v1.1.1-3
 
 * Bugfixes
 

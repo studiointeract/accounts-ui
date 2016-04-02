@@ -301,7 +301,7 @@ export class LoginForm extends Tracker.Component {
         type: hasPasswordService() ? 'submit' : 'link',
         className: 'active',
         disabled: waiting,
-        onClick: hasPasswordService() ? this.signUp.bind(this) : null
+        onClick: hasPasswordService() ? this.signUp.bind(this, {}) : null
       });
     }
 
@@ -510,7 +510,7 @@ export class LoginForm extends Tracker.Component {
 
   }
 
-  signUp(event, options = {}) {
+  signUp(options = {}) {
     const {
       username = null,
       email = null,
@@ -563,8 +563,8 @@ export class LoginForm extends Tracker.Component {
 
     this.setState({waiting: true});
 
-    const SignUp = () => {
-      Accounts.createUser(options, (error) => {
+    const SignUp = function(_options) {
+      Accounts.createUser(_options, (error) => {
         if (error) {
           this.showMessage(T9n.get(`error.accounts.${error.reason}`) || T9n.get("Unknown error"), 'error');
           if (T9n.get(`error.accounts.${error.reason}`)) {
@@ -581,7 +581,7 @@ export class LoginForm extends Tracker.Component {
             password: null
           });
           let user = Accounts.user();
-          loginResultCallback(Accounts.ui._options.onPostSignUpHook.bind(this, options, user));
+          loginResultCallback(Accounts.ui._options.onPostSignUpHook.bind(this, _options, user));
         }
 
         this.setState({ waiting: false });
@@ -591,10 +591,10 @@ export class LoginForm extends Tracker.Component {
     // Allow for Promises to return.
     let promise = Accounts.ui._options.onPreSignUpHook(options);
     if (promise instanceof Promise) {
-      promise.then(SignUp);
+      promise.then(SignUp.bind(this, options));
     }
     else {
-      SignUp();
+      SignUp(options);
     }
   }
 

@@ -1,17 +1,18 @@
 # React Accounts UI
 
-Current version 1.1.2
+Current version 1.1.4
 
 ## Features
 
 1. **[Easy to use](#using-react-accounts-ui)**, mixing the ideas of useraccounts configuration and accounts-ui that everyone already knows and loves.
-3. **[Components](#components-available)** are everywhere, and extensible by replacing them on Accounts.ui.
-4. **[Basic routing](#configuration)** included, redirections when the user clicks a link in an email or when signing in or out.
-5. **[Unstyled](#styling)** is the default, no CSS included.
-6. **[No password](#no-password-required)** sign up and sign in are included.
-7. **[Extra fields](#extra-fields)** is now supported.
-8. **[Server Side Rendering](#example-setup-using-flowrouter-meteor-13)** are supported, trough FlowRouter (SSR).
-9. **[Extending](#create-your-own-styled-version)** to make your own custom form, for your app, or as a package, all components can be extended and customized.
+2. **[Components](#available-components)** are everywhere, and extensible by replacing them on Accounts.ui.
+3. **[Basic routing](#configuration)** included, redirections when the user clicks a link in an email or when signing in or out.
+4. **[Unstyled](#styling)** is the default, no CSS included.
+5. **[No password](#no-password-required)** sign up and sign in are included.
+6. **[Extra fields](#extra-fields)** is now supported.
+7. **[Server Side Rendering](#example-setup-using-flowrouter-meteor-13)** are supported, trough FlowRouter (SSR).
+8. **[Extending](#create-your-own-styled-version)** to make your own custom form, for your app, or as a package, all components can be extended and customized.
+9. **[States API](#example-setup-using-the-states-api)** makes it possible to use the form on different routes, say you want the login on one route and signup on another, just set the inital state and the links (either globally or per component by using the props).
 
 ## Styling
 
@@ -40,6 +41,26 @@ We support the standard [configuration in the account-ui package](http://docs.me
 
 Configure the behavior of `<Accounts.ui.LoginForm />`
 
+Example configuration:
+
+```javascript
+Accounts.config({
+  sendVerificationEmail: true,
+  forbidClientAccountCreation: false
+});
+
+Accounts.ui.config({
+  passwordSignupFields: 'EMAIL_ONLY',
+  loginPath: '/login',
+  signUpPath: '/signup',
+  resetPasswordPath: '/reset-password',
+  profilePath: '/profile',
+  onSignedInHook: () => FlowRouter.go('/general'),
+  onSignedOutHook: () => FlowRouter.go('/login'),
+  minimumPasswordLength: 6
+});
+```
+
 **_Options:_**
 
 * **requestPermissions**&nbsp;&nbsp;&nbsp; Object  
@@ -61,19 +82,19 @@ Configure the behavior of `<Accounts.ui.LoginForm />`
   Set the path to where you would like the user to be redirected after a successful login or sign out.
 
 * **loginPath**&nbsp;&nbsp;&nbsp; String  
-  Change the default path a user should be redirected to after a clicking a link in a mail provided to them from the accounts system, it could be a mail set to them when they have reset their password, verifying their email if the setting for `sendVerificationEmail` is turned on ([read more on accounts configuration ](http://docs.meteor.com/#/full/accounts_config)). Can also be set as a property to the LoginForm, for i19n routes or other customization.
+  Change the default path a user should be redirected to after a clicking a link in a mail provided to them from the accounts system, it could be a mail set to them when they have reset their password, verifying their email if the setting for `sendVerificationEmail` is turned on ([read more on accounts configuration ](http://docs.meteor.com/#/full/accounts_config)). Can also be set as a property to the LoginForm, for i18n routes or other customization.
 
 * **signUpPath**&nbsp;&nbsp;&nbsp; String  
-  Set the path to where you would like the sign up links to link to rather than changing the state on the current page. Can also be set as a property to the LoginForm, for i19n routes or other customization.
+  Set the path to where you would like the sign up links to link to rather than changing the state on the current page. Can also be set as a property to the LoginForm, for i18n routes or other customization.
 
 * **resetPasswordPath**&nbsp;&nbsp;&nbsp; String  
-  Set the path to where you would like the link to reset password to go to rather than changing the state on the current page. Can also be set as a property to the LoginForm, for i19n routes or other customization.
+  Set the path to where you would like the link to reset password to go to rather than changing the state on the current page. Can also be set as a property to the LoginForm, for i18n routes or other customization.
 
 * **profilePath**&nbsp;&nbsp;&nbsp; String  
-  Set the path to where you would like the link to the profile to go to rather than changing the state on the current page. Can also be set as a property to the LoginForm, for i19n routes or other customization.
+  Set the path to where you would like the link to the profile to go to rather than changing the state on the current page. Can also be set as a property to the LoginForm, for i18n routes or other customization.
 
 * **changePasswordPath**&nbsp;&nbsp;&nbsp; String  
-  Set the path to where you would like the link to change password to go to rather than changing the state on the current page. Can also be set as a property to the LoginForm, for i19n routes or other customization.
+  Set the path to where you would like the link to change password to go to rather than changing the state on the current page. Can also be set as a property to the LoginForm, for i18n routes or other customization.
 
 * **onSubmitHook**&nbsp;&nbsp;&nbsp; function(error, state)&nbsp;&nbsp;&nbsp; **client**  
   Called when the LoginForm is being submitted: allows for custom actions to be taken on form submission. error contains possible errors occurred during the submission process, state specifies the LoginForm internal state from which the submission was triggered. A nice use case might be closing the modal or side-menu or dropdown showing LoginForm. You can get all the possible states by import `STATES` from this package.
@@ -82,7 +103,7 @@ Configure the behavior of `<Accounts.ui.LoginForm />`
   Called just before submitting the LoginForm for sign-up: allows for custom actions on the data being submitted. A nice use could be extending the user profile object accessing options.profile. to be taken on form submission. The plain text password is also provided for any reasonable use. If you return a promise, the submission will wait until you resolve it.
 
 * **onPostSignUpHook**&nbsp;&nbsp;&nbsp; func(options, user)&nbsp;&nbsp;&nbsp; **client**   
-  Called client side, just after a successful user account creation, post submitting the form for sign-up: allows for custom actions on the data being submitted after we are sure a new user was successfully created. Default is **loginPath**.
+  Called client side, just after a successful user account creation, post submitting the form for sign-up: allows for custom actions on the data being submitted after we are sure a new user was successfully created.
 
 * **onPostSignUpHook**&nbsp;&nbsp;&nbsp; func(options, user)&nbsp;&nbsp;&nbsp; **server**  
   Called server side, just after a successful user account creation, post submitting the pwdForm for sign-up: allows for custom actions on the data being submitted after we are sure a new user was successfully created. A common use might be applying roles to the user, as this is only possible after fully completing user creation in `alanning:roles`. Any extra fields added to the form is available as the first parameter, and the user is available as the second argument. *If you return the user object, this will also update the user document.*
@@ -353,14 +374,14 @@ class NewLogin extends Accounts.ui.LoginForm {
     return super.fields();
   }
 
-  signUp(event, options = {}) {
+  signUp(options = {}) {
     const { firstname = null } = this.state;
     if (firstname !== null) {
       options.profile = Object.assign(options.profile || {}, {
         firstname: firstname
       });
     }
-    super.signUp(event, options);
+    super.signUp(options);
   }
 }
 ```

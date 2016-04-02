@@ -8,7 +8,7 @@ export class Button extends React.Component {
       return <a href={ href } className={ className } onClick={ onClick }>{ label }</a>;
     }
     return <button className={ className }
-                   type={type} 
+                   type={ type } 
                    disabled={ disabled }
                    onClick={ onClick }>{ label }</button>;
   }
