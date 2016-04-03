@@ -1,6 +1,6 @@
 # React Accounts UI
 
-Current version 1.1.5
+Current version 1.1.6
 
 ## Features
 
@@ -96,17 +96,14 @@ Accounts.ui.config({
 * **changePasswordPath**&nbsp;&nbsp;&nbsp; String  
   Set the path to where you would like the link to change password to go to rather than changing the state on the current page. Can also be set as a property to the LoginForm, for i18n routes or other customization.
 
-* **onSubmitHook**&nbsp;&nbsp;&nbsp; function(error, state)&nbsp;&nbsp;&nbsp; **client**  
+* **onSubmitHook**&nbsp;&nbsp;&nbsp; function(error, state)  
   Called when the LoginForm is being submitted: allows for custom actions to be taken on form submission. error contains possible errors occurred during the submission process, state specifies the LoginForm internal state from which the submission was triggered. A nice use case might be closing the modal or side-menu or dropdown showing LoginForm. You can get all the possible states by import `STATES` from this package.
 
-* **onPreSignUpHook**&nbsp;&nbsp;&nbsp; function(options)&nbsp;&nbsp;&nbsp; **client**  
+* **onPreSignUpHook**&nbsp;&nbsp;&nbsp; function(options)  
   Called just before submitting the LoginForm for sign-up: allows for custom actions on the data being submitted. A nice use could be extending the user profile object accessing options.profile. to be taken on form submission. The plain text password is also provided for any reasonable use. If you return a promise, the submission will wait until you resolve it.
 
-* **onPostSignUpHook**&nbsp;&nbsp;&nbsp; func(options, user)&nbsp;&nbsp;&nbsp; **client**   
+* **onPostSignUpHook**&nbsp;&nbsp;&nbsp; func(options, user)  
   Called client side, just after a successful user account creation, post submitting the form for sign-up: allows for custom actions on the data being submitted after we are sure a new user was successfully created.
-
-* **onPostSignUpHook**&nbsp;&nbsp;&nbsp; func(options, user)&nbsp;&nbsp;&nbsp; **server**  
-  Called server side, just after a successful user account creation, post submitting the pwdForm for sign-up: allows for custom actions on the data being submitted after we are sure a new user was successfully created. A common use might be applying roles to the user, as this is only possible after fully completing user creation in `alanning:roles`. Any extra fields added to the form is available as the first parameter, and the user is available as the second argument. *If you return the user object, this will also update the user document.*
 
 * **onResetPasswordHook**&nbsp;&nbsp;&nbsp; function()  
   Change the default redirect behavior when the user clicks the link to reset their email sent from the system, i.e. you want a custom path for the reset password form. Default is **loginPath**.

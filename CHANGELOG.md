@@ -1,5 +1,11 @@
 # ChangeLog
 
+### v1.1.6
+
+* Removed server side version of onPostSignUpHook, related issues:
+https://github.com/studiointeract/accounts-ui/issues/17
+https://github.com/studiointeract/accounts-ui/issues/16
+
 ### v1.1.5
 
 * Improving and removing redundant logging.
