@@ -1,5 +1,10 @@
 # ChangeLog
 
+### v1.1.10
+
+* Fixed a bug that caused the form when submitted to reload the page, related:
+https://github.com/studiointeract/accounts-ui/issues/18
+
 ### v1.1.9
 
 * Fixed a faulty default setting, that got replaced in 1.0.21.
