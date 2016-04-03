@@ -1,5 +1,9 @@
 # ChangeLog
 
+### v1.1.12
+
+* Updated to use the latest translations in softwarerero:accounts-t9n
+
 ### v1.1.11
 
 * Updated to softwarerero:accounts-t9n@1.3.1
