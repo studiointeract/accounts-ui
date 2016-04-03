@@ -291,7 +291,7 @@ export class LoginForm extends Tracker.Component {
       });
     }
 
-    if (user && formState == STATES.PROFILE && (user && 'password' in user.services)) {
+    if (user && formState == STATES.PROFILE && (user.services && 'password' in user.services)) {
       loginButtons.push({
         id: 'switchToChangePassword',
         label: T9n.get('changePassword'),
