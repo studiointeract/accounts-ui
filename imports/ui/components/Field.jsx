@@ -44,6 +44,9 @@ export class Field extends React.Component {
       defaultValue = ""
     } = this.props;
     const { mount = true } = this.state;
+    if (type == 'notice') {
+      return <div className={ className }>{ label }</div>;
+    }
     return mount ? (
       <div className={ className }>
         <label htmlFor={ id }>{ label }</label>

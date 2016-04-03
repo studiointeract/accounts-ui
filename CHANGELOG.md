@@ -1,5 +1,9 @@
 # ChangeLog
 
+### v1.1.8
+
+* Added notice on missing login services.
+
 ### v1.1.7
 
 * Upgraded dependency of softwarerero:accounts-t9n to 1.3.0, related:

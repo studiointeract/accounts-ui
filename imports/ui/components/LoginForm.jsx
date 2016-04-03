@@ -167,6 +167,13 @@ export class LoginForm extends Tracker.Component {
     const loginFields = [];
     const { formState } = this.state;
 
+    if (!hasPasswordService() && getLoginServices().length == 0) {
+      loginFields.push({
+        label: 'No login service added, i.e. accounts-password',
+        type: 'notice'
+      });
+    }
+
     if (hasPasswordService() && formState == STATES.SIGN_IN) {
       if (_.contains([
         "USERNAME_AND_EMAIL",
