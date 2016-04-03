@@ -291,7 +291,12 @@ export class LoginForm extends Tracker.Component {
       });
     }
 
-    if (user && formState == STATES.PROFILE && (user.services && 'password' in user.services)) {
+    if (user && !_.contains([
+        "EMAIL_ONLY_NO_PASSWORD",
+        "USERNAME_AND_EMAIL_NO_PASSWORD"
+      ], passwordSignupFields())
+      && formState == STATES.PROFILE
+      && (user.services && 'password' in user.services)) {
       loginButtons.push({
         id: 'switchToChangePassword',
         label: T9n.get('changePassword'),
