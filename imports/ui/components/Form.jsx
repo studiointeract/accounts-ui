@@ -9,9 +9,9 @@ import './SocialButtons.jsx';
 
 export class Form extends React.Component {
   componentDidMount() {
-    let node = ReactDOM.findDOMNode(this);
-    if (node) {
-      node.addEventListener('submit', (e) => {
+    let form = this.form;
+    if (form) {
+      form.addEventListener('submit', (e) => {
         e.preventDefault();
       });
     }
@@ -29,7 +29,7 @@ export class Form extends React.Component {
       className
     } = this.props;
     return (
-      <form className={[className, ready ? "ready" : null].join(' ')} className="accounts-ui">
+      <form ref={(ref) => this.form = ref} className={[className, ready ? "ready" : null].join(' ')} className="accounts-ui">
         <Accounts.ui.Fields fields={ fields } />
         <Accounts.ui.Buttons buttons={ buttons } />
         <Accounts.ui.PasswordOrService oauthServices={ oauthServices } />
