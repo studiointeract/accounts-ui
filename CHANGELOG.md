@@ -1,5 +1,9 @@
 # ChangeLog
 
+### v1.1.9
+
+* Fixed a faulty default setting, that got replaced in 1.0.21.
+
 ### v1.1.8
 
 * Added notice on missing login services.
