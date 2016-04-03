@@ -1,5 +1,10 @@
 # ChangeLog
 
+### v1.1.11
+
+* Updated to softwarerero:accounts-t9n@1.3.1
+* Don't show change password link if using NO_PASSWORD.
+
 ### v1.1.10
 
 * Fixed a bug that caused the form when submitted to reload the page, related:
