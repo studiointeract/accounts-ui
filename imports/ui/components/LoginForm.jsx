@@ -167,6 +167,13 @@ export class LoginForm extends Tracker.Component {
     const loginFields = [];
     const { formState } = this.state;
 
+    if (!hasPasswordService() && getLoginServices().length == 0) {
+      loginFields.push({
+        label: 'No login service added, i.e. accounts-password',
+        type: 'notice'
+      });
+    }
+
     if (hasPasswordService() && formState == STATES.SIGN_IN) {
       if (_.contains([
         "USERNAME_AND_EMAIL",
@@ -284,7 +291,7 @@ export class LoginForm extends Tracker.Component {
       });
     }
 
-    if (user && formState == STATES.PROFILE && (user && 'password' in user.services)) {
+    if (user && formState == STATES.PROFILE && (user.services && 'password' in user.services)) {
       loginButtons.push({
         id: 'switchToChangePassword',
         label: T9n.get('changePassword'),

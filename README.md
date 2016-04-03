@@ -1,6 +1,6 @@
 # React Accounts UI
 
-Current version 1.1.5
+Current version 1.1.9
 
 ## Features
 
@@ -10,9 +10,11 @@ Current version 1.1.5
 4. **[Unstyled](#styling)** is the default, no CSS included.
 5. **[No password](#no-password-required)** sign up and sign in are included.
 6. **[Extra fields](#extra-fields)** is now supported.
-7. **[Server Side Rendering](#example-setup-using-flowrouter-meteor-13)** are supported, trough FlowRouter (SSR).
 8. **[Extending](#create-your-own-styled-version)** to make your own custom form, for your app, or as a package, all components can be extended and customized.
 9. **[States API](#example-setup-using-the-states-api)** makes it possible to use the form on different routes, say you want the login on one route and signup on another, just set the inital state and the links (either globally or per component by using the props).
+10. **[React Router](#example-setup-using-react-router-meteor-13)** is fully supported, see the example how to use with React Router.
+11. **[FlowRouter](#example-setup-using-flowrouter-meteor-13)** is fully supported, see the example how to use with FlowRouter.
+7. **[Server Side Rendering](#example-setup-using-flowrouter-meteor-13)** is easily setup, see how it's done with FlowRouter (SSR). An example for React Router using [react-router-ssr](https://github.com/thereactivestack/meteor-react-router-ssr) coming shortly.
 
 ## Styling
 
@@ -96,17 +98,14 @@ Accounts.ui.config({
 * **changePasswordPath**&nbsp;&nbsp;&nbsp; String  
   Set the path to where you would like the link to change password to go to rather than changing the state on the current page. Can also be set as a property to the LoginForm, for i18n routes or other customization.
 
-* **onSubmitHook**&nbsp;&nbsp;&nbsp; function(error, state)&nbsp;&nbsp;&nbsp; **client**  
+* **onSubmitHook**&nbsp;&nbsp;&nbsp; function(error, state)  
   Called when the LoginForm is being submitted: allows for custom actions to be taken on form submission. error contains possible errors occurred during the submission process, state specifies the LoginForm internal state from which the submission was triggered. A nice use case might be closing the modal or side-menu or dropdown showing LoginForm. You can get all the possible states by import `STATES` from this package.
 
-* **onPreSignUpHook**&nbsp;&nbsp;&nbsp; function(options)&nbsp;&nbsp;&nbsp; **client**  
+* **onPreSignUpHook**&nbsp;&nbsp;&nbsp; function(options)  
   Called just before submitting the LoginForm for sign-up: allows for custom actions on the data being submitted. A nice use could be extending the user profile object accessing options.profile. to be taken on form submission. The plain text password is also provided for any reasonable use. If you return a promise, the submission will wait until you resolve it.
 
-* **onPostSignUpHook**&nbsp;&nbsp;&nbsp; func(options, user)&nbsp;&nbsp;&nbsp; **client**   
+* **onPostSignUpHook**&nbsp;&nbsp;&nbsp; func(options, user)  
   Called client side, just after a successful user account creation, post submitting the form for sign-up: allows for custom actions on the data being submitted after we are sure a new user was successfully created.
-
-* **onPostSignUpHook**&nbsp;&nbsp;&nbsp; func(options, user)&nbsp;&nbsp;&nbsp; **server**  
-  Called server side, just after a successful user account creation, post submitting the pwdForm for sign-up: allows for custom actions on the data being submitted after we are sure a new user was successfully created. A common use might be applying roles to the user, as this is only possible after fully completing user creation in `alanning:roles`. Any extra fields added to the form is available as the first parameter, and the user is available as the second argument. *If you return the user object, this will also update the user document.*
 
 * **onResetPasswordHook**&nbsp;&nbsp;&nbsp; function()  
   Change the default redirect behavior when the user clicks the link to reset their email sent from the system, i.e. you want a custom path for the reset password form. Default is **loginPath**.
@@ -152,8 +151,98 @@ if (Meteor.isClient) {
 
 ```
 
+### Example setup using React Router (Meteor 1.3)
+
+Following the [Application Structure from the Meteor Guide](http://guide.meteor.com/v1.3/structure.html).
+
+`npm i --save react react-dom react-router`  
+`meteor add accounts-password`  
+`meteor add std:accounts-ui`
+
+```javascript
+import React from 'react';
+import { render } from 'react-dom';
+import { Router, Route, IndexRoute, browserHistory } from 'react-router';
+import { Accounts, STATES } from 'meteor/std:accounts-ui';
+
+import { App } from '../../ui/layouts/app.jsx';
+import { Index } from '../../ui/components/index.jsx';
+
+import { Hello } from '../../ui/pages/hello.jsx';
+import { Admin } from '../../ui/pages/admin.jsx';
+import { NotFound } from '../../ui/pages/not-found.jsx';
+
+Meteor.startup( () => {
+  render(
+    <Router history={ browserHistory }>
+      <Route path="/" component={ App }>
+        <IndexRoute component={ Index } />
+        <Route path="/signin" component={ Accounts.ui.LoginForm } formState={ STATES.SIGN_IN } />
+        <Route path="/signup" component={ Accounts.ui.LoginForm } formState={ STATES.SIGN_UP } />
+        <Route path="/hello/:name" component={ Hello } />
+      </Route>
+      <Route path="/admin" component={ App }>
+        <IndexRoute component={ Admin } />
+      </Route>
+      <Route path="*" component={ NotFound } />
+    </Router>,
+    document.getElementById( 'react-root' )
+  );
+});
+```
+
+As a bonus, here's a component that redirects to the signin route if you're not
+logged in, using [`Tracker.Component`](https://www.npmjs.com/package/tracker-component).
+
+`npm i --save tracker-component`
+
+```javascript
+import React from 'react';
+import Tracker from 'tracker-component';
+import { Meteor } from 'meteor/meteor';
+import { browserHistory } from 'react-router';
+
+const AdminPage = () => (
+  <h3>Admin</h3>
+);
+
+export class Admin extends Tracker.Component {
+  constructor(props) {
+    super(props);
+    this.autorun(() => {
+      this.setState({
+        isAuthenticated: Meteor.user()
+      });
+    });
+  }
+
+  componentWillMount() {
+    // Check that the user is logged in before the component mounts
+    if (!this.state.isAuthenticated) {
+      browserHistory.push(null, '/signin');
+    }
+  }
+
+  componentDidUpdate() {
+    // Navigate to a sign in page if the user isn't authenticated when data changes
+    if (!this.state.isAuthenticated) {
+      browserHistory.push(null, '/signin');
+    }
+  }
+
+  render() {
+    return <AdminPage {...this.state} />;
+  }
+}
+
+```
+
+You can learn more about the remaining components here in the tutorial on [React Router Basics](https://themeteorchef.com/snippets/react-router-basics/) by the Meteor Chef.
+
+
 ### Example setup using FlowRouter (Meteor 1.3)
 
+`npm i --save react react-dom`
 `meteor add accounts-password`  
 `meteor add std:accounts-ui`  
 `meteor add kadira:flow-router-ssr`
@@ -189,9 +278,14 @@ have one route for /login and one for /signup.
 
 `meteor add accounts-password`  
 `meteor add std:accounts-ui`  
+`meteor add softwarerero:accounts-t9n`  
 `meteor add kadira:flow-router-ssr`
 
 ```javascript
+import React from 'react';
+import { Accounts, STATES } from 'meteor/std:accounts-ui';
+import { T9n } from 'meteor/softwarerero:accounts-t9n';
+
 T9n.setLanguage('en');
 
 Accounts.config({

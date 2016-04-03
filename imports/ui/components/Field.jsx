@@ -33,12 +33,28 @@ export class Field extends React.Component {
   }
 
   render() {
-    const { id, hint, label, type = 'text', onChange, className = "field", defaultValue = "" } = this.props;
+    const {
+      id,
+      hint,
+      label,
+      type = 'text',
+      onChange,
+      required = false,
+      className = "field",
+      defaultValue = ""
+    } = this.props;
     const { mount = true } = this.state;
+    if (type == 'notice') {
+      return <div className={ className }>{ label }</div>;
+    }
     return mount ? (
       <div className={ className }>
         <label htmlFor={ id }>{ label }</label>
-        <input id={ id } type={ type } onChange={ onChange } placeholder={ hint } defaultValue={ defaultValue } />
+        <input id={ id } 
+               type={ type }
+               onChange={ onChange }
+               placeholder={ hint }
+               defaultValue={ defaultValue } />
       </div>
     ) : null;
   }

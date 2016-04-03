@@ -9,9 +9,7 @@ import './SocialButtons.jsx';
 
 export class Form extends React.Component {
   componentDidMount() {
-
     let node = ReactDOM.findDOMNode(this);
-    console.log(node);
     if (node) {
       node.addEventListener('submit', (e) => {
         e.preventDefault();

@@ -12,7 +12,7 @@ Accounts.ui._options = {
   requestPermissions: [],
   requestOfflineToken: {},
   forceApprovalPrompt: {},
-  passwordSignupFields: 'NO_PASSWORD',
+  passwordSignupFields: 'EMAIL_ONLY_NO_PASSWORD',
   minimumPasswordLength: 7,
   loginPath: '/',
   signUpPath: null,

@@ -1,5 +1,24 @@
 # ChangeLog
 
+### v1.1.9
+
+* Fixed a faulty default setting, that got replaced in 1.0.21.
+
+### v1.1.8
+
+* Added notice on missing login services.
+
+### v1.1.7
+
+* Upgraded dependency of softwarerero:accounts-t9n to 1.3.0, related:
+https://github.com/studiointeract/accounts-ui/issues/15
+
+### v1.1.6
+
+* Removed server side version of onPostSignUpHook, related issues:
+https://github.com/studiointeract/accounts-ui/issues/17
+https://github.com/studiointeract/accounts-ui/issues/16
+
 ### v1.1.5
 
 * Improving and removing redundant logging.
