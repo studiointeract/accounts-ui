@@ -1,5 +1,9 @@
 # ChangeLog
 
+### v1.1.13
+
+* Fixed faulty language strings.
+
 ### v1.1.12
 
 * Updated to use the latest translations in softwarerero:accounts-t9n

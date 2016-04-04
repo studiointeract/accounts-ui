@@ -98,7 +98,7 @@ export class LoginForm extends Tracker.Component {
   getUsernameOrEmailField() {
     return {
       id: 'usernameOrEmail',
-      hint: T9n.get('Enter username or email'),
+      hint: T9n.get('enterUsernameOrEmail'),
       label: T9n.get('usernameOrEmail'),
       required: true,
       defaultValue: this.state.username || "",
@@ -109,7 +109,7 @@ export class LoginForm extends Tracker.Component {
   getUsernameField() {
     return {
       id: 'username',
-      hint: T9n.get('Enter username'),
+      hint: T9n.get('enterUsername'),
       label: T9n.get('username'),
       required: true,
       defaultValue: this.state.username || "",
@@ -120,7 +120,7 @@ export class LoginForm extends Tracker.Component {
   getEmailField() {
     return {
       id: 'email',
-      hint: T9n.get('Enter email'),
+      hint: T9n.get('enterEmail'),
       label: T9n.get('email'),
       type: 'email',
       required: true,
@@ -132,7 +132,7 @@ export class LoginForm extends Tracker.Component {
   getPasswordField() {
     return {
       id: 'password',
-      hint: T9n.get('Enter password'),
+      hint: T9n.get('enterPassword'),
       label: T9n.get('password'),
       type: 'password',
       required: true,
@@ -144,7 +144,7 @@ export class LoginForm extends Tracker.Component {
   getNewPasswordField() {
     return {
       id: 'newPassword',
-      hint: T9n.get('Enter newPassword'),
+      hint: T9n.get('enterNewPassword'),
       label: T9n.get('newPassword'),
       type: 'password',
       required: true,
