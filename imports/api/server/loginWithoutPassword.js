@@ -30,6 +30,12 @@ Meteor.methods({loginWithoutPassword: function ({ email, username = null }) {
       throw new Meteor.Error(403, "User not found");
   }
 
+  if (Accounts.ui._options.requireEmailVerification) {
+    if (user.emails[0].verified) {
+      throw new Meteor.Error(403, "Email not verified");
+    }
+  }
+
   Accounts.sendLoginEmail(user._id, email);
 }});
 

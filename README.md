@@ -77,6 +77,9 @@ Accounts.ui.config({
 * **passwordSignupFields**&nbsp;&nbsp;&nbsp; String  
   Which fields to display in the user creation form. One of `'USERNAME_AND_EMAIL'`, `'USERNAME_AND_OPTIONAL_EMAIL'`, `'USERNAME_ONLY'`, `'EMAIL_ONLY'`, `'USERNAME_AND_EMAIL_NO_PASSWORD'`, **`'EMAIL_ONLY_NO_PASSWORD'`** (**default**).
 
+* **requireEmailVerification**&nbsp;&nbsp;&nbsp; Boolean  
+  Set if the login *without password* should check if the user is verified before sending any login emails. Default is **false**.
+
 * **minimumPasswordLength**&nbsp;&nbsp;&nbsp; Number  
   Set the minimum number of password length for your application. Default so **7**.
 
