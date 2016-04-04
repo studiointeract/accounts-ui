@@ -31,7 +31,7 @@ Meteor.methods({loginWithoutPassword: function ({ email, username = null }) {
   }
 
   if (Accounts.ui._options.requireEmailVerification) {
-    if (user.emails[0].verified) {
+    if (!user.emails[0].verified) {
       throw new Meteor.Error(403, "Email not verified");
     }
   }
