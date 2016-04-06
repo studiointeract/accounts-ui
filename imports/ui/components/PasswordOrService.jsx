@@ -15,7 +15,7 @@ export class PasswordOrService extends React.Component {
   }
 
   render () {
-    let { className, style = {} } = this.props;
+    let { className = "password-or-service", style = {} } = this.props;
     let { hasPasswordService, services } = this.state;
     labels = services;
     if (services.length > 2) {

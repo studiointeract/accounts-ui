@@ -493,7 +493,8 @@ export class LoginForm extends Tracker.Component {
             id: service,
             label: capitalize(service),
             disabled: waiting,
-            type: 'link',
+            type: 'button',
+            className: `btn-${service} ${service}`,
             onClick: this.oauthSignIn.bind(this, service)
           });
         });
