@@ -508,6 +508,11 @@ export class LoginForm extends Tracker.Component {
     function capitalService() {
       return service.charAt(0).toUpperCase() + service.slice(1);
     }
+
+    if(service === 'meteor-developer'){
+      service = 'meteorDeveloperAccount';
+    }
+
     login = Meteor["loginWith" + capitalService()];
     login({requestPermissions: Accounts.ui._options.requestPermissions}, (error) => {
       if (error) {
