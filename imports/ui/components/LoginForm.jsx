@@ -494,7 +494,7 @@ export class LoginForm extends Tracker.Component {
             label: capitalize(service),
             disabled: waiting,
             type: 'button',
-            className: 'btn-'+service,
+            className: `btn-${service} ${service}`,
             onClick: this.oauthSignIn.bind(this, service)
           });
         });

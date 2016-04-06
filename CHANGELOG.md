@@ -1,8 +1,11 @@
 # ChangeLog
 
+### v1.1.15
+
+* @SachaG added classes to the social buttons distinguishing which service. 
+
 ### v1.1.14
 
-* @SachaG added classes to the social buttons distinguishing which service.
 * @SachaG added tmeasday:check-npm-versions to check for the correct version of npm packages.
 * @ArthurPai updated T9n, which adds the Chinese language for accounts, so we can update it to v1.3.3
 * @ArthurPai fixed a forgotten update T9n translation in the PasswordOrService component.
