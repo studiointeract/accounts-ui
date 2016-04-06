@@ -17,7 +17,7 @@ Package.onUse(function(api) {
   api.use('email');
   api.use('session');
   api.use('softwarerero:accounts-t9n');
-  api.use('tmeasday:check-npm-versions');
+  api.use('tmeasday:check-npm-versions@0.1.1');
 
   api.imply('accounts-base');
   api.imply('softwarerero:accounts-t9n@1.3.3');
