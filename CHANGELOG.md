@@ -1,8 +1,12 @@
 # ChangeLog
 
+### v1.1.16
+
+* Bumping version on check-npm-versions to solve #29
+
 ### v1.1.15
 
-* @SachaG added classes to the social buttons distinguishing which service. 
+* @SachaG added classes to the social buttons distinguishing which service.
 
 ### v1.1.14
 
