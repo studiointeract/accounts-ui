@@ -1,5 +1,10 @@
 # ChangeLog
 
+### v1.1.19
+
+* Improving hooks for server side rendered pages.
+* Improving so that browser pre-filled input values are pushed back to the form state.
+
 ### v1.1.18
 
 * Updated Tracker dependency.
