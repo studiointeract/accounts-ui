@@ -1,5 +1,13 @@
 # ChangeLog
 
+### v1.1.18
+
+* Updated Tracker dependency.
+
+### v1.1.17
+
+* Updated Tracker dependency.
+
 ### v1.1.16
 
 * Bumping version on check-npm-versions to solve #29
