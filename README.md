@@ -22,8 +22,7 @@ This package does not by standard come with any styling, you can easily [extend 
 
 * [**Basic**](https://atmospherejs.com/std/accounts-basic)  `std:accounts-basic`
 * [**Semantic UI**](https://atmospherejs.com/std/accounts-semantic)  `std:accounts-semantic`
-* Bootstrap 3  
-  Help out on this: [http://github.com/studiointeract/accounts-bootstrap](http://github.com/studiointeract/accounts-bootstrap)
+* [**Bootstrap 3**](https://atmospherejs.com/std/accounts-bootstrap)  `std:accounts-bootstrap`
 * Material UI  
   Help out on this: [http://github.com/studiointeract/accounts-material](http://github.com/studiointeract/accounts-material)
 
