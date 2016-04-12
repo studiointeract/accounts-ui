@@ -475,10 +475,8 @@ export class LoginForm extends Tracker.Component {
         this.showMessage(T9n.get(`error.accounts.${error.reason}`) || T9n.get("Unknown error"), 'error');
       }
       else {
+        loginResultCallback(() => Accounts.ui._options.onSignedInHook());
         this.setState({ formState: STATES.PROFILE, message: null, password: null });
-        loginResultCallback(() => {
-          Meteor.setTimeout(() => Accounts.ui._options.onSignedInHook(), 100);
-        });
       }
     });
   }

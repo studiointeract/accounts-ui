@@ -14,7 +14,11 @@ export class Field extends React.Component {
     // Trigger an onChange on inital load, to support browser prefilled values.
     const { onChange } = this.props;
     let node = ReactDOM.findDOMNode(this);
-    if (node) {
+    if (this.refs.input) {
+      onChange({ target: { value: this.refs.input.value } });
+    }
+    // Backward compat.
+    else if (node) {
       let value = node.getElementsByTagName('input')[0].value;
       // Match the data format of a typical onChange event.
       onChange({ target: { value: value } });
@@ -50,7 +54,8 @@ export class Field extends React.Component {
     return mount ? (
       <div className={ className }>
         <label htmlFor={ id }>{ label }</label>
-        <input id={ id } 
+        <input id={ id }
+               ref="input"
                type={ type }
                onChange={ onChange }
                placeholder={ hint }
