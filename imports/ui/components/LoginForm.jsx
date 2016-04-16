@@ -317,7 +317,7 @@ export class LoginForm extends Tracker.Component {
       });
     }
 
-    if (formState == STATES.SIGN_IN) {
+    if (this.showSignInLink()) {
       loginButtons.push({
         id: 'signIn',
         label: T9n.get('signIn'),
@@ -369,13 +369,17 @@ export class LoginForm extends Tracker.Component {
     return _.indexBy(loginButtons, 'id');
   }
 
+  showSignInLink(){
+    return this.state.formState == STATES.SIGN_IN && Package['accounts-password'];
+  }
+
   showPasswordChangeForm() {
     return(Package['accounts-password']
       && this.state.formState == STATES.PASSWORD_CHANGE);
   }
 
   showCreateAccountLink() {
-    return this.state.formState == STATES.SIGN_IN && !Accounts._options.forbidClientAccountCreation;
+    return this.state.formState == STATES.SIGN_IN && !Accounts._options.forbidClientAccountCreation && Package['accounts-password'];
   }
 
   showForgotPasswordLink() {
