@@ -1,6 +1,6 @@
 # React Accounts UI
 
-Current version 1.1.19
+Current version 1.1.20
 
 ## Features
 
@@ -22,7 +22,8 @@ This package does not by standard come with any styling, you can easily [extend 
 
 * [**Basic**](https://atmospherejs.com/std/accounts-basic)  `std:accounts-basic`
 * [**Semantic UI**](https://atmospherejs.com/std/accounts-semantic)  `std:accounts-semantic`
-* [**Bootstrap 3**](https://atmospherejs.com/std/accounts-bootstrap)  `std:accounts-bootstrap`
+* [**Bootstrap 3/4**](https://atmospherejs.com/std/accounts-bootstrap)  `std:accounts-bootstrap`
+* [**Ionic**](https://atmospherejs.com/std/accounts-ionic)  `std:accounts-ionic`
 * Material UI  
   Help out on this: [http://github.com/studiointeract/accounts-material](http://github.com/studiointeract/accounts-material)
 
