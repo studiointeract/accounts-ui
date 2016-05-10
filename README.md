@@ -1,6 +1,6 @@
 # React Accounts UI
 
-Current version 1.1.20
+Current version 1.2.0
 
 ## Features
 
@@ -61,6 +61,17 @@ Accounts.ui.config({
   onSignedOutHook: () => FlowRouter.go('/login'),
   minimumPasswordLength: 6
 });
+```
+
+### Version 1.2 also supports passing hooks through props to the component.
+
+```js
+import { Accounts, STATES } from 'meteor/std:accounts-ui';
+
+<Accounts.ui.LoginForm
+  state={ STATES.SIGN_IN }
+  onSignedInHook={ () => console.log('user signed in') }
+/>
 ```
 
 **_Options:_**

@@ -30,7 +30,12 @@ export class LoginForm extends Tracker.Component {
     this.state = {
       message: null,
       waiting: true,
-      formState: Accounts.user() ? STATES.PROFILE : formState
+      formState: Accounts.user() ? STATES.PROFILE : formState,
+      onSubmitHook: props.onSubmitHook || Accounts.ui._options.onSubmitHook,
+      onSignedInHook: props.onSignedInHook || Accounts.ui._options.onSignedInHook,
+      onSignedOutHook: props.onSignedOutHook || Accounts.ui._options.onSignedOutHook,
+      onPreSignUpHook: props.onPreSignUpHook || Accounts.ui._options.onPreSignUpHook,
+      onPostSignUpHook: props.onPostSignUpHook || Accounts.ui._options.onPostSignUpHook
     };
 
     // Listen for the user to login/logout.
@@ -71,7 +76,7 @@ export class LoginForm extends Tracker.Component {
     else {
       this.showMessage(T9n.get("error.usernameRequired"), 'warning');
       if (this.state.formState == STATES.SIGN_UP) {
-        Accounts.ui._options.onSubmitHook("error.accounts.usernameRequired", this.state.formState);
+        this.state.onSubmitHook("error.accounts.usernameRequired", this.state.formState);
       }
 
       return false;
@@ -88,7 +93,7 @@ export class LoginForm extends Tracker.Component {
     else {
       this.showMessage(T9n.get("error.accounts.Invalid email"), 'warning');
       if (this.state.formState == STATES.SIGN_UP) {
-        Accounts.ui._options.onSubmitHook("error.accounts.Invalid email", this.state.formState);
+        this.state.onSubmitHook("error.accounts.Invalid email", this.state.formState);
       }
 
       return false;
@@ -422,7 +427,7 @@ export class LoginForm extends Tracker.Component {
   signOut() {
     Meteor.logout(() => {
       this.setState({ formState: STATES.SIGN_IN, message: null, password: null });
-      Accounts.ui._options.onSignedOutHook();
+      this.state.onSignedOutHook();
     });
   }
 
@@ -479,7 +484,7 @@ export class LoginForm extends Tracker.Component {
         this.showMessage(T9n.get(`error.accounts.${error.reason}`) || T9n.get("Unknown error"), 'error');
       }
       else {
-        loginResultCallback(() => Accounts.ui._options.onSignedInHook());
+        loginResultCallback(() => this.state.onSignedInHook());
         this.setState({ formState: STATES.PROFILE, message: null, password: null });
       }
     });
@@ -523,7 +528,7 @@ export class LoginForm extends Tracker.Component {
       } else {
         this.setState({ formState: STATES.PROFILE, message: '' });
         loginResultCallback(() => {
-          Meteor.setTimeout(() => Accounts.ui._options.onSignedInHook(), 100);
+          Meteor.setTimeout(() => this.state.onSignedInHook(), 100);
         });
       }
     });
@@ -574,7 +579,7 @@ export class LoginForm extends Tracker.Component {
     }
     else if (!validatePassword(password)) {
       this.showMessage(T9n.get("error.minChar").replace(/7/, Accounts.ui._options.minimumPasswordLength), 'warning');
-      Accounts.ui._options.onSubmitHook("error.minChar", formState);
+      this.state.onSubmitHook("error.minChar", formState);
       return;
     }
     else {
@@ -588,10 +593,10 @@ export class LoginForm extends Tracker.Component {
         if (error) {
           this.showMessage(T9n.get(`error.accounts.${error.reason}`) || T9n.get("Unknown error"), 'error');
           if (T9n.get(`error.accounts.${error.reason}`)) {
-            Accounts.ui._options.onSubmitHook(`error.accounts.${error.reason}`, formState);
+            this.state.onSubmitHook(`error.accounts.${error.reason}`, formState);
           }
           else {
-            Accounts.ui._options.onSubmitHook("Unknown error", formState);
+            this.state.onSubmitHook("Unknown error", formState);
           }
         }
         else {
@@ -601,7 +606,7 @@ export class LoginForm extends Tracker.Component {
             password: null
           });
           let user = Accounts.user();
-          loginResultCallback(Accounts.ui._options.onPostSignUpHook.bind(this, _options, user));
+          loginResultCallback(this.state.onPostSignUpHook.bind(this, _options, user));
         }
 
         this.setState({ waiting: false });
@@ -609,7 +614,7 @@ export class LoginForm extends Tracker.Component {
     };
 
     // Allow for Promises to return.
-    let promise = Accounts.ui._options.onPreSignUpHook(options);
+    let promise = this.state.onPreSignUpHook(options);
     if (promise instanceof Promise) {
       promise.then(SignUp.bind(this, options));
     }

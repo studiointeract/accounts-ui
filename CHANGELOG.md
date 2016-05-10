@@ -1,5 +1,10 @@
 # ChangeLog
 
+### v1.2.0
+10-May-2016
+
+* Adding the hooks to be passed as props.
+
 ### v1.1.19
 
 * Improving hooks for server side rendered pages.
