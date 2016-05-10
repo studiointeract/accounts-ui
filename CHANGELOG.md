@@ -1,5 +1,10 @@
 # ChangeLog
 
+### v1.2.1
+10-May-2016
+
+* Solves issue with props not being passed down: #39
+
 ### v1.2.0
 10-May-2016
 
