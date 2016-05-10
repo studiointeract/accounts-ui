@@ -69,6 +69,14 @@ export class LoginForm extends Tracker.Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.formState != this.state.formState) {
+      this.setState({
+        formState: nextProps.formState
+      }); 
+    }
+  }
+
   validateUsername( username ) {
     if ( username ) {
       return true;
