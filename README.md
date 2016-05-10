@@ -128,7 +128,7 @@ import { Accounts, STATES } from 'meteor/std:accounts-ui';
   Change the default redirect behavior when the user clicks the link to enroll for an account sent from the system, i.e. you want a custom path for the enrollment form. Learn more about [how to send enrollment emails](http://docs.meteor.com/#/full/accounts_sendenrollmentemail). Default is **loginPath**.
 
 * **onVerifyEmailHook**&nbsp;&nbsp;&nbsp; function()  
-  Change the default redirect behavior when the user clicks the link to verify their email sent from the system, i.e. you want a custom path after the user verifies their email or login with `NO_PASSWORD`. Default is **profilePath**.
+  Change the default redirect behavior when the user clicks the link to verify their email sent from the system, i.e. you want a custom path after the user verifies their email or login with `EMAIL_ONLY_NO_PASSWORD`. Default is **profilePath**.
 
 * **onSignedInHook**&nbsp;&nbsp;&nbsp; function()  
   Change the default redirect behavior when the user successfully login to your application, i.e. you want a custom path for the reset password form. Default is **profilePath**.
@@ -155,7 +155,7 @@ import React from 'react';
 import { Accounts } from 'meteor/std:accounts-ui';
 
 Accounts.ui.config({
-  passwordSignupFields: 'NO_PASSWORD',
+  passwordSignupFields: 'EMAIL_ONLY_NO_PASSWORD',
   loginPath: '/',
 });
 
@@ -268,7 +268,7 @@ import { Accounts } from 'meteor/std:accounts-ui';
 import { FlowRouter } from 'meteor/kadira:flow-router-ssr';
 
 Accounts.ui.config({
-  passwordSignupFields: 'NO_PASSWORD',
+  passwordSignupFields: 'EMAIL_ONLY_NO_PASSWORD',
   loginPath: '/login',
   onSignedInHook: () => FlowRouter.go('/general'),
   onSignedOutHook: () => FlowRouter.go('/')
