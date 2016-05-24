@@ -1,9 +1,10 @@
 # ChangeLog
 
-### v1.2.1
+### v1.2.2-3
 24-May-2016
 
 * Solves issue with social redirect flow being redirected to a faulty urls: #36
+* Solves issue: Accounts.sendLoginEmail does not work if address is set: #42
 
 ### v1.2.1
 10-May-2016
