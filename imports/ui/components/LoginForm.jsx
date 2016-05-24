@@ -449,7 +449,20 @@ export class LoginForm extends Tracker.Component {
 
     let loginSelector;
 
-    if (username !== null) {
+    if (usernameOrEmail !== null) {
+      // XXX not sure how we should validate this. but this seems good enough (for now),
+      // since an email must have at least 3 characters anyways
+      if (!this.validateUsername(usernameOrEmail)) {
+        return;
+      }
+      else {
+        if (_.contains([ "USERNAME_AND_EMAIL_NO_PASSWORD" ], passwordSignupFields())) {
+          this.loginWithoutPassword();
+          return;
+        }
+        loginSelector = usernameOrEmail;
+      }
+    } else if (username !== null) {
       if (!this.validateUsername(username)) {
         return;
       }
@@ -468,22 +481,7 @@ export class LoginForm extends Tracker.Component {
         }
         loginSelector = { email };
       }
-    }
-    else if (usernameOrEmail !== null) {
-      // XXX not sure how we should validate this. but this seems good enough (for now),
-      // since an email must have at least 3 characters anyways
-      if (!this.validateUsername(usernameOrEmail)) {
-        return;
-      }
-      else {
-        if (_.contains([ "USERNAME_AND_EMAIL_NO_PASSWORD" ], passwordSignupFields())) {
-          this.loginWithoutPassword();
-          return;
-        }
-        loginSelector = usernameOrEmail;
-      }
-    }
-    else {
+    } else {
       throw new Error("Unexpected -- no element to use as a login user selector");
     }
 
