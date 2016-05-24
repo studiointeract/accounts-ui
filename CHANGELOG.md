@@ -1,6 +1,11 @@
 # ChangeLog
 
 ### v1.2.1
+24-May-2016
+
+* Solves issue with social redirect flow being redirected to a faulty urls: #36
+
+### v1.2.1
 10-May-2016
 
 * Solves issue with props not being passed down: #39

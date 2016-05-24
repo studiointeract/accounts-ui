@@ -1,6 +1,6 @@
 # React Accounts UI
 
-Current version 1.2.1
+Current version 1.2.2
 
 ## Features
 

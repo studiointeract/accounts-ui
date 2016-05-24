@@ -29,10 +29,6 @@ export function hasPasswordService() {
 
 export function loginResultCallback(redirect, error) {
   if (Meteor.isClient) {
-    if (typeof redirect === 'string'){
-      window.location.href = redirect;
-    }
-
     if (typeof redirect === 'function'){
       redirect();
     }

@@ -73,7 +73,7 @@ export class LoginForm extends Tracker.Component {
     if (nextProps.formState != this.state.formState) {
       this.setState({
         formState: nextProps.formState
-      }); 
+      });
     }
   }
 
@@ -530,7 +530,8 @@ export class LoginForm extends Tracker.Component {
     }
 
     login = Meteor["loginWith" + capitalService()];
-    login({requestPermissions: Accounts.ui._options.requestPermissions}, (error) => {
+    const requestPermissions = Accounts.ui._options.requestPermissions[service] || [];
+    login({ requestPermissions }, (error) => {
       if (error) {
         this.showMessage(T9n.get(`error.accounts.${error.reason}`) || T9n.get("Unknown error"));
       } else {
