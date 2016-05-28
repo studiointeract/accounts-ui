@@ -516,20 +516,30 @@ export class LoginForm extends Tracker.Component {
     return _.indexBy(oauthButtons, 'id');
   }
 
-  oauthSignIn(service) {
+  oauthSignIn(serviceName) {
     const { formState, waiting, user } = this.state;
     //Thanks Josh Owens for this one.
     function capitalService() {
-      return service.charAt(0).toUpperCase() + service.slice(1);
+      return serviceName.charAt(0).toUpperCase() + serviceName.slice(1);
     }
 
-    if(service === 'meteor-developer'){
-      service = 'meteorDeveloperAccount';
+    if(serviceName === 'meteor-developer'){
+      serviceName = 'meteorDeveloperAccount';
     }
 
-    login = Meteor["loginWith" + capitalService()];
-    const requestPermissions = Accounts.ui._options.requestPermissions[service] || [];
-    login({ requestPermissions }, (error) => {
+    const loginWithService = Meteor["loginWith" + capitalService()];
+
+    let options = {
+      loginStyle: "redirect"
+    }; // use default scope unless specified
+    if (Accounts.ui._options.requestPermissions[serviceName])
+      options.requestPermissions = Accounts.ui._options.requestPermissions[serviceName];
+    if (Accounts.ui._options.requestOfflineToken[serviceName])
+      options.requestOfflineToken = Accounts.ui._options.requestOfflineToken[serviceName];
+    if (Accounts.ui._options.forceApprovalPrompt[serviceName])
+      options.forceApprovalPrompt = Accounts.ui._options.forceApprovalPrompt[serviceName];
+
+    loginWithService(options, (error) => {
       if (error) {
         this.showMessage(T9n.get(`error.accounts.${error.reason}`) || T9n.get("Unknown error"));
       } else {
