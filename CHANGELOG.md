@@ -1,6 +1,6 @@
 # ChangeLog
 
-### v1.2.4
+### v1.2.4-5
 28-May-2016
 
 * Adding missing configuration in oauth services.
