@@ -529,9 +529,7 @@ export class LoginForm extends Tracker.Component {
 
     const loginWithService = Meteor["loginWith" + capitalService()];
 
-    let options = {
-      loginStyle: "redirect"
-    }; // use default scope unless specified
+    let options = {}; // use default scope unless specified
     if (Accounts.ui._options.requestPermissions[serviceName])
       options.requestPermissions = Accounts.ui._options.requestPermissions[serviceName];
     if (Accounts.ui._options.requestOfflineToken[serviceName])
