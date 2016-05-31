@@ -19,7 +19,7 @@ export class LoginForm extends Tracker.Component {
   constructor(props) {
     super(props);
     let {
-      formState = STATES.SIGN_IN,
+      formState,
       loginPath,
       signUpPath,
       resetPasswordPath,
@@ -30,7 +30,7 @@ export class LoginForm extends Tracker.Component {
     this.state = {
       message: null,
       waiting: true,
-      formState: Accounts.user() ? STATES.PROFILE : formState,
+      formState: formState ? formState : Accounts.user() ? STATES.PROFILE : STATES.SIGN_IN,
       onSubmitHook: props.onSubmitHook || Accounts.ui._options.onSubmitHook,
       onSignedInHook: props.onSignedInHook || Accounts.ui._options.onSignedInHook,
       onSignedOutHook: props.onSignedOutHook || Accounts.ui._options.onSignedOutHook,
