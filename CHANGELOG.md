@@ -1,5 +1,10 @@
 # ChangeLog
 
+### v1.2.6
+2-June-2016
+
+* Allow form state to be set from prop formState when logged in #51 @todda00
+
 ### v1.2.4-5
 28-May-2016
 
