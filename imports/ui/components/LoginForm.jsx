@@ -55,12 +55,6 @@ export class LoginForm extends Tracker.Component {
     let changeState = Session.get(KEY_PREFIX + 'state');
     switch (changeState) {
       case 'enrollAccountToken':
-        this.setState({
-          formState: STATES.ENROLL_ACCOUNT
-        });
-        Session.set(KEY_PREFIX + 'state', null);
-        break;
-
       case 'resetPasswordToken':
         this.setState({
           formState: STATES.PASSWORD_CHANGE
@@ -173,17 +167,6 @@ export class LoginForm extends Tracker.Component {
     };
   }
 
-  getSetPasswordField() {
-    return {
-      id: 'newPassword',
-      hint: T9n.get('enterPassword'),
-      label: T9n.get('choosePassword'),
-      type: 'password',
-      required: true,
-      onChange: this.handleChange.bind(this, 'newPassword')
-    };
-  }
-
   handleChange(field, evt) {
     let value = evt.target.value;
     switch (field) {
@@ -270,16 +253,12 @@ export class LoginForm extends Tracker.Component {
     }
 
     if (this.showPasswordChangeForm()) {
-      if (Meteor.isClient && !Accounts._loginButtonsSession.get('resetPasswordToken')) {
+      if (Meteor.isClient && !Accounts._loginButtonsSession.get('resetPasswordToken')
+        && !Accounts._loginButtonsSession.get('enrollAccountToken')) {
         loginFields.push(this.getPasswordField());
       }
       loginFields.push(this.getNewPasswordField());
     }
-
-    if (this.showEnrollAccountForm()) {
-      loginFields.push(this.getSetPasswordField());
-    }
-
 
     return _.indexBy(loginFields, 'id');
   }
@@ -374,10 +353,10 @@ export class LoginForm extends Tracker.Component {
       });
     }
 
-    if (this.showPasswordChangeForm() || this.showEnrollAccountForm()) {
+    if (this.showPasswordChangeForm()) {
       loginButtons.push({
         id: 'changePassword',
-        label: (this.showPasswordChangeForm() ? T9n.get('changePassword') : T9n.get('setPassword')),
+        label: T9n.get('changePassword'),
         type: 'submit',
         disabled: waiting,
         onClick: this.passwordChange.bind(this)
@@ -412,11 +391,6 @@ export class LoginForm extends Tracker.Component {
   showPasswordChangeForm() {
     return(Package['accounts-password']
       && this.state.formState == STATES.PASSWORD_CHANGE);
-  }
-
-  showEnrollAccountForm() {
-    return(Package['accounts-password']
-      && this.state.formState == STATES.ENROLL_ACCOUNT);
   }
 
   showCreateAccountLink() {
