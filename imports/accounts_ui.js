@@ -28,10 +28,7 @@ Accounts.ui._options = {
   onResetPasswordHook: () => redirect(`${Accounts.ui._options.loginPath}`),
   onVerifyEmailHook: () => redirect(`${Accounts.ui._options.profilePath}`),
   onSignedInHook: () => null,
-  onSignedOutHook: () => null,
-  onPostResetPasswordHook: () => null,
-  onPostEnrollAccountHook: () => null
-
+  onSignedOutHook: () => null
 };
 
 /**
@@ -65,9 +62,7 @@ Accounts.ui.config = function(options) {
     'onResetPasswordHook',
     'onVerifyEmailHook',
     'onSignedInHook',
-    'onSignedOutHook',
-    'onPostResetPasswordHook',
-    'onPostEnrollAccountHook'
+    'onSignedOutHook'
   ];
 
   _.each(_.keys(options), function (key) {
@@ -194,9 +189,7 @@ Accounts.ui.config = function(options) {
       'onResetPasswordHook',
       'onVerifyEmailHook',
       'onSignedInHook',
-      'onSignedOutHook',
-      'onPostResetPasswordHook',
-      'onPostEnrollAccountHook' ]) {
+      'onSignedOutHook']) {
     if (options[hook]) {
       if (typeof options[hook] == 'function') {
         Accounts.ui._options[hook] = options[hook];

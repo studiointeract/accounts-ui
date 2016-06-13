@@ -35,9 +35,7 @@ export class LoginForm extends Tracker.Component {
       onSignedInHook: props.onSignedInHook || Accounts.ui._options.onSignedInHook,
       onSignedOutHook: props.onSignedOutHook || Accounts.ui._options.onSignedOutHook,
       onPreSignUpHook: props.onPreSignUpHook || Accounts.ui._options.onPreSignUpHook,
-      onPostSignUpHook: props.onPostSignUpHook || Accounts.ui._options.onPostSignUpHook,
-      onPostResetPasswordHook: props.onPostResetPasswordHook || Accounts.ui._options.onPostResetPasswordHook,
-      onPostEnrollAccountHook: props.onPostEnrollAccountHook || Accounts.ui._options.onPostEnrollAccountHook
+      onPostSignUpHook: props.onPostSignUpHook || Accounts.ui._options.onPostSignUpHook
     };
 
     // Listen for the user to login/logout.
@@ -741,18 +739,8 @@ export class LoginForm extends Tracker.Component {
         else {
           this.showMessage(T9n.get('info.passwordChanged'), 'success', 5000);
           this.setState({ formState: STATES.PROFILE });
-
-          //Determin what hook to call after password set / reset
-          let hookFunction = () => null;
-          if (Accounts._loginButtonsSession.get('resetPasswordToken')) {
-            hookFunction = this.state.onPostResetPasswordHook;
-          } else if (Accounts._loginButtonsSession.get('enrollAccountToken')){
-            hookFunction = this.state.onPostEnrollAccountHook;
-          }
-
           Accounts._loginButtonsSession.set('resetPasswordToken', null);
           Accounts._loginButtonsSession.set('enrollAccountToken', null);
-          hookFunction();
         }
       });
     }
