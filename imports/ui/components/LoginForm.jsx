@@ -70,7 +70,7 @@ export class LoginForm extends Tracker.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.formState != this.state.formState) {
+    if (nextProps.formState && nextProps.formState !== this.state.formState) {
       this.setState({
         formState: nextProps.formState
       });
