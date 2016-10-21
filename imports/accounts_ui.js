@@ -12,6 +12,7 @@ Accounts.ui._options = {
   requestPermissions: [],
   requestOfflineToken: {},
   forceApprovalPrompt: {},
+  requireEmailVerification: false,
   passwordSignupFields: 'EMAIL_ONLY_NO_PASSWORD',
   minimumPasswordLength: 7,
   loginPath: '/',
@@ -26,8 +27,8 @@ Accounts.ui._options = {
   onEnrollAccountHook: () => redirect(`${Accounts.ui._options.loginPath}`),
   onResetPasswordHook: () => redirect(`${Accounts.ui._options.loginPath}`),
   onVerifyEmailHook: () => redirect(`${Accounts.ui._options.profilePath}`),
-  onSignedInHook: () => redirect(`${Accounts.ui._options.profilePath}`),
-  onSignedOutHook: () => redirect(`${Accounts.ui._options.homeRoutePath}`)
+  onSignedInHook: () => null,
+  onSignedOutHook: () => null
 };
 
 /**
@@ -46,6 +47,7 @@ Accounts.ui.config = function(options) {
     'requestPermissions',
     'requestOfflineToken',
     'forbidClientAccountCreation',
+    'requireEmailVerification',
     'minimumPasswordLength',
     'loginPath',
     'signUpPath',
@@ -128,6 +130,16 @@ Accounts.ui.config = function(options) {
         Accounts.ui._options.forceApprovalPrompt[service] = value;
       }
     });
+  }
+
+  // deal with `requireEmailVerification`
+  if (options.requireEmailVerification) {
+    if (typeof options.requireEmailVerification != 'boolean') {
+      throw new Error(`Accounts.ui.config: "requireEmailVerification" not a boolean`);
+    }
+    else {
+      Accounts.ui._options.requireEmailVerification = options.requireEmailVerification;
+    }
   }
 
   // deal with `minimumPasswordLength`

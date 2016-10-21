@@ -1,6 +1,6 @@
 # React Accounts UI
 
-Current version 1.1.13
+Current version 1.2.6
 
 ## Features
 
@@ -22,11 +22,18 @@ This package does not by standard come with any styling, you can easily [extend 
 
 * [**Basic**](https://atmospherejs.com/std/accounts-basic)  `std:accounts-basic`
 * [**Semantic UI**](https://atmospherejs.com/std/accounts-semantic)  `std:accounts-semantic`
+<<<<<<< HEAD
 * Bootstrap 3  
   Help out on this: [http://github.com/studiointeract/accounts-bootstrap](http://github.com/studiointeract/accounts-bootstrap)
 * [**Material UI**](https://atmospherejs.com/zetoff/accounts-material-ui) `zetoff:accounts-material-ui`
 * Materil-UI with materialize  
 Help out on this: [http://github.com/studiointeract/accounts-material](http://github.com/studiointeract/accounts-material)
+=======
+* [**Bootstrap 3/4**](https://atmospherejs.com/std/accounts-bootstrap)  `std:accounts-bootstrap`
+* [**Ionic**](https://atmospherejs.com/std/accounts-ionic)  `std:accounts-ionic`
+* Material UI  
+  Help out on this: [http://github.com/studiointeract/accounts-material](http://github.com/studiointeract/accounts-material)
+>>>>>>> studiointeract/master
 
 * Add your styled version here [Learn how](#create-your-own-styled-version)
 
@@ -64,6 +71,17 @@ Accounts.ui.config({
 });
 ```
 
+### Version 1.2 also supports passing hooks through props to the component.
+
+```js
+import { Accounts, STATES } from 'meteor/std:accounts-ui';
+
+<Accounts.ui.LoginForm
+  state={ STATES.SIGN_IN }
+  onSignedInHook={ () => console.log('user signed in') }
+/>
+```
+
 **_Options:_**
 
 * **requestPermissions**&nbsp;&nbsp;&nbsp; Object  
@@ -77,6 +95,9 @@ Accounts.ui.config({
 
 * **passwordSignupFields**&nbsp;&nbsp;&nbsp; String  
   Which fields to display in the user creation form. One of `'USERNAME_AND_EMAIL'`, `'USERNAME_AND_OPTIONAL_EMAIL'`, `'USERNAME_ONLY'`, `'EMAIL_ONLY'`, `'USERNAME_AND_EMAIL_NO_PASSWORD'`, **`'EMAIL_ONLY_NO_PASSWORD'`** (**default**).
+
+* **requireEmailVerification**&nbsp;&nbsp;&nbsp; Boolean  
+  Set if the login *without password* should check if the user is verified before sending any login emails. Default is **false**.
 
 * **minimumPasswordLength**&nbsp;&nbsp;&nbsp; Number  
   Set the minimum number of password length for your application. Default so **7**.
@@ -115,7 +136,7 @@ Accounts.ui.config({
   Change the default redirect behavior when the user clicks the link to enroll for an account sent from the system, i.e. you want a custom path for the enrollment form. Learn more about [how to send enrollment emails](http://docs.meteor.com/#/full/accounts_sendenrollmentemail). Default is **loginPath**.
 
 * **onVerifyEmailHook**&nbsp;&nbsp;&nbsp; function()  
-  Change the default redirect behavior when the user clicks the link to verify their email sent from the system, i.e. you want a custom path after the user verifies their email or login with `NO_PASSWORD`. Default is **profilePath**.
+  Change the default redirect behavior when the user clicks the link to verify their email sent from the system, i.e. you want a custom path after the user verifies their email or login with `EMAIL_ONLY_NO_PASSWORD`. Default is **profilePath**.
 
 * **onSignedInHook**&nbsp;&nbsp;&nbsp; function()  
   Change the default redirect behavior when the user successfully login to your application, i.e. you want a custom path for the reset password form. Default is **profilePath**.
@@ -142,7 +163,7 @@ import React from 'react';
 import { Accounts } from 'meteor/std:accounts-ui';
 
 Accounts.ui.config({
-  passwordSignupFields: 'NO_PASSWORD',
+  passwordSignupFields: 'EMAIL_ONLY_NO_PASSWORD',
   loginPath: '/',
 });
 
@@ -255,7 +276,7 @@ import { Accounts } from 'meteor/std:accounts-ui';
 import { FlowRouter } from 'meteor/kadira:flow-router-ssr';
 
 Accounts.ui.config({
-  passwordSignupFields: 'NO_PASSWORD',
+  passwordSignupFields: 'EMAIL_ONLY_NO_PASSWORD',
   loginPath: '/login',
   onSignedInHook: () => FlowRouter.go('/general'),
   onSignedOutHook: () => FlowRouter.go('/')

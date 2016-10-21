@@ -1,5 +1,64 @@
 # ChangeLog
 
+### v1.2.7
+19-October-2016
+
+* Make sure `nextProps.formState` actually exists before overwriting `state.formState`.
+
+### v1.2.6
+2-June-2016
+
+* Allow form state to be set from prop formState when logged in #51 @todda00
+
+### v1.2.4-5
+28-May-2016
+
+* Adding missing configuration in oauth services.
+
+### v1.2.2-3
+24-May-2016
+
+* Solves issue with social redirect flow being redirected to a faulty urls: #36
+* Solves issue: Accounts.sendLoginEmail does not work if address is set: #42
+
+### v1.2.1
+10-May-2016
+
+* Solves issue with props not being passed down: #39
+
+### v1.2.0
+10-May-2016
+
+* Adding the hooks to be passed as props.
+
+### v1.1.19
+
+* Improving hooks for server side rendered pages.
+* Improving so that browser pre-filled input values are pushed back to the form state.
+
+### v1.1.18
+
+* Updated Tracker dependency.
+
+### v1.1.17
+
+* Updated Tracker dependency.
+
+### v1.1.16
+
+* Bumping version on check-npm-versions to solve #29
+
+### v1.1.15
+
+* @SachaG added classes to the social buttons distinguishing which service.
+
+### v1.1.14
+
+* @SachaG added tmeasday:check-npm-versions to check for the correct version of npm packages.
+* @ArthurPai updated T9n, which adds the Chinese language for accounts, so we can update it to v1.3.3
+* @ArthurPai fixed a forgotten update T9n translation in the PasswordOrService component.
+* @PolGuixe fixed the faulty meteor-developer account integration.
+
 ### v1.1.13
 
 * Fixed faulty language strings.

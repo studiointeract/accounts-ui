@@ -15,7 +15,7 @@ export class PasswordOrService extends React.Component {
   }
 
   render () {
-    let { className, style = {} } = this.props;
+    let { className = "password-or-service", style = {} } = this.props;
     let { hasPasswordService, services } = this.state;
     labels = services;
     if (services.length > 2) {
@@ -25,7 +25,7 @@ export class PasswordOrService extends React.Component {
     if (hasPasswordService && services.length > 0) {
       return (
         <div style={ style } className={ className }>
-          { `${T9n.get('or use')} ${ labels.join(' / ') }` }
+          { `${T9n.get('orUse')} ${ labels.join(' / ') }` }
         </div>
       );
     }
