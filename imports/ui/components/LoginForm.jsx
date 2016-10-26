@@ -25,7 +25,7 @@ export class LoginForm extends Tracker.Component {
       resetPasswordPath,
       profilePath,
       changePasswordPath
-    } = this.props;
+    } = props;
     // Set inital state.
     this.state = {
       message: null,
