@@ -13,15 +13,8 @@ export class Field extends React.Component {
   triggerUpdate() {
     // Trigger an onChange on inital load, to support browser prefilled values.
     const { onChange } = this.props;
-    let node = ReactDOM.findDOMNode(this);
     if (this.input) {
       onChange({ target: { value: this.input.value } });
-    }
-    // Backward compat.
-    else if (node) {
-      let value = node.getElementsByTagName('input')[0].value;
-      // Match the data format of a typical onChange event.
-      onChange({ target: { value: value } });
     }
   }
 
