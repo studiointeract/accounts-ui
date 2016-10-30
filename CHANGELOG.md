@@ -1,5 +1,10 @@
 # ChangeLog
 
+### v1.2.7
+19-October-2016
+
+* Make sure `nextProps.formState` actually exists before overwriting `state.formState`.
+
 ### v1.2.6
 2-June-2016
 
