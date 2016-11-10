@@ -1,5 +1,18 @@
 # ChangeLog
 
+### v1.2.9
+10-November-2016
+
+* #73 – in constructor, we should use `props` and not `this.props`
+* #78 – Move react packages to peerDependencies
+* Added support for React Router Link in buttons.
+
+### v1.2.8
+26-October-2016
+
+* #70 – Added link to new material UI package.
+* #71 – make sure nextProps.formState actually exists before overwriting state
+
 ### v1.2.7
 19-October-2016
 
