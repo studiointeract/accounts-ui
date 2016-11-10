@@ -1,3 +1,4 @@
+export const loginButtonsSession = Accounts._loginButtonsSession;
 export const STATES = {
   SIGN_IN: Symbol('SIGN_IN'),
   SIGN_UP: Symbol('SIGN_UP'),
@@ -27,14 +28,24 @@ export function hasPasswordService() {
   return !!Package['accounts-password'];
 };
 
-export function loginResultCallback(redirect, error) {
+export function loginResultCallback(service, err) {
+  if (!err) {
+
+  } else if (err instanceof Accounts.LoginCancelledError) {
+    // do nothing
+  } else if (err instanceof ServiceConfiguration.ConfigError) {
+
+  } else {
+    //loginButtonsSession.errorMessage(err.reason || "Unknown error");
+  }
+
   if (Meteor.isClient) {
     if (typeof redirect === 'string'){
-      window.location.href = redirect;
+      window.location.href = '/';
     }
 
-    if (typeof redirect === 'function'){
-      redirect();
+    if (typeof service === 'function'){
+      service();
     }
   }
 };

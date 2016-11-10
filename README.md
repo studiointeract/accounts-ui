@@ -1,6 +1,6 @@
 # React Accounts UI
 
-Current version 1.1.20
+Current version 1.2.9
 
 ## Features
 
@@ -24,8 +24,10 @@ This package does not by standard come with any styling, you can easily [extend 
 * [**Semantic UI**](https://atmospherejs.com/std/accounts-semantic)  `std:accounts-semantic`
 * [**Bootstrap 3/4**](https://atmospherejs.com/std/accounts-bootstrap)  `std:accounts-bootstrap`
 * [**Ionic**](https://atmospherejs.com/std/accounts-ionic)  `std:accounts-ionic`
+* [**Material UI**](https://atmospherejs.com/zetoff/accounts-material-ui) `zetoff:accounts-material-ui`
 * Material UI  
   Help out on this: [http://github.com/studiointeract/accounts-material](http://github.com/studiointeract/accounts-material)
+
 
 * Add your styled version here [Learn how](#create-your-own-styled-version)
 
@@ -61,6 +63,17 @@ Accounts.ui.config({
   onSignedOutHook: () => FlowRouter.go('/login'),
   minimumPasswordLength: 6
 });
+```
+
+### Version 1.2 also supports passing hooks through props to the component.
+
+```js
+import { Accounts, STATES } from 'meteor/std:accounts-ui';
+
+<Accounts.ui.LoginForm
+  state={ STATES.SIGN_IN }
+  onSignedInHook={ () => console.log('user signed in') }
+/>
 ```
 
 **_Options:_**
@@ -117,7 +130,7 @@ Accounts.ui.config({
   Change the default redirect behavior when the user clicks the link to enroll for an account sent from the system, i.e. you want a custom path for the enrollment form. Learn more about [how to send enrollment emails](http://docs.meteor.com/#/full/accounts_sendenrollmentemail). Default is **loginPath**.
 
 * **onVerifyEmailHook**&nbsp;&nbsp;&nbsp; function()  
-  Change the default redirect behavior when the user clicks the link to verify their email sent from the system, i.e. you want a custom path after the user verifies their email or login with `NO_PASSWORD`. Default is **profilePath**.
+  Change the default redirect behavior when the user clicks the link to verify their email sent from the system, i.e. you want a custom path after the user verifies their email or login with `EMAIL_ONLY_NO_PASSWORD`. Default is **profilePath**.
 
 * **onSignedInHook**&nbsp;&nbsp;&nbsp; function()  
   Change the default redirect behavior when the user successfully login to your application, i.e. you want a custom path for the reset password form. Default is **profilePath**.
@@ -144,7 +157,7 @@ import React from 'react';
 import { Accounts } from 'meteor/std:accounts-ui';
 
 Accounts.ui.config({
-  passwordSignupFields: 'NO_PASSWORD',
+  passwordSignupFields: 'EMAIL_ONLY_NO_PASSWORD',
   loginPath: '/',
 });
 
@@ -180,8 +193,8 @@ Meteor.startup( () => {
     <Router history={ browserHistory }>
       <Route path="/" component={ App }>
         <IndexRoute component={ Index } />
-        <Route path="/signin" component={ Accounts.ui.LoginForm } formState={ STATES.SIGN_IN } />
-        <Route path="/signup" component={ Accounts.ui.LoginForm } formState={ STATES.SIGN_UP } />
+        <Route path="/signin" component={() => <Accounts.ui.LoginForm formState={STATES.SIGN_IN} />} />
+        <Route path="/signup" component={() => <Accounts.ui.LoginForm formState={STATES.SIGN_UP} />} />
         <Route path="/hello/:name" component={ Hello } />
       </Route>
       <Route path="/admin" component={ App }>
@@ -257,7 +270,7 @@ import { Accounts } from 'meteor/std:accounts-ui';
 import { FlowRouter } from 'meteor/kadira:flow-router-ssr';
 
 Accounts.ui.config({
-  passwordSignupFields: 'NO_PASSWORD',
+  passwordSignupFields: 'EMAIL_ONLY_NO_PASSWORD',
   loginPath: '/login',
   onSignedInHook: () => FlowRouter.go('/general'),
   onSignedOutHook: () => FlowRouter.go('/')

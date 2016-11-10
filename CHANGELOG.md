@@ -1,5 +1,49 @@
 # ChangeLog
 
+### v1.2.9
+10-November-2016
+
+* #73 – in constructor, we should use `props` and not `this.props`
+* #78 – Move react packages to peerDependencies
+* Added support for React Router Link in buttons.
+
+### v1.2.8
+26-October-2016
+
+* #70 – Added link to new material UI package.
+* #71 – make sure nextProps.formState actually exists before overwriting state
+
+### v1.2.7
+19-October-2016
+
+* Make sure `nextProps.formState` actually exists before overwriting `state.formState`.
+
+### v1.2.6
+2-June-2016
+
+* Allow form state to be set from prop formState when logged in #51 @todda00
+
+### v1.2.4-5
+28-May-2016
+
+* Adding missing configuration in oauth services.
+
+### v1.2.2-3
+24-May-2016
+
+* Solves issue with social redirect flow being redirected to a faulty urls: #36
+* Solves issue: Accounts.sendLoginEmail does not work if address is set: #42
+
+### v1.2.1
+10-May-2016
+
+* Solves issue with props not being passed down: #39
+
+### v1.2.0
+10-May-2016
+
+* Adding the hooks to be passed as props.
+
 ### v1.1.19
 
 * Improving hooks for server side rendered pages.

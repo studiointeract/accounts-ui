@@ -83,7 +83,7 @@ Accounts.sendLoginEmail = function (userId, address) {
   var loginUrl = Accounts.urls.verifyEmail(tokenRecord.token);
 
   var options = {
-    to: email,
+    to: address,
     from: Accounts.emailTemplates.loginNoPassword.from
       ? Accounts.emailTemplates.loginNoPassword.from(user)
       : Accounts.emailTemplates.from,
