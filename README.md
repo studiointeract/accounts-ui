@@ -193,8 +193,8 @@ Meteor.startup( () => {
     <Router history={ browserHistory }>
       <Route path="/" component={ App }>
         <IndexRoute component={ Index } />
-        <Route path="/signin" component={ Accounts.ui.LoginForm } formState={ STATES.SIGN_IN } />
-        <Route path="/signup" component={ Accounts.ui.LoginForm } formState={ STATES.SIGN_UP } />
+        <Route path="/signin" component={() => <Accounts.ui.LoginForm formState={STATES.SIGN_IN} />} />
+        <Route path="/signup" component={() => <Accounts.ui.LoginForm formState={STATES.SIGN_UP} />} />
         <Route path="/hello/:name" component={ Hello } />
       </Route>
       <Route path="/admin" component={ App }>
