@@ -1,5 +1,6 @@
 import React from 'react';
 import { Accounts } from 'meteor/accounts-base';
+try { import { Link } from 'react-router'; } catch(e) {}
 
 export class Button extends React.Component {
   render () {
@@ -12,7 +13,12 @@ export class Button extends React.Component {
       onClick
     } = this.props;
     if (type == 'link') {
-      return <a href={ href } className={ className } onClick={ onClick }>{ label }</a>;
+      // Support React Router.
+      if (Link && href) {
+        return <Link to={ href } className={ className }>{ label }</Link>;
+      } else {
+        return <a href={ href } className={ className } onClick={ onClick }>{ label }</a>;
+      }
     }
     return <button className={ className }
                    type={ type } 
