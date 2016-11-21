@@ -465,7 +465,7 @@ export default Accounts;
 > Example provided by [@radzom](https://github.com/radzom).
 
 ```javascript
-import { Accounts, STATES } from 'meteor/accounts-ui';
+import { Accounts, STATES } from 'meteor/std:accounts-ui';
 
 class NewLogin extends Accounts.ui.LoginForm {
   fields() {
