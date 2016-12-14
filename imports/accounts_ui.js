@@ -27,8 +27,8 @@ Accounts.ui._options = {
   onEnrollAccountHook: () => redirect(`${Accounts.ui._options.loginPath}`),
   onResetPasswordHook: () => redirect(`${Accounts.ui._options.loginPath}`),
   onVerifyEmailHook: () => redirect(`${Accounts.ui._options.profilePath}`),
-  onSignedInHook: () => null,
-  onSignedOutHook: () => null
+  onSignedInHook: () => redirect(`${Accounts.ui._options.homeRoutePath}`),
+  onSignedOutHook: () => redirect(`${Accounts.ui._options.homeRoutePath}`)
 };
 
 /**
