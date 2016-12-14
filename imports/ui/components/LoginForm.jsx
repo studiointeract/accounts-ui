@@ -270,7 +270,13 @@ export class LoginForm extends Tracker.Component {
         id: 'signOut',
         label: T9n.get('signOut'),
         disabled: waiting,
-        onClick: this.signOut.bind(this)
+        onClick: function (event) {
+          if (_.isFunction(this.props.onSignOut)) {
+            this.props.onSignOut(event);
+          }
+
+          this.signOut();
+        }.bind(this)
       });
     }
 
@@ -280,7 +286,13 @@ export class LoginForm extends Tracker.Component {
         label: T9n.get('signUp'),
         type: 'link',
         href: this.props.signUpPath || Accounts.ui._options.signUpPath,
-        onClick: this.switchToSignUp.bind(this)
+        onClick: function (event) {
+          if (_.isFunction(this.props.onSwitchToSignUp)) {
+            this.props.onSwitchToSignUp(event);
+          }
+
+          this.switchToSignUp(event);
+        }.bind(this)
       });
     }
 
@@ -290,7 +302,13 @@ export class LoginForm extends Tracker.Component {
         label: T9n.get('signIn'),
         type: 'link',
         href: this.props.loginPath || Accounts.ui._options.loginPath,
-        onClick: this.switchToSignIn.bind(this)
+        onClick: function (event) {
+          if (_.isFunction(this.props.onSwitchToSignIn)) {
+            this.props.onSwitchToSignIn(event);
+          }
+
+          this.switchToSignIn(event);
+        }.bind(this)
       });
     }
 
@@ -300,7 +318,13 @@ export class LoginForm extends Tracker.Component {
         label: T9n.get('forgotPassword'),
         type: 'link',
         href: this.props.resetPasswordPath || Accounts.ui._options.resetPasswordPath,
-        onClick: this.switchToPasswordReset.bind(this)
+        onClick: function (event) {
+          if (_.isFunction(this.props.onSwitchToPasswordReset)) {
+            this.props.onSwitchToPasswordReset(event);
+          }
+
+          this.switchToPasswordReset(event);
+        }.bind(this)
       });
     }
 
@@ -315,7 +339,13 @@ export class LoginForm extends Tracker.Component {
         label: T9n.get('changePassword'),
         type: 'link',
         href: this.props.changePasswordPath || Accounts.ui._options.changePasswordPath,
-        onClick: this.switchToChangePassword.bind(this)
+        onClick: function (event) {
+          if (_.isFunction(this.props.onSwitchToChangePassword)) {
+            this.props.onSwitchToChangePassword(event);
+          }
+
+          this.switchToChangePassword(event);
+        }.bind(this)
       });
     }
 
@@ -326,7 +356,15 @@ export class LoginForm extends Tracker.Component {
         type: hasPasswordService() ? 'submit' : 'link',
         className: 'active',
         disabled: waiting,
-        onClick: hasPasswordService() ? this.signUp.bind(this, {}) : null
+        onClick: function (event) {
+          if (_.isFunction(this.props.onSwitchToChangePassword)) {
+            this.props.onSwitchToChangePassword(event);
+          }
+
+          if (hasPasswordService()) {
+            this.signUp();
+          }
+        }.bind(this)
       });
     }
 
@@ -337,7 +375,15 @@ export class LoginForm extends Tracker.Component {
         type: hasPasswordService() ? 'submit' : 'link',
         className: 'active',
         disabled: waiting,
-        onClick: hasPasswordService() ? this.signIn.bind(this) : null
+        onClick: function (event) {
+          if (_.isFunction(this.props.onSignIn)) {
+            this.props.onSignIn(event);
+          }
+
+          if (hasPasswordService()) {
+            this.signIn();
+          }
+        }.bind(this)
       });
     }
 
@@ -347,7 +393,13 @@ export class LoginForm extends Tracker.Component {
         label: T9n.get('resetYourPassword'),
         type: 'submit',
         disabled: waiting,
-        onClick: this.passwordReset.bind(this)
+        onClick: function (event) {
+          if (_.isFunction(this.props.onPasswordReset)) {
+            this.props.onPasswordReset(event);
+          }
+
+          this.passwordReset();
+        }.bind(this)
       });
     }
 
@@ -357,7 +409,13 @@ export class LoginForm extends Tracker.Component {
         label: T9n.get('changePassword'),
         type: 'submit',
         disabled: waiting,
-        onClick: this.passwordChange.bind(this)
+        onClick: function (event) {
+          if (_.isFunction(this.props.onPasswordChange)) {
+            this.props.onPasswordChange(event);
+          }
+
+          this.passwordChange();
+        }.bind(this)
       });
 
       loginButtons.push({
@@ -365,7 +423,13 @@ export class LoginForm extends Tracker.Component {
         label: T9n.get('cancel'),
         type: 'link',
         href: this.props.profilePath || Accounts.ui._options.profilePath,
-        onClick: this.switchToSignOut.bind(this)
+        onClick: function (event) {
+          if (_.isFunction(this.props.onSwitchToSignOut)) {
+            this.props.onSwitchToSignOut(event);
+          }
+
+          this.switchToSignOut(event);
+        }.bind(this)
       });
     }
 
