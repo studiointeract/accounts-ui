@@ -54,7 +54,7 @@ export function passwordSignupFields() {
   return Accounts.ui._options.passwordSignupFields || "EMAIL_ONLY_NO_PASSWORD";
 };
 
-export function validatePassword(password){
+export function validatePassword(password = ''){
   if (password.length >= Accounts.ui._options.minimumPasswordLength) {
     return true;
   } else {
