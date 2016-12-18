@@ -173,9 +173,9 @@ Accounts.ui.config = function(options) {
     'changePasswordPath',
     'homeRoutePath'
   ]) {
-    if (options[path]) {
-      if (typeof options[path] != 'string') {
-        throw new Error(`Accounts.ui.config: ${path} is not a string`);
+    if (typeof options[path] !== 'undefined') {
+      if (options[path] !== null && typeof options[path] !== 'string') {
+        throw new Error(`Accounts.ui.config: ${path} is not a string or null`);
       }
       else {
         Accounts.ui._options[path] = options[path];
