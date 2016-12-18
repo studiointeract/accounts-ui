@@ -262,8 +262,23 @@ export class LoginForm extends Tracker.Component {
   }
 
   buttons() {
+    const {
+      loginPath = Accounts.ui._options.loginPath,
+      signUpPath = Accounts.ui._options.signUpPath,
+      resetPasswordPath = Accounts.ui._options.resetPasswordPath,
+      changePasswordPath = Accounts.ui._options.changePasswordPath,
+      profilePath = Accounts.ui._options.profilePath,
+    } = this.props;
     const { formState, waiting, user } = this.state;
     let loginButtons = [];
+
+    console.log({
+      loginPath,
+      signUpPath,
+      resetPasswordPath,
+      changePasswordPath,
+      profilePath,
+    })
 
     if (user && formState == STATES.PROFILE) {
       loginButtons.push({
@@ -279,7 +294,7 @@ export class LoginForm extends Tracker.Component {
         id: 'switchToSignUp',
         label: T9n.get('signUp'),
         type: 'link',
-        href: this.props.signUpPath || Accounts.ui._options.signUpPath,
+        href: signUpPath,
         onClick: this.switchToSignUp.bind(this)
       });
     }
@@ -289,17 +304,19 @@ export class LoginForm extends Tracker.Component {
         id: 'switchToSignIn',
         label: T9n.get('signIn'),
         type: 'link',
-        href: this.props.loginPath || Accounts.ui._options.loginPath,
+        href: loginPath,
         onClick: this.switchToSignIn.bind(this)
       });
     }
+
+    console.log(this.props);
 
     if (this.showForgotPasswordLink()) {
       loginButtons.push({
         id: 'switchToPasswordReset',
         label: T9n.get('forgotPassword'),
         type: 'link',
-        href: this.props.resetPasswordPath || Accounts.ui._options.resetPasswordPath,
+        href: resetPasswordPath,
         onClick: this.switchToPasswordReset.bind(this)
       });
     }
@@ -314,7 +331,7 @@ export class LoginForm extends Tracker.Component {
         id: 'switchToChangePassword',
         label: T9n.get('changePassword'),
         type: 'link',
-        href: this.props.changePasswordPath || Accounts.ui._options.changePasswordPath,
+        href: changePasswordPath,
         onClick: this.switchToChangePassword.bind(this)
       });
     }
@@ -364,7 +381,7 @@ export class LoginForm extends Tracker.Component {
         id: 'switchToSignOut',
         label: T9n.get('cancel'),
         type: 'link',
-        href: this.props.profilePath || Accounts.ui._options.profilePath,
+        href: profilePath,
         onClick: this.switchToSignOut.bind(this)
       });
     }
