@@ -13,7 +13,7 @@ export class Field extends React.Component {
   triggerUpdate() {
     // Trigger an onChange on inital load, to support browser prefilled values.
     const { onChange } = this.props;
-    if (this.input) {
+    if (this.input && this.input.value) {
       onChange({ target: { value: this.input.value } });
     }
   }
@@ -25,7 +25,7 @@ export class Field extends React.Component {
   componentDidUpdate(prevProps) {
     // Re-mount component so that we don't expose browser prefilled passwords if the component was
     // a password before and now something else.
-    if (prevProps.formState !== this.props.formState) {
+    if (prevProps.id !== this.props.id) {
       this.setState({mount: false});
     }
     else if (!this.state.mount) {
@@ -43,7 +43,8 @@ export class Field extends React.Component {
       onChange,
       required = false,
       className = "field",
-      defaultValue = ""
+      defaultValue = "",
+      message,
     } = this.props;
     const { mount = true } = this.state;
     if (type == 'notice') {
@@ -52,12 +53,18 @@ export class Field extends React.Component {
     return mount ? (
       <div className={ className }>
         <label htmlFor={ id }>{ label }</label>
-        <input id={ id }
-               ref={ (ref) => this.input = ref }
-               type={ type }
-               onChange={ onChange }
-               placeholder={ hint }
-               defaultValue={ defaultValue } />
+        <input
+          id={ id }
+          ref={ (ref) => this.input = ref }
+          type={ type }
+          onChange={ onChange }
+          placeholder={ hint }
+          defaultValue={ defaultValue }
+        />
+        {message && (
+          <span className={['message', message.type].join(' ').trim()}>
+            {message.message}</span>
+        )}
       </div>
     ) : null;
   }

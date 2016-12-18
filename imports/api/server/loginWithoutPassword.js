@@ -7,37 +7,39 @@ import { Accounts } from 'meteor/accounts-base';
 
 // Method called by a user to request a password reset email. This is
 // the start of the reset process.
-Meteor.methods({loginWithoutPassword: function ({ email, username = null }) {
-  if (username !== null) {
-    check(username, String);
+Meteor.methods({
+  loginWithoutPassword: function ({ email, username = null }) {
+    if (username !== null) {
+      check(username, String);
 
-    var user = Meteor.users.findOne({ $or: [{
-        "username": username, "emails.address": { $exists: 1 }
-      }, {
-        "emails.address": email
-      }]
-    });
-    if (!user)
-      throw new Meteor.Error(403, "User not found");
+      var user = Meteor.users.findOne({ $or: [{
+          "username": username, "emails.address": { $exists: 1 }
+        }, {
+          "emails.address": email
+        }]
+      });
+      if (!user)
+        throw new Meteor.Error(403, "User not found");
 
-    email = user.emails[0].address;
-  }
-  else {
-    check(email, String);
-
-    var user = Meteor.users.findOne({ "emails.address": email });
-    if (!user)
-      throw new Meteor.Error(403, "User not found");
-  }
-
-  if (Accounts.ui._options.requireEmailVerification) {
-    if (!user.emails[0].verified) {
-      throw new Meteor.Error(403, "Email not verified");
+      email = user.emails[0].address;
     }
-  }
+    else {
+      check(email, String);
 
-  Accounts.sendLoginEmail(user._id, email);
-}});
+      var user = Meteor.users.findOne({ "emails.address": email });
+      if (!user)
+        throw new Meteor.Error(403, "User not found");
+    }
+
+    if (Accounts.ui._options.requireEmailVerification) {
+      if (!user.emails[0].verified) {
+        throw new Meteor.Error(403, "Email not verified");
+      }
+    }
+
+    Accounts.sendLoginEmail(user._id, email);
+  },
+});
 
 /**
  * @summary Send an email with a link the user can use verify their email address.

@@ -54,13 +54,39 @@ export function passwordSignupFields() {
   return Accounts.ui._options.passwordSignupFields || "EMAIL_ONLY_NO_PASSWORD";
 };
 
-export function validatePassword(password){
+export function validateEmail(email, showMessage, clearMessage) {
+  if (passwordSignupFields() === "USERNAME_AND_OPTIONAL_EMAIL" && email === '') {
+    return true;
+  }
+  if (Accounts.ui._options.emailPattern.test(email)) {
+    return true;
+  } else if (!email || email.length === 0) {
+    showMessage(T9n.get("error.emailRequired"), 'warning', false, 'email');
+    return false;
+  } else {
+    showMessage(T9n.get("error.accounts.Invalid email"), 'warning', false, 'email');
+    return false;
+  }
+}
+
+export function validatePassword(password = '', showMessage, clearMessage){
   if (password.length >= Accounts.ui._options.minimumPasswordLength) {
     return true;
   } else {
+    const errMsg = T9n.get("error.minChar").replace(/7/, Accounts.ui._options.minimumPasswordLength);
+    showMessage(errMsg, 'warning', false, 'password');
     return false;
   }
 };
+
+export function validateUsername(username, showMessage, clearMessage) {
+  if ( username ) {
+    return true;
+  } else {
+    showMessage(T9n.get("error.usernameRequired"), 'warning', false, 'username');
+    return false;
+  }
+}
 
 export function redirect(redirect) {
   if (Meteor.isClient) {
@@ -68,11 +94,9 @@ export function redirect(redirect) {
       Meteor.setTimeout(() => {
         if (Package['kadira:flow-router']) {
           Package['kadira:flow-router'].FlowRouter.go(redirect);
-        }
-        else if (Package['kadira:flow-router-ssr']) {
+        } else if (Package['kadira:flow-router-ssr']) {
           Package['kadira:flow-router-ssr'].FlowRouter.go(redirect);
-        }
-        else {
+        } else {
           window.history.pushState( {} , 'redirect', redirect );
         }
       }, 500);

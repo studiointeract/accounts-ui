@@ -8,7 +8,9 @@ import './Form.jsx';
 import {
   STATES,
   passwordSignupFields,
+  validateEmail,
   validatePassword,
+  validateUsername,
   loginResultCallback,
   getLoginServices,
   hasPasswordService,
@@ -28,14 +30,16 @@ export class LoginForm extends Tracker.Component {
     } = props;
     // Set inital state.
     this.state = {
-      message: null,
+      messages: [],
       waiting: true,
       formState: formState ? formState : Accounts.user() ? STATES.PROFILE : STATES.SIGN_IN,
       onSubmitHook: props.onSubmitHook || Accounts.ui._options.onSubmitHook,
       onSignedInHook: props.onSignedInHook || Accounts.ui._options.onSignedInHook,
       onSignedOutHook: props.onSignedOutHook || Accounts.ui._options.onSignedOutHook,
       onPreSignUpHook: props.onPreSignUpHook || Accounts.ui._options.onPreSignUpHook,
-      onPostSignUpHook: props.onPostSignUpHook || Accounts.ui._options.onPostSignUpHook
+      onPostSignUpHook: props.onPostSignUpHook || Accounts.ui._options.onPostSignUpHook,
+      // Add default field values.
+      ...this.getDefaultFieldValues(),
     };
 
     // Listen for the user to login/logout.
@@ -72,39 +76,37 @@ export class LoginForm extends Tracker.Component {
   componentWillReceiveProps(nextProps, nextContext) {
     if (nextProps.formState && nextProps.formState !== this.state.formState) {
       this.setState({
-        formState: nextProps.formState
+        formState: nextProps.formState,
+        ...this.getDefaultFieldValues(),
       });
     }
   }
 
-  validateUsername( username ) {
-    if ( username ) {
-      return true;
-    }
-    else {
-      this.showMessage(T9n.get("error.usernameRequired"), 'warning');
-      if (this.state.formState == STATES.SIGN_UP) {
-        this.state.onSubmitHook("error.accounts.usernameRequired", this.state.formState);
-      }
-
-      return false;
+  componentDidUpdate(prevProps, prevState) {
+    if (!prevState.user !== !this.state.user) {
+      this.setState({
+        formState: this.state.user ? STATES.PROFILE : STATES.SIGN_IN
+      });
     }
   }
 
-  validateEmail( email ) {
-    if (passwordSignupFields() === "USERNAME_AND_OPTIONAL_EMAIL" && email === '')
-      return true;
-
-    if (email.indexOf('@') !== -1) {
-      return true;
-    }
-    else {
-      this.showMessage(T9n.get("error.accounts.Invalid email"), 'warning');
-      if (this.state.formState == STATES.SIGN_UP) {
-        this.state.onSubmitHook("error.accounts.Invalid email", this.state.formState);
-      }
-
-      return false;
+  validateField(field, value) {
+    switch(field) {
+      case 'email':
+        return validateEmail(value,
+          this.showMessage.bind(this),
+          this.clearMessage.bind(this),
+        );
+      case 'password':
+        return validatePassword(value,
+          this.showMessage.bind(this),
+          this.clearMessage.bind(this),
+        );
+      case 'username':
+        return validateUsername(value,
+          this.showMessage.bind(this),
+          this.clearMessage.bind(this),
+        );
     }
   }
 
@@ -115,7 +117,8 @@ export class LoginForm extends Tracker.Component {
       label: T9n.get('usernameOrEmail'),
       required: true,
       defaultValue: this.state.username || "",
-      onChange: this.handleChange.bind(this, 'usernameOrEmail')
+      onChange: this.handleChange.bind(this, 'usernameOrEmail'),
+      message: this.getMessageForField('usernameOrEmail'),
     };
   }
 
@@ -126,7 +129,8 @@ export class LoginForm extends Tracker.Component {
       label: T9n.get('username'),
       required: true,
       defaultValue: this.state.username || "",
-      onChange: this.handleChange.bind(this, 'username')
+      onChange: this.handleChange.bind(this, 'username'),
+      message: this.getMessageForField('username'),
     };
   }
 
@@ -138,7 +142,8 @@ export class LoginForm extends Tracker.Component {
       type: 'email',
       required: true,
       defaultValue: this.state.email || "",
-      onChange: this.handleChange.bind(this, 'email')
+      onChange: this.handleChange.bind(this, 'email'),
+      message: this.getMessageForField('email'),
     };
   }
 
@@ -150,7 +155,8 @@ export class LoginForm extends Tracker.Component {
       type: 'password',
       required: true,
       defaultValue: this.state.password || "",
-      onChange: this.handleChange.bind(this, 'password')
+      onChange: this.handleChange.bind(this, 'password'),
+      message: this.getMessageForField('password'),
     };
   }
 
@@ -161,7 +167,8 @@ export class LoginForm extends Tracker.Component {
       label: T9n.get('newPassword'),
       type: 'password',
       required: true,
-      onChange: this.handleChange.bind(this, 'newPassword')
+      onChange: this.handleChange.bind(this, 'newPassword'),
+      message: this.getMessageForField('newPassword'),
     };
   }
 
@@ -174,6 +181,7 @@ export class LoginForm extends Tracker.Component {
         break;
     }
     this.setState({ [field]: value });
+    this.setDefaultFieldValues({ [field]: value });
   }
 
   fields() {
@@ -262,6 +270,13 @@ export class LoginForm extends Tracker.Component {
   }
 
   buttons() {
+    const {
+      loginPath = Accounts.ui._options.loginPath,
+      signUpPath = Accounts.ui._options.signUpPath,
+      resetPasswordPath = Accounts.ui._options.resetPasswordPath,
+      changePasswordPath = Accounts.ui._options.changePasswordPath,
+      profilePath = Accounts.ui._options.profilePath,
+    } = this.props;
     const { formState, waiting, user } = this.state;
     let loginButtons = [];
 
@@ -279,7 +294,7 @@ export class LoginForm extends Tracker.Component {
         id: 'switchToSignUp',
         label: T9n.get('signUp'),
         type: 'link',
-        href: this.props.signUpPath || Accounts.ui._options.signUpPath,
+        href: signUpPath,
         onClick: this.switchToSignUp.bind(this)
       });
     }
@@ -289,7 +304,7 @@ export class LoginForm extends Tracker.Component {
         id: 'switchToSignIn',
         label: T9n.get('signIn'),
         type: 'link',
-        href: this.props.loginPath || Accounts.ui._options.loginPath,
+        href: loginPath,
         onClick: this.switchToSignIn.bind(this)
       });
     }
@@ -299,7 +314,7 @@ export class LoginForm extends Tracker.Component {
         id: 'switchToPasswordReset',
         label: T9n.get('forgotPassword'),
         type: 'link',
-        href: this.props.resetPasswordPath || Accounts.ui._options.resetPasswordPath,
+        href: resetPasswordPath,
         onClick: this.switchToPasswordReset.bind(this)
       });
     }
@@ -314,7 +329,7 @@ export class LoginForm extends Tracker.Component {
         id: 'switchToChangePassword',
         label: T9n.get('changePassword'),
         type: 'link',
-        href: this.props.changePasswordPath || Accounts.ui._options.changePasswordPath,
+        href: changePasswordPath,
         onClick: this.switchToChangePassword.bind(this)
       });
     }
@@ -364,7 +379,7 @@ export class LoginForm extends Tracker.Component {
         id: 'switchToSignOut',
         label: T9n.get('cancel'),
         type: 'link',
-        href: this.props.profilePath || Accounts.ui._options.profilePath,
+        href: profilePath,
         onClick: this.switchToSignOut.bind(this)
       });
     }
@@ -403,39 +418,96 @@ export class LoginForm extends Tracker.Component {
         passwordSignupFields());
   }
 
+  /**
+   * Helper to store field values while using the form.
+   */
+  setDefaultFieldValues(defaults) {
+    if (typeof defaults !== 'object') {
+      throw new Error('Argument to setDefaultFieldValues is not of type object');
+    } else if (localStorage) {
+      localStorage.setItem('accounts_ui', JSON.stringify({
+        passwordSignupFields: passwordSignupFields(),
+        ...this.getDefaultFieldValues(),
+        ...defaults,
+      }));
+    }
+  }
+
+  /**
+   * Helper to get field values when switching states in the form.
+   */
+  getDefaultFieldValues() {
+    if (localStorage) {
+      const defaultFieldValues = JSON.parse(localStorage.getItem('accounts_ui') || null);
+      if (defaultFieldValues
+        && defaultFieldValues.passwordSignupFields === passwordSignupFields()) {
+        return defaultFieldValues;
+      }
+    }
+  }
+
+  /**
+   * Helper to clear field values when signing in, up or out.
+   */
+  clearDefaultFieldValues() {
+    if (localStorage) {
+      localStorage.removeItem('accounts_ui');
+    }
+  }
+
   switchToSignUp(event) {
     event.preventDefault();
     this.setState({
       formState: STATES.SIGN_UP,
-      message: null,
-      email: null
+      ...this.getDefaultFieldValues(),
     });
+    this.clearMessages();
   }
 
   switchToSignIn(event) {
     event.preventDefault();
-    this.setState({ formState: STATES.SIGN_IN, message: null });
+    this.setState({
+      formState: STATES.SIGN_IN,
+      ...this.getDefaultFieldValues(),
+    });
+    this.clearMessages();
   }
 
   switchToPasswordReset(event) {
     event.preventDefault();
-    this.setState({ formState: STATES.PASSWORD_RESET, message: null });
+    this.setState({
+      formState: STATES.PASSWORD_RESET,
+      ...this.getDefaultFieldValues(),
+    });
+    this.clearMessages();
   }
 
   switchToChangePassword(event) {
     event.preventDefault();
-    this.setState({ formState: STATES.PASSWORD_CHANGE, message: null });
+    this.setState({
+      formState: STATES.PASSWORD_CHANGE,
+      ...this.getDefaultFieldValues(),
+    });
+    this.clearMessages();
   }
 
   switchToSignOut(event) {
     event.preventDefault();
-    this.setState({ formState: STATES.PROFILE, message: null });
+    this.setState({
+      formState: STATES.PROFILE,
+    });
+    this.clearMessages();
   }
 
   signOut() {
     Meteor.logout(() => {
-      this.setState({ formState: STATES.SIGN_IN, message: null, password: null });
+      this.setState({
+        formState: STATES.SIGN_IN,
+        password: null,
+      });
       this.state.onSignedOutHook();
+      this.clearMessages();
+      this.clearDefaultFieldValues();
     });
   }
 
@@ -444,56 +516,74 @@ export class LoginForm extends Tracker.Component {
       username = null,
       email = null,
       usernameOrEmail = null,
-      password
+      password,
+      formState,
+      onSubmitHook
     } = this.state;
-
+    let error = false;
     let loginSelector;
+    this.clearMessages();
 
     if (usernameOrEmail !== null) {
-      // XXX not sure how we should validate this. but this seems good enough (for now),
-      // since an email must have at least 3 characters anyways
-      if (!this.validateUsername(usernameOrEmail)) {
-        return;
+      if (!this.validateField('username', usernameOrEmail)) {
+        if (this.state.formState == STATES.SIGN_UP) {
+          this.state.onSubmitHook("error.accounts.usernameRequired", this.state.formState);
+        }
+        error = true;
       }
       else {
         if (_.contains([ "USERNAME_AND_EMAIL_NO_PASSWORD" ], passwordSignupFields())) {
           this.loginWithoutPassword();
           return;
+        } else {
+          loginSelector = usernameOrEmail;
         }
-        loginSelector = usernameOrEmail;
       }
     } else if (username !== null) {
-      if (!this.validateUsername(username)) {
-        return;
+      if (!this.validateField('username', username)) {
+        if (this.state.formState == STATES.SIGN_UP) {
+          this.state.onSubmitHook("error.accounts.usernameRequired", this.state.formState);
+        }
+        error = true;
       }
       else {
         loginSelector = { username: username };
       }
     }
-    else if (email !== null && usernameOrEmail == null) {
-      if (!this.validateEmail(email)) {
-        return;
+    else if (usernameOrEmail == null) {
+      if (!this.validateField('email', email)) {
+        error = true;
       }
       else {
         if (_.contains([ "EMAIL_ONLY_NO_PASSWORD" ], passwordSignupFields())) {
           this.loginWithoutPassword();
-          return;
+          error = true;
+        } else {
+          loginSelector = { email };
         }
-        loginSelector = { email };
       }
-    } else {
-      throw new Error("Unexpected -- no element to use as a login user selector");
+    }
+    if (!_.contains([ "EMAIL_ONLY_NO_PASSWORD" ], passwordSignupFields())
+      && !this.validateField('password', password)) {
+      error = true;
     }
 
-    Meteor.loginWithPassword(loginSelector, password, (error, result) => {
-      if (error) {
-        this.showMessage(T9n.get(`error.accounts.${error.reason}`) || T9n.get("Unknown error"), 'error');
-      }
-      else {
-        loginResultCallback(() => this.state.onSignedInHook());
-        this.setState({ formState: STATES.PROFILE, message: null, password: null });
-      }
-    });
+    if (!error) {
+      Meteor.loginWithPassword(loginSelector, password, (error, result) => {
+        onSubmitHook(error,formState);
+        if (error) {
+          this.showMessage(T9n.get(`error.accounts.${error.reason}`) || T9n.get("Unknown error"), 'error');
+        }
+        else {
+          loginResultCallback(() => this.state.onSignedInHook());
+          this.setState({
+            formState: STATES.PROFILE,
+            password: null,
+          });
+          this.clearDefaultFieldValues();
+        }
+      });
+    }
   }
 
   oauthButtons() {
@@ -517,7 +607,7 @@ export class LoginForm extends Tracker.Component {
   }
 
   oauthSignIn(serviceName) {
-    const { formState, waiting, user } = this.state;
+    const { formState, waiting, user, onSubmitHook } = this.state;
     //Thanks Josh Owens for this one.
     function capitalService() {
       return serviceName.charAt(0).toUpperCase() + serviceName.slice(1);
@@ -537,11 +627,14 @@ export class LoginForm extends Tracker.Component {
     if (Accounts.ui._options.forceApprovalPrompt[serviceName])
       options.forceApprovalPrompt = Accounts.ui._options.forceApprovalPrompt[serviceName];
 
+    this.clearMessages();
     loginWithService(options, (error) => {
+      onSubmitHook(error,formState);
       if (error) {
         this.showMessage(T9n.get(`error.accounts.${error.reason}`) || T9n.get("Unknown error"));
       } else {
-        this.setState({ formState: STATES.PROFILE, message: '' });
+        this.setState({ formState: STATES.PROFILE });
+        this.clearDefaultFieldValues();
         loginResultCallback(() => {
           Meteor.setTimeout(() => this.state.onSignedInHook(), 100);
         });
@@ -556,33 +649,37 @@ export class LoginForm extends Tracker.Component {
       email = null,
       usernameOrEmail = null,
       password,
-      formState
+      formState,
+      onSubmitHook
     } = this.state;
+    let error = false;
+    this.clearMessages();
 
     if (username !== null) {
-      if ( !this.validateUsername(username) ) {
-        return;
-      }
-      else {
+      if ( !this.validateField('username', username) ) {
+        if (this.state.formState == STATES.SIGN_UP) {
+          this.state.onSubmitHook("error.accounts.usernameRequired", this.state.formState);
+        }
+        error = true;
+      } else {
         options.username = username;
       }
-    }
-    else {
+    } else {
       if (_.contains([
         "USERNAME_AND_EMAIL",
         "USERNAME_AND_EMAIL_NO_PASSWORD"
-      ], passwordSignupFields()) && !this.validateUsername(username) ) {
-        return;
+      ], passwordSignupFields()) && !this.validateField('username', username) ) {
+        if (this.state.formState == STATES.SIGN_UP) {
+          this.state.onSubmitHook("error.accounts.usernameRequired", this.state.formState);
+        }
+        error = true;
       }
     }
 
-    if (email !== null) {
-      if ( !this.validateEmail(email) ){
-        return;
-      }
-      else {
-        options.email = email;
-      }
+    if (!this.validateField('email', email)){
+      error = true;
+    } else {
+      options.email = email;
     }
 
     if (_.contains([
@@ -591,50 +688,46 @@ export class LoginForm extends Tracker.Component {
     ], passwordSignupFields())) {
       // Generate a random password.
       options.password = Meteor.uuid();
-    }
-    else if (!validatePassword(password)) {
-      this.showMessage(T9n.get("error.minChar").replace(/7/, Accounts.ui._options.minimumPasswordLength), 'warning');
-      this.state.onSubmitHook("error.minChar", formState);
-      return;
-    }
-    else {
+    } else if (!this.validateField('password', password)) {
+      onSubmitHook("Invalid password", formState);
+      error = true;
+    } else {
       options.password = password;
     }
-
-    this.setState({waiting: true});
 
     const SignUp = function(_options) {
       Accounts.createUser(_options, (error) => {
         if (error) {
           this.showMessage(T9n.get(`error.accounts.${error.reason}`) || T9n.get("Unknown error"), 'error');
           if (T9n.get(`error.accounts.${error.reason}`)) {
-            this.state.onSubmitHook(`error.accounts.${error.reason}`, formState);
+            onSubmitHook(`error.accounts.${error.reason}`, formState);
           }
           else {
-            this.state.onSubmitHook("Unknown error", formState);
+            onSubmitHook("Unknown error", formState);
           }
         }
         else {
-          this.setState({
-            formState: STATES.PROFILE,
-            message: null,
-            password: null
-          });
+          onSubmitHook(null, formState);
+          this.setState({ formState: STATES.PROFILE, password: null });
           let user = Accounts.user();
           loginResultCallback(this.state.onPostSignUpHook.bind(this, _options, user));
+          this.clearDefaultFieldValues();
         }
 
         this.setState({ waiting: false });
       });
     };
 
-    // Allow for Promises to return.
-    let promise = this.state.onPreSignUpHook(options);
-    if (promise instanceof Promise) {
-      promise.then(SignUp.bind(this, options));
-    }
-    else {
-      SignUp(options);
+    if (!error) {
+      this.setState({ waiting: true });
+      // Allow for Promises to return.
+      let promise = this.state.onPreSignUpHook(options);
+      if (promise instanceof Promise) {
+        promise.then(SignUp.bind(this, options));
+      }
+      else {
+        SignUp(options);
+      }
     }
   }
 
@@ -642,14 +735,16 @@ export class LoginForm extends Tracker.Component {
     const {
       email = '',
       usernameOrEmail = '',
-      waiting
+      waiting,
+      formState,
+      onSubmitHook
     } = this.state;
 
     if (waiting) {
       return;
     }
 
-    if (email.indexOf('@') !== -1) {
+    if (this.validateField('email', email)) {
       this.setState({ waiting: true });
 
       Accounts.loginWithoutPassword({ email: email }, (error) => {
@@ -658,12 +753,12 @@ export class LoginForm extends Tracker.Component {
         }
         else {
           this.showMessage(T9n.get("info.emailSent"), 'success', 5000);
+          this.clearDefaultFieldValues();
         }
-
+        onSubmitHook(error, formState);
         this.setState({ waiting: false });
       });
-    }
-    else if (this.validateUsername(usernameOrEmail)) {
+    } else if (this.validateField('username', usernameOrEmail)) {
       this.setState({ waiting: true });
 
       Accounts.loginWithoutPassword({ email: usernameOrEmail, username: usernameOrEmail }, (error) => {
@@ -672,32 +767,38 @@ export class LoginForm extends Tracker.Component {
         }
         else {
           this.showMessage(T9n.get("info.emailSent"), 'success', 5000);
+          this.clearDefaultFieldValues();
         }
-
+        onSubmitHook(error, formState);
         this.setState({ waiting: false });
       });
-    }
-    else {
+    } else {
+      let errMsg = null;
       if (_.contains([ "USERNAME_AND_EMAIL_NO_PASSWORD" ], passwordSignupFields())) {
-        this.showMessage(T9n.get("error.accounts.Invalid email or username"), 'warning');
+        errMsg = T9n.get("error.accounts.Invalid email or username");
       }
       else {
-        this.showMessage(T9n.get("error.accounts.Invalid email"), 'warning');
+        errMsg = T9n.get("error.accounts.Invalid email");
       }
+      this.showMessage(errMsg,'warning');
+      onSubmitHook(errMsg, formState);
     }
   }
 
   passwordReset() {
     const {
       email = '',
-      waiting
+      waiting,
+      formState,
+      onSubmitHook
     } = this.state;
 
     if (waiting) {
       return;
     }
 
-    if (email.indexOf('@') !== -1) {
+    this.clearMessages();
+    if (this.validateField('email', email)) {
       this.setState({ waiting: true });
 
       Accounts.forgotPassword({ email: email }, (error) => {
@@ -706,24 +807,24 @@ export class LoginForm extends Tracker.Component {
         }
         else {
           this.showMessage(T9n.get("info.emailSent"), 'success', 5000);
+          this.clearDefaultFieldValues();
         }
-
+        onSubmitHook(error, formState);
         this.setState({ waiting: false });
       });
-    }
-    else {
-      this.showMessage(T9n.get("error.accounts.Invalid email"), 'warning');
     }
   }
 
   passwordChange() {
     const {
       password,
-      newPassword
+      newPassword,
+      formState,
+      onSubmitHook
     } = this.state;
 
-    if ( !validatePassword(newPassword) ){
-      this.showMessage(T9n.get("error.minChar").replace(/7/, Accounts.ui._options.minimumPasswordLength), 'warning');
+    if (!this.validateField('password', newPassword)){
+      onSubmitHook('err.minChar',formState);
       return;
     }
 
@@ -735,9 +836,11 @@ export class LoginForm extends Tracker.Component {
       Accounts.resetPassword(token, newPassword, (error) => {
         if (error) {
           this.showMessage(T9n.get(`error.accounts.${error.reason}`) || T9n.get("Unknown error"), 'error');
+          onSubmitHook(error, formState);
         }
         else {
           this.showMessage(T9n.get('info.passwordChanged'), 'success', 5000);
+          onSubmitHook(null, formState);
           this.setState({ formState: STATES.PROFILE });
           Accounts._loginButtonsSession.set('resetPasswordToken', null);
           Accounts._loginButtonsSession.set('enrollAccountToken', null);
@@ -748,42 +851,74 @@ export class LoginForm extends Tracker.Component {
       Accounts.changePassword(password, newPassword, (error) => {
         if (error) {
           this.showMessage(T9n.get(`error.accounts.${error.reason}`) || T9n.get("Unknown error"), 'error');
+          onSubmitHook(error, formState);
         }
         else {
           this.showMessage(T9n.get('info.passwordChanged'), 'success', 5000);
+          onSubmitHook(null, formState);
           this.setState({ formState: STATES.PROFILE });
+          this.clearDefaultFieldValues();
         }
       });
     }
   }
 
-  showMessage(message, type, clearTimeout){
+  showMessage(message, type, clearTimeout, field){
     message = message.trim();
-
-    if (message){
-      this.setState({ message: { message: message, type: type } });
+    if (message) {
+      this.setState(({ messages = [] }) => {
+        messages.push({
+          message,
+          type,
+          ...(field && { field }),
+        });
+        return  { messages };
+      });
       if (clearTimeout) {
-        Meteor.setTimeout(() => {
-          this.setState({ message: null });
+        this.hideMessageTimout = setTimeout(() => {
+          // Filter out the message that timed out.
+          this.clearMessage(message);
         }, clearTimeout);
       }
     }
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (!prevState.user !== !this.state.user) {
-      this.setState({
-        formState: this.state.user ? STATES.PROFILE : STATES.SIGN_IN
-      });
+  getMessageForField(field) {
+    const { messages = [] } = this.state;
+    return messages.find(({ field:key }) => key === field);
+  }
+
+  clearMessage(message) {
+    if (message) {
+      this.setState(({ messages = [] }) => ({
+        messages: messages.filter(({ message:a }) => a !== message),
+      }));
+    }
+  }
+
+  clearMessages() {
+    if (this.hideMessageTimout) {
+      clearTimeout(this.hideMessageTimout);
+    }
+    this.setState({ messages: [] });
+  }
+
+  componentWillUnmount() {
+    if (this.hideMessageTimout) {
+      clearTimeout(this.hideMessageTimout);
     }
   }
 
   render() {
     this.oauthButtons();
-    return <Accounts.ui.Form oauthServices={this.oauthButtons()}
-                             fields={this.fields()} 
-                             buttons={this.buttons()}
-                             {...this.state} />;
+    return (
+      <Accounts.ui.Form
+        oauthServices={this.oauthButtons()}
+        fields={this.fields()} 
+        buttons={this.buttons()}
+        {...this.state}
+      />
+    );
   }
 };
 

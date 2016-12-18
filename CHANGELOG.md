@@ -1,5 +1,13 @@
 # ChangeLog
 
+### v1.2.10
+14-December-2016
+
+* #82 - Fix for empty `input.value` issue and form prefilled issues
+* #84 - Quick fix to redirect login/logout
+* #75 - Fix issue, when message is object in Accounts.ui.FormMessage
+* #58 - call onSubmitHook after all form submissions
+
 ### v1.2.9
 10-November-2016
 

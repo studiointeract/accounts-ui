@@ -16,9 +16,7 @@
     "url": "https://github.com/studiointeract/accounts-ui/issues"
   },
   "homepage": "https://github.com/studiointeract/accounts-ui",
-  "dependencies": {
-
-  },
+  "dependencies": {},
   "peerDependencies": {
     "react": ">=0.14.7 || ^15.0.0",
     "react-dom": ">=0.14.7 || ^15.0.0",
