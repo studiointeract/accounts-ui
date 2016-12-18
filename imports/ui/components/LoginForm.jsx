@@ -35,7 +35,9 @@ export class LoginForm extends Tracker.Component {
       onSignedInHook: props.onSignedInHook || Accounts.ui._options.onSignedInHook,
       onSignedOutHook: props.onSignedOutHook || Accounts.ui._options.onSignedOutHook,
       onPreSignUpHook: props.onPreSignUpHook || Accounts.ui._options.onPreSignUpHook,
-      onPostSignUpHook: props.onPostSignUpHook || Accounts.ui._options.onPostSignUpHook
+      onPostSignUpHook: props.onPostSignUpHook || Accounts.ui._options.onPostSignUpHook,
+      // Add default field values.
+      ...this.getDefaultFieldValues(),
     };
 
     // Listen for the user to login/logout.
@@ -72,7 +74,16 @@ export class LoginForm extends Tracker.Component {
   componentWillReceiveProps(nextProps, nextContext) {
     if (nextProps.formState && nextProps.formState !== this.state.formState) {
       this.setState({
-        formState: nextProps.formState
+        formState: nextProps.formState,
+        ...this.getDefaultFieldValues(),
+      });
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (!prevState.user !== !this.state.user) {
+      this.setState({
+        formState: this.state.user ? STATES.PROFILE : STATES.SIGN_IN
       });
     }
   }
@@ -174,6 +185,7 @@ export class LoginForm extends Tracker.Component {
         break;
     }
     this.setState({ [field]: value });
+    this.setDefaultFieldValues({ [field]: value });
   }
 
   fields() {
@@ -301,8 +313,6 @@ export class LoginForm extends Tracker.Component {
       });
     }
 
-    console.log(this.props);
-
     if (this.showForgotPasswordLink()) {
       loginButtons.push({
         id: 'switchToPasswordReset',
@@ -412,39 +422,91 @@ export class LoginForm extends Tracker.Component {
         passwordSignupFields());
   }
 
+  /**
+   * Helper to store field values while using the form.
+   */
+  setDefaultFieldValues(defaults) {
+    if (typeof defaults !== 'object') {
+      throw new Error('Argument to setDefaultFieldValues is not of type object');
+    } else if (localStorage) {
+      localStorage.setItem('accounts_ui', JSON.stringify({
+        ...this.getDefaultFieldValues(),
+        ...defaults,
+      }));
+    }
+  }
+
+  /**
+   * Helper to get field values when switching states in the form.
+   */
+  getDefaultFieldValues() {
+    if (localStorage) {
+      return JSON.parse(localStorage.getItem('accounts_ui') || null);
+    }
+  }
+
+  /**
+   * Helper to clear field values when signing in, up or out.
+   */
+  clearDefaultFieldValues() {
+    if (localStorage) {
+      localStorage.removeItem('accounts_ui');
+    }
+  }
+
   switchToSignUp(event) {
     event.preventDefault();
     this.setState({
       formState: STATES.SIGN_UP,
       message: null,
-      email: null
+      ...this.getDefaultFieldValues(),
     });
   }
 
   switchToSignIn(event) {
     event.preventDefault();
-    this.setState({ formState: STATES.SIGN_IN, message: null });
+    this.setState({
+      formState: STATES.SIGN_IN,
+      message: null,
+      ...this.getDefaultFieldValues(),
+    });
   }
 
   switchToPasswordReset(event) {
     event.preventDefault();
-    this.setState({ formState: STATES.PASSWORD_RESET, message: null });
+    this.setState({
+      formState: STATES.PASSWORD_RESET,
+      message: null,
+      ...this.getDefaultFieldValues(),
+    });
   }
 
   switchToChangePassword(event) {
     event.preventDefault();
-    this.setState({ formState: STATES.PASSWORD_CHANGE, message: null });
+    this.setState({
+      formState: STATES.PASSWORD_CHANGE,
+      message: null,
+      ...this.getDefaultFieldValues(),
+    });
   }
 
   switchToSignOut(event) {
     event.preventDefault();
-    this.setState({ formState: STATES.PROFILE, message: null });
+    this.setState({
+      formState: STATES.PROFILE,
+      message: null,
+    });
   }
 
   signOut() {
     Meteor.logout(() => {
-      this.setState({ formState: STATES.SIGN_IN, message: null, password: null });
+      this.setState({
+        formState: STATES.SIGN_IN,
+        message: null,
+        password: null,
+      });
       this.state.onSignedOutHook();
+      this.clearDefaultFieldValues();
     });
   }
 
@@ -504,6 +566,7 @@ export class LoginForm extends Tracker.Component {
       else {
         loginResultCallback(() => this.state.onSignedInHook());
         this.setState({ formState: STATES.PROFILE, message: null, password: null });
+        this.clearDefaultFieldValues();
       }
     });
   }
@@ -555,6 +618,7 @@ export class LoginForm extends Tracker.Component {
         this.showMessage(T9n.get(`error.accounts.${error.reason}`) || T9n.get("Unknown error"));
       } else {
         this.setState({ formState: STATES.PROFILE, message: '' });
+        this.clearDefaultFieldValues();
         loginResultCallback(() => {
           Meteor.setTimeout(() => this.state.onSignedInHook(), 100);
         });
@@ -637,6 +701,7 @@ export class LoginForm extends Tracker.Component {
           });
           let user = Accounts.user();
           loginResultCallback(this.state.onPostSignUpHook.bind(this, _options, user));
+          this.clearDefaultFieldValues();
         }
 
         this.setState({ waiting: false });
@@ -675,6 +740,7 @@ export class LoginForm extends Tracker.Component {
         }
         else {
           this.showMessage(T9n.get("info.emailSent"), 'success', 5000);
+          this.clearDefaultFieldValues();
         }
         onSubmitHook(error, formState);
         this.setState({ waiting: false });
@@ -689,6 +755,7 @@ export class LoginForm extends Tracker.Component {
         }
         else {
           this.showMessage(T9n.get("info.emailSent"), 'success', 5000);
+          this.clearDefaultFieldValues();
         }
         onSubmitHook(error, formState);
         this.setState({ waiting: false });
@@ -728,6 +795,7 @@ export class LoginForm extends Tracker.Component {
         }
         else {
           this.showMessage(T9n.get("info.emailSent"), 'success', 5000);
+          this.clearDefaultFieldValues();
         }
         onSubmitHook(error, formState);
         this.setState({ waiting: false });
@@ -784,6 +852,7 @@ export class LoginForm extends Tracker.Component {
           this.showMessage(T9n.get('info.passwordChanged'), 'success', 5000);
           onSubmitHook(null, formState);
           this.setState({ formState: STATES.PROFILE });
+          this.clearDefaultFieldValues();
         }
       });
     }
@@ -802,20 +871,16 @@ export class LoginForm extends Tracker.Component {
     }
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (!prevState.user !== !this.state.user) {
-      this.setState({
-        formState: this.state.user ? STATES.PROFILE : STATES.SIGN_IN
-      });
-    }
-  }
-
   render() {
     this.oauthButtons();
-    return <Accounts.ui.Form oauthServices={this.oauthButtons()}
-                             fields={this.fields()} 
-                             buttons={this.buttons()}
-                             {...this.state} />;
+    return (
+      <Accounts.ui.Form
+        oauthServices={this.oauthButtons()}
+        fields={this.fields()} 
+        buttons={this.buttons()}
+        {...this.state}
+      />
+    );
   }
 };
 
