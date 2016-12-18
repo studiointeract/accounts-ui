@@ -94,7 +94,7 @@ import { Accounts, STATES } from 'meteor/std:accounts-ui';
   Set if the login *without password* should check if the user is verified before sending any login emails. Default is **false**.
 
 * **minimumPasswordLength**&nbsp;&nbsp;&nbsp; Number  
-  Set the minimum number of password length for your application. Default so **7**.
+  Set the minimum number of password length for your application. Default is **7**.
 
 * **homeRoutePath**&nbsp;&nbsp;&nbsp; String  
   Set the path to where you would like the user to be redirected after a successful login or sign out.
