@@ -272,14 +272,6 @@ export class LoginForm extends Tracker.Component {
     const { formState, waiting, user } = this.state;
     let loginButtons = [];
 
-    console.log({
-      loginPath,
-      signUpPath,
-      resetPasswordPath,
-      changePasswordPath,
-      profilePath,
-    })
-
     if (user && formState == STATES.PROFILE) {
       loginButtons.push({
         id: 'signOut',
