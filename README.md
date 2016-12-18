@@ -138,7 +138,7 @@ import { Accounts, STATES } from 'meteor/std:accounts-ui';
 * **onSignedOutHook**&nbsp;&nbsp;&nbsp; function()  
   Change the default redirect behavior when the user signs out using the LoginForm, i.e. you want a custom path after the user signs out. Default is **homeRoutePath**.
 
-* **emailPattern**&nbsp;&nbsp;&nbsp; new RegExp()
+* **emailPattern**&nbsp;&nbsp;&nbsp; new RegExp()  
   Change how emails are validated on the client, i.e. require specific domain or pattern for an email. Default is **new RegExp('[^@]+@[^@\.]{2,}\.[^\.@]+')**.
 
 ## No password required
