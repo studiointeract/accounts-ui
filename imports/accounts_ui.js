@@ -1,5 +1,10 @@
 import { Accounts } from 'meteor/accounts-base';
-import { redirect } from './helpers.js';
+import {
+  redirect,
+  validatePassword,
+  validateEmail,
+  validateUsername,
+} from './helpers.js';
 
 /**
  * @summary Accounts UI
@@ -28,7 +33,8 @@ Accounts.ui._options = {
   onResetPasswordHook: () => redirect(`${Accounts.ui._options.loginPath}`),
   onVerifyEmailHook: () => redirect(`${Accounts.ui._options.profilePath}`),
   onSignedInHook: () => redirect(`${Accounts.ui._options.homeRoutePath}`),
-  onSignedOutHook: () => redirect(`${Accounts.ui._options.homeRoutePath}`)
+  onSignedOutHook: () => redirect(`${Accounts.ui._options.homeRoutePath}`),
+  emailPattern: new RegExp('[^@]+@[^@\.]{2,}\.[^\.@]+'),
 };
 
 /**
@@ -62,7 +68,9 @@ Accounts.ui.config = function(options) {
     'onResetPasswordHook',
     'onVerifyEmailHook',
     'onSignedInHook',
-    'onSignedOutHook'
+    'onSignedOutHook',
+    'validateField',
+    'emailPattern',
   ];
 
   _.each(_.keys(options), function (key) {
@@ -70,7 +78,7 @@ Accounts.ui.config = function(options) {
       throw new Error("Accounts.ui.config: Invalid key: " + key);
   });
 
-  // deal with `passwordSignupFields`
+  // Deal with `passwordSignupFields`
   if (options.passwordSignupFields) {
     if (_.contains([
       "USERNAME_AND_EMAIL",
@@ -87,7 +95,7 @@ Accounts.ui.config = function(options) {
     }
   }
 
-  // deal with `requestPermissions`
+  // Deal with `requestPermissions`
   if (options.requestPermissions) {
     _.each(options.requestPermissions, function (scope, service) {
       if (Accounts.ui._options.requestPermissions[service]) {
@@ -102,7 +110,7 @@ Accounts.ui.config = function(options) {
     });
   }
 
-  // deal with `requestOfflineToken`
+  // Deal with `requestOfflineToken`
   if (options.requestOfflineToken) {
     _.each(options.requestOfflineToken, function (value, service) {
       if (service !== 'google')
@@ -117,7 +125,7 @@ Accounts.ui.config = function(options) {
     });
   }
 
-  // deal with `forceApprovalPrompt`
+  // Deal with `forceApprovalPrompt`
   if (options.forceApprovalPrompt) {
     _.each(options.forceApprovalPrompt, function (value, service) {
       if (service !== 'google')
@@ -132,7 +140,7 @@ Accounts.ui.config = function(options) {
     });
   }
 
-  // deal with `requireEmailVerification`
+  // Deal with `requireEmailVerification`
   if (options.requireEmailVerification) {
     if (typeof options.requireEmailVerification != 'boolean') {
       throw new Error(`Accounts.ui.config: "requireEmailVerification" not a boolean`);
@@ -142,7 +150,7 @@ Accounts.ui.config = function(options) {
     }
   }
 
-  // deal with `minimumPasswordLength`
+  // Deal with `minimumPasswordLength`
   if (options.minimumPasswordLength) {
     if (typeof options.minimumPasswordLength != 'number') {
       throw new Error(`Accounts.ui.config: "minimumPasswordLength" not a number`);
@@ -152,11 +160,29 @@ Accounts.ui.config = function(options) {
     }
   }
 
-  // deal with the hooks.
-  for (let hook of ['onSubmitHook', 'onPreSignUpHook', 'onPostSignUpHook']) {
+  // Deal with the hooks.
+  for (let hook of [
+    'onSubmitHook',
+    'onPreSignUpHook',
+    'onPostSignUpHook',
+  ]) {
     if (options[hook]) {
       if (typeof options[hook] != 'function') {
         throw new Error(`Accounts.ui.config: "${hook}" not a function`);
+      }
+      else {
+        Accounts.ui._options[hook] = options[hook];
+      }
+    }
+  }
+
+  // Deal with pattern.
+  for (let hook of [
+    'emailPattern',
+  ]) {
+    if (options[hook]) {
+      if (!(options[hook] instanceof RegExp)) {
+        throw new Error(`Accounts.ui.config: "${hook}" not a Regular Expression`);
       }
       else {
         Accounts.ui._options[hook] = options[hook];

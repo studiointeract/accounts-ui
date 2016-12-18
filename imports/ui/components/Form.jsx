@@ -1,11 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Accounts} from 'meteor/accounts-base';
+import { Accounts } from 'meteor/accounts-base';
 import './Fields.jsx';
 import './Buttons.jsx';
 import './FormMessage.jsx';
 import './PasswordOrService.jsx';
 import './SocialButtons.jsx';
+import './FormMessages.jsx';
 
 export class Form extends React.Component {
   componentDidMount() {
@@ -24,17 +25,22 @@ export class Form extends React.Component {
       fields,
       buttons,
       error,
-      message,
+      messages,
       ready = true,
       className
     } = this.props;
     return (
-      <form ref={(ref) => this.form = ref} className={[className, ready ? "ready" : null].join(' ')} className="accounts-ui">
+      <form
+        ref={(ref) => this.form = ref}
+        className={[className, ready ? "ready" : null].join(' ')}
+        className="accounts-ui"
+        novalidate
+      >
         <Accounts.ui.Fields fields={ fields } />
         <Accounts.ui.Buttons buttons={ buttons } />
         <Accounts.ui.PasswordOrService oauthServices={ oauthServices } />
         <Accounts.ui.SocialButtons oauthServices={ oauthServices } />
-        <Accounts.ui.FormMessage {...message} />
+        <Accounts.ui.FormMessages messages={messages} />
       </form>
     );
   }

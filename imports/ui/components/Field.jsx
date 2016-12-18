@@ -43,7 +43,8 @@ export class Field extends React.Component {
       onChange,
       required = false,
       className = "field",
-      defaultValue = ""
+      defaultValue = "",
+      message,
     } = this.props;
     const { mount = true } = this.state;
     if (type == 'notice') {
@@ -52,12 +53,18 @@ export class Field extends React.Component {
     return mount ? (
       <div className={ className }>
         <label htmlFor={ id }>{ label }</label>
-        <input id={ id }
-               ref={ (ref) => this.input = ref }
-               type={ type }
-               onChange={ onChange }
-               placeholder={ hint }
-               defaultValue={ defaultValue } />
+        <input
+          id={ id }
+          ref={ (ref) => this.input = ref }
+          type={ type }
+          onChange={ onChange }
+          placeholder={ hint }
+          defaultValue={ defaultValue }
+        />
+        {message && (
+          <span className={['message', message.type].join(' ').trim()}>
+            {message.message}</span>
+        )}
       </div>
     ) : null;
   }
