@@ -4,8 +4,7 @@ export const STATES = {
   SIGN_UP: Symbol('SIGN_UP'),
   PROFILE: Symbol('PROFILE'),
   PASSWORD_CHANGE: Symbol('PASSWORD_CHANGE'),
-  PASSWORD_RESET: Symbol('PASSWORD_RESET'),
-  ENROLL_ACCOUNT: Symbol('ENROLL_ACCOUNT')
+  PASSWORD_RESET: Symbol('PASSWORD_RESET')
 };
 
 export function getLoginServices() {
@@ -55,7 +54,7 @@ export function passwordSignupFields() {
   return Accounts.ui._options.passwordSignupFields || "EMAIL_ONLY_NO_PASSWORD";
 };
 
-export function validatePassword(password){
+export function validatePassword(password = ''){
   if (password.length >= Accounts.ui._options.minimumPasswordLength) {
     return true;
   } else {

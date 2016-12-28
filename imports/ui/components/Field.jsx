@@ -13,15 +13,8 @@ export class Field extends React.Component {
   triggerUpdate() {
     // Trigger an onChange on inital load, to support browser prefilled values.
     const { onChange } = this.props;
-    let node = ReactDOM.findDOMNode(this);
-    if (this.input) {
+    if (this.input && this.input.value) {
       onChange({ target: { value: this.input.value } });
-    }
-    // Backward compat.
-    else if (node) {
-      let value = node.getElementsByTagName('input')[0].value;
-      // Match the data format of a typical onChange event.
-      onChange({ target: { value: value } });
     }
   }
 
@@ -32,7 +25,7 @@ export class Field extends React.Component {
   componentDidUpdate(prevProps) {
     // Re-mount component so that we don't expose browser prefilled passwords if the component was
     // a password before and now something else.
-    if (prevProps.formState !== this.props.formState) {
+    if (prevProps.id !== this.props.id) {
       this.setState({mount: false});
     }
     else if (!this.state.mount) {

@@ -27,8 +27,8 @@ Accounts.ui._options = {
   onEnrollAccountHook: () => redirect(`${Accounts.ui._options.loginPath}`),
   onResetPasswordHook: () => redirect(`${Accounts.ui._options.loginPath}`),
   onVerifyEmailHook: () => redirect(`${Accounts.ui._options.profilePath}`),
-  onSignedInHook: () => null,
-  onSignedOutHook: () => null
+  onSignedInHook: () => redirect(`${Accounts.ui._options.homeRoutePath}`),
+  onSignedOutHook: () => redirect(`${Accounts.ui._options.homeRoutePath}`)
 };
 
 /**
@@ -173,9 +173,9 @@ Accounts.ui.config = function(options) {
     'changePasswordPath',
     'homeRoutePath'
   ]) {
-    if (options[path]) {
-      if (typeof options[path] != 'string') {
-        throw new Error(`Accounts.ui.config: ${path} is not a string`);
+    if (typeof options[path] !== 'undefined') {
+      if (options[path] !== null && typeof options[path] !== 'string') {
+        throw new Error(`Accounts.ui.config: ${path} is not a string or null`);
       }
       else {
         Accounts.ui._options[path] = options[path];

@@ -1,5 +1,31 @@
 # ChangeLog
 
+### v1.2.10
+14-December-2016
+
+* #82 - Fix for empty `input.value` issue and form prefilled issues
+* #84 - Quick fix to redirect login/logout
+* #75 - Fix issue, when message is object in Accounts.ui.FormMessage
+* #58 - call onSubmitHook after all form submissions
+
+### v1.2.9
+10-November-2016
+
+* #73 – in constructor, we should use `props` and not `this.props`
+* #78 – Move react packages to peerDependencies
+* Added support for React Router Link in buttons.
+
+### v1.2.8
+26-October-2016
+
+* #70 – Added link to new material UI package.
+* #71 – make sure nextProps.formState actually exists before overwriting state
+
+### v1.2.7
+19-October-2016
+
+* Make sure `nextProps.formState` actually exists before overwriting `state.formState`.
+
 ### v1.2.6
 2-June-2016
 

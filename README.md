@@ -1,6 +1,6 @@
 # React Accounts UI
 
-Current version 1.2.6
+Current version 1.2.11
 
 ## Features
 
@@ -24,8 +24,10 @@ This package does not by standard come with any styling, you can easily [extend 
 * [**Semantic UI**](https://atmospherejs.com/std/accounts-semantic)  `std:accounts-semantic`
 * [**Bootstrap 3/4**](https://atmospherejs.com/std/accounts-bootstrap)  `std:accounts-bootstrap`
 * [**Ionic**](https://atmospherejs.com/std/accounts-ionic)  `std:accounts-ionic`
+* [**Material UI**](https://atmospherejs.com/zetoff/accounts-material-ui) `zetoff:accounts-material-ui`
 * Material UI  
   Help out on this: [http://github.com/studiointeract/accounts-material](http://github.com/studiointeract/accounts-material)
+
 
 * Add your styled version here [Learn how](#create-your-own-styled-version)
 
@@ -191,8 +193,8 @@ Meteor.startup( () => {
     <Router history={ browserHistory }>
       <Route path="/" component={ App }>
         <IndexRoute component={ Index } />
-        <Route path="/signin" component={ Accounts.ui.LoginForm } formState={ STATES.SIGN_IN } />
-        <Route path="/signup" component={ Accounts.ui.LoginForm } formState={ STATES.SIGN_UP } />
+        <Route path="/signin" component={() => <Accounts.ui.LoginForm formState={STATES.SIGN_IN} />} />
+        <Route path="/signup" component={() => <Accounts.ui.LoginForm formState={STATES.SIGN_UP} />} />
         <Route path="/hello/:name" component={ Hello } />
       </Route>
       <Route path="/admin" component={ App }>
@@ -463,7 +465,7 @@ export default Accounts;
 > Example provided by [@radzom](https://github.com/radzom).
 
 ```javascript
-import { Accounts, STATES } from 'meteor/accounts-ui';
+import { Accounts, STATES } from 'meteor/std:accounts-ui';
 
 class NewLogin extends Accounts.ui.LoginForm {
   fields() {
