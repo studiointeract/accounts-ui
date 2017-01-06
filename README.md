@@ -1,6 +1,6 @@
 # React Accounts UI
 
-Current version 1.3.0
+Current version 1.2.12
 
 ## Features
 
@@ -513,7 +513,7 @@ Accounts.onCreateUser(function (options, user) {
 
 ## Deprecations
 
-### v1.3.0
+### v1.2.11
 * The use of FormMessage in Form has been deprecated in favor of using
 FormMessages that handles multiple messages and errors.
 See example: [Form.jsx#L43](imports/ui/components/Form.jsx#L43)

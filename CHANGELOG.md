@@ -1,8 +1,16 @@
 # ChangeLog
 
-### v1.3.0
+### v1.2.12
+6-January-2017
 
-* #49 - Support for inline field validation message?
+* #49 - Support for inline field validation message
+* Added missing deprecation notices.
+
+### v1.2.11
+18-December-2016
+
+* #61 - BUG: Error «Need to set a username or email» when email is set
+* Solved #61 by adding functionality to remember entered values in localStorage, which also makes it possible to remember values between routes (i.e. when switching between /login and /register).
 
 ### v1.2.10
 14-December-2016

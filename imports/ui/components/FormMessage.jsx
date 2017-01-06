@@ -7,7 +7,7 @@ export class FormMessage extends React.Component {
     // XXX Check for deprecations.
     if (deprecated) {
       // Found backwords compatibility issue.
-      console.warn('You are overriding Accounts.ui.Form and using FormMessage, the use of FormMessage in Form has been depreacted in v1.3.0, update your implementation to use FormMessages: https://github.com/studiointeract/accounts-ui/#deprecations');
+      console.warn('You are overriding Accounts.ui.Form and using FormMessage, the use of FormMessage in Form has been depreacted in v1.2.11, update your implementation to use FormMessages: https://github.com/studiointeract/accounts-ui/#deprecations');
     }
     message = _.isObject(message) ? message.message : message; // If message is object, then try to get message from it
     return message ? (

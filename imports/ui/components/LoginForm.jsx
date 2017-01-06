@@ -910,7 +910,7 @@ export class LoginForm extends Tracker.Component {
     ReactDOM.render(<Accounts.ui.Field message="test" />, container);
     if (container.getElementsByClassName('message').length == 0) {
       // Found backwards compatibility issue with 1.3.x
-      console.warn(`Implementations of Accounts.ui.Field must render message in v1.3.0.
+      console.warn(`Implementations of Accounts.ui.Field must render message in v1.2.11.
         https://github.com/studiointeract/accounts-ui/#deprecations`);
     }
   }
