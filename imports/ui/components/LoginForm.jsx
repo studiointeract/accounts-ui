@@ -904,14 +904,14 @@ export class LoginForm extends Tracker.Component {
     this.setState({ messages: [] });
   }
 
-  componentWillMount() {
-    // Check for backwards compatibility.
-    this.props.message = 'test';
+  componentDidMount() {
+    // XXX Check for backwards compatibility.
     const container = document.createElement('div');
     ReactDOM.render(<Accounts.ui.Field message="test" />, container);
     if (container.getElementsByClassName('message').length == 0) {
       // Found backwards compatibility issue with 1.3.x
-      console.warn('Implementations of Accounts.ui.Field must render message in v1.3.0 https://github.com/studiointeract/accounts-ui/#deprecations');
+      console.warn(`Implementations of Accounts.ui.Field must render message in v1.3.0.
+        https://github.com/studiointeract/accounts-ui/#deprecations`);
     }
   }
 
@@ -923,7 +923,7 @@ export class LoginForm extends Tracker.Component {
 
   render() {
     this.oauthButtons();
-    // Backwords compatibility with v1.3.x.
+    // Backwords compatibility with v1.2.x.
     const { messages = [] } = this.state;
     const message = {
       deprecated: true,
