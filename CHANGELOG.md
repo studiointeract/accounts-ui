@@ -1,5 +1,9 @@
 # ChangeLog
 
+### v1.3.0
+
+* #49 - Support for inline field validation message?
+
 ### v1.2.10
 14-December-2016
 
