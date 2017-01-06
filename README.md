@@ -10,11 +10,11 @@ Current version 1.3.0
 4. **[Unstyled](#styling)** is the default, no CSS included.
 5. **[No password](#no-password-required)** sign up and sign in are included.
 6. **[Extra fields](#extra-fields)** is now supported.
-8. **[Extending](#create-your-own-styled-version)** to make your own custom form, for your app, or as a package, all components can be extended and customized.
-9. **[States API](#example-setup-using-the-states-api)** makes it possible to use the form on different routes, say you want the login on one route and signup on another, just set the inital state and the links (either globally or per component by using the props).
-10. **[React Router](#example-setup-using-react-router-meteor-13)** is fully supported, see the example how to use with React Router.
-11. **[FlowRouter](#example-setup-using-flowrouter-meteor-13)** is fully supported, see the example how to use with FlowRouter.
-7. **[Server Side Rendering](#example-setup-using-flowrouter-meteor-13)** is easily setup, see how it's done with FlowRouter (SSR). An example for React Router using [react-router-ssr](https://github.com/thereactivestack/meteor-react-router-ssr) coming shortly.
+7. **[Extending](#create-your-own-styled-version)** to make your own custom form, for your app, or as a package, all components can be extended and customized.
+8. **[States API](#example-setup-using-the-states-api)** makes it possible to use the form on different routes, say you want the login on one route and signup on another, just set the inital state and the links (either globally or per component by using the props).
+9. **[React Router](#example-setup-using-react-router-meteor-13)** is fully supported, see the example how to use with React Router.
+10. **[FlowRouter](#example-setup-using-flowrouter-meteor-13)** is fully supported, see the example how to use with FlowRouter.
+11. **[Server Side Rendering](#example-setup-using-flowrouter-meteor-13)** is easily setup, see how it's done with FlowRouter (SSR). An example for React Router using [react-router-ssr](https://github.com/thereactivestack/meteor-react-router-ssr) coming shortly.
 
 ## Styling
 
