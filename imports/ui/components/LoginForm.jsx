@@ -911,12 +911,19 @@ export class LoginForm extends Tracker.Component {
 
   render() {
     this.oauthButtons();
+    // Backwords compatibility with v1.2.x.
+    const { messages = [] } = this.state;
+    const message = {
+      deprecated: true,
+      message: messages.map(({ message }) => message).join(', '),
+    };
     return (
       <Accounts.ui.Form
         oauthServices={this.oauthButtons()}
         fields={this.fields()} 
         buttons={this.buttons()}
         {...this.state}
+        message={message}
       />
     );
   }
