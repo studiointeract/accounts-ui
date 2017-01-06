@@ -511,11 +511,15 @@ Accounts.onCreateUser(function (options, user) {
 });
 ```
 
-## Deprecations in v1.3.0
+## Deprecations
 
+### v1.3.0
 * The use of FormMessage in Form has been deprecated in favor of using
 FormMessages that handles multiple messages and errors.
-See example: [Form.jsx#L43](blob/master/imports/ui/components/Form.jsx#L43)
+See example: [Form.jsx#L43](imports/ui/components/Form.jsx#L43)
+
+* Implementations of Accounts.ui.Field must render a message.
+See example: [Field.jsx#L](imports/ui/components/Field.jsx#L64-L67)
 
 ## Credits
 

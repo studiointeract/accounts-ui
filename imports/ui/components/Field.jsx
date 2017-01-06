@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { Accounts } from 'meteor/accounts-base';
 
 export class Field extends React.Component {
