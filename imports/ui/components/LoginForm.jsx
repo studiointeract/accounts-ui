@@ -904,7 +904,7 @@ export class LoginForm extends Tracker.Component {
     this.setState({ messages: [] });
   }
 
-  componentDidMount() {
+  componentWillMount() {
     // XXX Check for backwards compatibility.
     const container = document.createElement('div');
     ReactDOM.render(<Accounts.ui.Field message="test" />, container);

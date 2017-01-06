@@ -1,5 +1,10 @@
 # ChangeLog
 
+### v1.2.13
+6-January-2017
+
+* Fixed issue with faulty duplicate use of componentDidMount in LoginForm.
+
 ### v1.2.12
 6-January-2017
 
