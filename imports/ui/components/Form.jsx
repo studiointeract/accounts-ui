@@ -34,7 +34,7 @@ export class Form extends React.Component {
         ref={(ref) => this.form = ref}
         className={[className, ready ? "ready" : null].join(' ')}
         className="accounts-ui"
-        novalidate
+        noValidate
       >
         <Accounts.ui.Fields fields={ fields } />
         <Accounts.ui.Buttons buttons={ buttons } />
