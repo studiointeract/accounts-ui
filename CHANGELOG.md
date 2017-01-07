@@ -4,6 +4,8 @@
 7-January-2017
 
 * #91 - Fixed: localStorage not defined in server side
+* Improving experience on successful reset password.
+* Reset faulty redirect to reset-password.
 
 ### v1.2.14
 7-January-2017
