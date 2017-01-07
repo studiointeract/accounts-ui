@@ -378,13 +378,22 @@ export class LoginForm extends Tracker.Component {
         onClick: this.passwordChange.bind(this)
       });
 
-      loginButtons.push({
-        id: 'switchToSignOut',
-        label: T9n.get('cancel'),
-        type: 'link',
-        href: profilePath,
-        onClick: this.switchToSignOut.bind(this)
-      });
+      if (Accounts.user()) {
+        loginButtons.push({
+          id: 'switchToSignOut',
+          label: T9n.get('cancel'),
+          type: 'link',
+          href: profilePath,
+          onClick: this.switchToSignOut.bind(this)
+        });
+      } else {
+        loginButtons.push({
+          id: 'cancelResetPassword',
+          label: T9n.get('cancel'),
+          type: 'link',
+          onClick: this.cancelResetPassword.bind(this),
+        });
+      }
     }
 
     // Sort the button array so that the submit button always comes first, and
@@ -500,6 +509,15 @@ export class LoginForm extends Tracker.Component {
       formState: STATES.PROFILE,
     });
     this.clearMessages();
+  }
+
+  cancelResetPassword(event) {
+    event.preventDefault();
+    Accounts._loginButtonsSession.set('resetPasswordToken', null);
+    this.setState({
+      formState: STATES.SIGN_IN,
+      messages: [],
+    });
   }
 
   signOut() {
@@ -823,7 +841,8 @@ export class LoginForm extends Tracker.Component {
       password,
       newPassword,
       formState,
-      onSubmitHook
+      onSubmitHook,
+      onSignedInHook,
     } = this.state;
 
     if (!this.validateField('password', newPassword)){
@@ -847,6 +866,7 @@ export class LoginForm extends Tracker.Component {
           this.setState({ formState: STATES.PROFILE });
           Accounts._loginButtonsSession.set('resetPasswordToken', null);
           Accounts._loginButtonsSession.set('enrollAccountToken', null);
+          onSignedInHook();
         }
       });
     }
