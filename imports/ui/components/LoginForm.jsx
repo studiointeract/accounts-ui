@@ -92,6 +92,7 @@ export class LoginForm extends Tracker.Component {
   }
 
   validateField(field, value) {
+    const { formState } = this.state;
     switch(field) {
       case 'email':
         return validateEmail(value,
@@ -107,6 +108,7 @@ export class LoginForm extends Tracker.Component {
         return validateUsername(value,
           this.showMessage.bind(this),
           this.clearMessage.bind(this),
+          formState,
         );
     }
   }
@@ -425,7 +427,7 @@ export class LoginForm extends Tracker.Component {
   setDefaultFieldValues(defaults) {
     if (typeof defaults !== 'object') {
       throw new Error('Argument to setDefaultFieldValues is not of type object');
-    } else if (localStorage) {
+    } else if (typeof localStorage !== 'undefined' && localStorage) {
       localStorage.setItem('accounts_ui', JSON.stringify({
         passwordSignupFields: passwordSignupFields(),
         ...this.getDefaultFieldValues(),
@@ -438,7 +440,7 @@ export class LoginForm extends Tracker.Component {
    * Helper to get field values when switching states in the form.
    */
   getDefaultFieldValues() {
-    if (localStorage) {
+    if (typeof localStorage !== 'undefined' && localStorage) {
       const defaultFieldValues = JSON.parse(localStorage.getItem('accounts_ui') || null);
       if (defaultFieldValues
         && defaultFieldValues.passwordSignupFields === passwordSignupFields()) {
@@ -451,7 +453,7 @@ export class LoginForm extends Tracker.Component {
    * Helper to clear field values when signing in, up or out.
    */
   clearDefaultFieldValues() {
-    if (localStorage) {
+    if (typeof localStorage !== 'undefined' && localStorage) {
       localStorage.removeItem('accounts_ui');
     }
   }
@@ -906,12 +908,14 @@ export class LoginForm extends Tracker.Component {
 
   componentWillMount() {
     // XXX Check for backwards compatibility.
-    const container = document.createElement('div');
-    ReactDOM.render(<Accounts.ui.Field message="test" />, container);
-    if (container.getElementsByClassName('message').length == 0) {
-      // Found backwards compatibility issue with 1.3.x
-      console.warn(`Implementations of Accounts.ui.Field must render message in v1.2.11.
-        https://github.com/studiointeract/accounts-ui/#deprecations`);
+    if (Meteor.isClient) {
+      const container = document.createElement('div');
+      ReactDOM.render(<Accounts.ui.Field message="test" />, container);
+      if (container.getElementsByClassName('message').length == 0) {
+        // Found backwards compatibility issue with 1.3.x
+        console.warn(`Implementations of Accounts.ui.Field must render message in v1.2.11.
+          https://github.com/studiointeract/accounts-ui/#deprecations`);
+      }
     }
   }
 

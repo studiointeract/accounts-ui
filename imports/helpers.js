@@ -80,11 +80,12 @@ export function validatePassword(password = '', showMessage, clearMessage){
   }
 };
 
-export function validateUsername(username, showMessage, clearMessage) {
+export function validateUsername(username, showMessage, clearMessage, formState) {
   if ( username ) {
     return true;
   } else {
-    showMessage(T9n.get("error.usernameRequired"), 'warning', false, 'username');
+    const fieldName = (passwordSignupFields() === 'USERNAME_ONLY' || formState === STATES.SIGN_UP) ? 'username' : 'usernameOrEmail';
+    showMessage(T9n.get("error.usernameRequired"), 'warning', false, fieldName);
     return false;
   }
 }
