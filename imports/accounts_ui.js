@@ -30,7 +30,7 @@ Accounts.ui._options = {
   onPreSignUpHook: () => new Promise(resolve => resolve()),
   onPostSignUpHook: () => {},
   onEnrollAccountHook: () => redirect(`${Accounts.ui._options.loginPath}`),
-  onResetPasswordHook: () => redirect(`${Accounts.ui._options.loginPath}`),
+  onResetPasswordHook: () => redirect(`${Accounts.ui._options.resetPasswordPath}`),
   onVerifyEmailHook: () => redirect(`${Accounts.ui._options.profilePath}`),
   onSignedInHook: () => redirect(`${Accounts.ui._options.homeRoutePath}`),
   onSignedOutHook: () => redirect(`${Accounts.ui._options.homeRoutePath}`),

@@ -1,3 +1,4 @@
+try { import { browserHistory } from 'react-router'; } catch(e) {}
 export const loginButtonsSession = Accounts._loginButtonsSession;
 export const STATES = {
   SIGN_IN: Symbol('SIGN_IN'),
@@ -91,15 +92,18 @@ export function validateUsername(username, showMessage, clearMessage) {
 export function redirect(redirect) {
   if (Meteor.isClient) {
     if (window.history) {
+      // Run after all app specific redirects, i.e. to the login screen.
       Meteor.setTimeout(() => {
         if (Package['kadira:flow-router']) {
           Package['kadira:flow-router'].FlowRouter.go(redirect);
         } else if (Package['kadira:flow-router-ssr']) {
           Package['kadira:flow-router-ssr'].FlowRouter.go(redirect);
+        } else if (browserHistory) {
+          browserHistory.push(redirect);
         } else {
           window.history.pushState( {} , 'redirect', redirect );
         }
-      }, 500);
+      }, 100);
     }
   }
 }
