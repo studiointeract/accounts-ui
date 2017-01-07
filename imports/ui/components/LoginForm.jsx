@@ -29,6 +29,11 @@ export class LoginForm extends Tracker.Component {
       profilePath,
       changePasswordPath
     } = props;
+
+    if (formState === STATES.SIGN_IN && Package['accounts-password']) {
+      console.warn('Do not force the state to SIGN_IN on Accounts.ui.LoginForm, it will make it impossible to reset password in your app, this state is also the default state if logged out, so no need to force it.');
+    }
+
     // Set inital state.
     this.state = {
       messages: [],
