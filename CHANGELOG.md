@@ -1,5 +1,11 @@
 # ChangeLog
 
+### v1.2.16
+7-January-2017
+
+* Added warning on misconfigured LoginForm usage, that could prevent users from
+resetting their password.
+
 ### v1.2.15
 7-January-2017
 
