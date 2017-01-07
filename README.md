@@ -71,7 +71,6 @@ Accounts.ui.config({
 import { Accounts, STATES } from 'meteor/std:accounts-ui';
 
 <Accounts.ui.LoginForm
-  state={ STATES.SIGN_IN }
   onSignedInHook={ () => console.log('user signed in') }
 />
 ```
@@ -196,7 +195,7 @@ Meteor.startup( () => {
     <Router history={ browserHistory }>
       <Route path="/" component={ App }>
         <IndexRoute component={ Index } />
-        <Route path="/signin" component={() => <Accounts.ui.LoginForm formState={STATES.SIGN_IN} />} />
+        <Route path="/signin" component={() => <Accounts.ui.LoginForm />} />
         <Route path="/signup" component={() => <Accounts.ui.LoginForm formState={STATES.SIGN_UP} />} />
         <Route path="/hello/:name" component={ Hello } />
       </Route>
@@ -321,7 +320,6 @@ FlowRouter.route("/login", {
   action(params) {
     mount(MainLayout, {
       content: <Accounts.ui.LoginForm {...{
-        formState: STATES.SIGN_IN,
         signUpPath: '/signup'
       }} />
     });
