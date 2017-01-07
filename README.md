@@ -65,7 +65,7 @@ Accounts.ui.config({
 ### Version 1.2 also supports passing hooks through props to the component.
 
 ```js
-import { Accounts, STATES } from 'meteor/std:accounts-ui';
+import { Accounts } from 'meteor/std:accounts-ui';
 
 <Accounts.ui.LoginForm
   onSignedInHook={ () => console.log('user signed in') }
