@@ -1,5 +1,10 @@
 # ChangeLog
 
+### v1.2.17
+7-January-2017
+
+* #55 - Create new form state for Enroll Account
+
 ### v1.2.16
 7-January-2017
 
