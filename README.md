@@ -1,6 +1,6 @@
 # React Accounts UI
 
-Current version 1.2.14
+Current version 1.2.15
 
 ## Features
 
@@ -523,4 +523,5 @@ See example: [Field.jsx#L](imports/ui/components/Field.jsx#L64-L67)
 
 ## Credits
 
-Made by the [creative folks at Studio Interact](http://studiointeract.com)
+Made by the [creative folks at Studio Interact](http://studiointeract.com) and
+[all the wonderful people using and improving this package](https://github.com/studiointeract/accounts-ui/graphs/contributors).

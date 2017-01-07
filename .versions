@@ -50,7 +50,7 @@ session@1.1.5
 softwarerero:accounts-t9n@1.3.3
 spacebars@1.0.11
 spacebars-compiler@1.0.11
-std:accounts-ui@1.2.14
+std:accounts-ui@1.2.15
 tmeasday:check-npm-versions@0.3.0
 tracker@1.0.13
 ui@1.0.11

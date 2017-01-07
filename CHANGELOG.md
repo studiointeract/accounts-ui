@@ -1,5 +1,10 @@
 # ChangeLog
 
+### v1.2.15
+7-January-2017
+
+* #91 - Fixed: localStorage not defined in server side
+
 ### v1.2.14
 7-January-2017
 
