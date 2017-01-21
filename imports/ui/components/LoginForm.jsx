@@ -44,8 +44,6 @@ export class LoginForm extends Tracker.Component {
       onSignedOutHook: props.onSignedOutHook || Accounts.ui._options.onSignedOutHook,
       onPreSignUpHook: props.onPreSignUpHook || Accounts.ui._options.onPreSignUpHook,
       onPostSignUpHook: props.onPostSignUpHook || Accounts.ui._options.onPostSignUpHook,
-      // Add default field values.
-      ...this.getDefaultFieldValues(),
     };
 
     // Listen for the user to login/logout.
@@ -82,6 +80,11 @@ export class LoginForm extends Tracker.Component {
         Session.set(KEY_PREFIX + 'state', null);
         break;
     }
+    
+    // Add default field values once the form did mount on the client
+    this.setState({
+      ...this.getDefaultFieldValues(),
+    });
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
