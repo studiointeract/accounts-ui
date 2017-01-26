@@ -57,34 +57,34 @@ export class LoginForm extends Tracker.Component {
   }
 
   componentDidMount() {
-    this.setState({ waiting: false, ready: true });
+    this.setState(prevState => ({ waiting: false, ready: true }));
     let changeState = Session.get(KEY_PREFIX + 'state');
     switch (changeState) {
       case 'enrollAccountToken':
-        this.setState({
+        this.setState(prevState => ({
           formState: STATES.ENROLL_ACCOUNT
-        });
+        }));
         Session.set(KEY_PREFIX + 'state', null);
         break;
       case 'resetPasswordToken':
-        this.setState({
+        this.setState(prevState => ({
           formState: STATES.PASSWORD_CHANGE
-        });
+        }));
         Session.set(KEY_PREFIX + 'state', null);
         break;
 
       case 'justVerifiedEmail':
-        this.setState({
+        this.setState(prevState => ({
           formState: STATES.PROFILE
-        });
+        }));
         Session.set(KEY_PREFIX + 'state', null);
         break;
     }
     
     // Add default field values once the form did mount on the client
-    this.setState({
+    this.setState(prevState => ({
       ...this.getDefaultFieldValues(),
-    });
+    }));
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
@@ -995,6 +995,6 @@ export class LoginForm extends Tracker.Component {
       />
     );
   }
-};
+}
 
 Accounts.ui.LoginForm = LoginForm;
