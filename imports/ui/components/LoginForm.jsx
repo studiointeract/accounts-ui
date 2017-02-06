@@ -44,44 +44,49 @@ export class LoginForm extends Tracker.Component {
       onSignedOutHook: props.onSignedOutHook || Accounts.ui._options.onSignedOutHook,
       onPreSignUpHook: props.onPreSignUpHook || Accounts.ui._options.onPreSignUpHook,
       onPostSignUpHook: props.onPostSignUpHook || Accounts.ui._options.onPostSignUpHook,
-      // Add default field values.
-      ...this.getDefaultFieldValues(),
     };
+  }
 
+  componentDidMount() {
+    this.setState(prevState => ({ waiting: false, ready: true }));
+    let changeState = Session.get(KEY_PREFIX + 'state');
+    switch (changeState) {
+      case 'enrollAccountToken':
+        this.setState(prevState => ({
+          formState: STATES.ENROLL_ACCOUNT
+        }));
+        Session.set(KEY_PREFIX + 'state', null);
+        break;
+      case 'resetPasswordToken':
+        this.setState(prevState => ({
+          formState: STATES.PASSWORD_CHANGE
+        }));
+        Session.set(KEY_PREFIX + 'state', null);
+        break;
+
+      case 'justVerifiedEmail':
+        this.setState(prevState => ({
+          formState: STATES.PROFILE
+        }));
+        Session.set(KEY_PREFIX + 'state', null);
+        break;
+    }
+    
+    // Add default field values once the form did mount on the client
+    this.setState(prevState => ({
+      ...this.getDefaultFieldValues(),
+    }));
+    
     // Listen for the user to login/logout.
     this.autorun(() => {
+      
       // Add the services list to the user.
       this.subscribe('servicesList');
       this.setState({
         user: Accounts.user()
       });
+      
     });
-  }
-
-  componentDidMount() {
-    this.setState({ waiting: false, ready: true });
-    let changeState = Session.get(KEY_PREFIX + 'state');
-    switch (changeState) {
-      case 'enrollAccountToken':
-        this.setState({
-          formState: STATES.ENROLL_ACCOUNT
-        });
-        Session.set(KEY_PREFIX + 'state', null);
-        break;
-      case 'resetPasswordToken':
-        this.setState({
-          formState: STATES.PASSWORD_CHANGE
-        });
-        Session.set(KEY_PREFIX + 'state', null);
-        break;
-
-      case 'justVerifiedEmail':
-        this.setState({
-          formState: STATES.PROFILE
-        });
-        Session.set(KEY_PREFIX + 'state', null);
-        break;
-    }
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
@@ -992,6 +997,6 @@ export class LoginForm extends Tracker.Component {
       />
     );
   }
-};
+}
 
 Accounts.ui.LoginForm = LoginForm;
