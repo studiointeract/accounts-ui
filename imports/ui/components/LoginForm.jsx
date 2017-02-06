@@ -45,15 +45,6 @@ export class LoginForm extends Tracker.Component {
       onPreSignUpHook: props.onPreSignUpHook || Accounts.ui._options.onPreSignUpHook,
       onPostSignUpHook: props.onPostSignUpHook || Accounts.ui._options.onPostSignUpHook,
     };
-
-    // Listen for the user to login/logout.
-    this.autorun(() => {
-      // Add the services list to the user.
-      this.subscribe('servicesList');
-      this.setState({
-        user: Accounts.user()
-      });
-    });
   }
 
   componentDidMount() {
@@ -85,6 +76,17 @@ export class LoginForm extends Tracker.Component {
     this.setState(prevState => ({
       ...this.getDefaultFieldValues(),
     }));
+    
+    // Listen for the user to login/logout.
+    this.autorun(() => {
+      
+      // Add the services list to the user.
+      this.subscribe('servicesList');
+      this.setState({
+        user: Accounts.user()
+      });
+      
+    });
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
