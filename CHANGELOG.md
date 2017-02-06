@@ -1,5 +1,10 @@
 # ChangeLog
 
+### v1.2.18
+6-February-2017
+
+* #94 - Better support for Server-Side Rendering & client-only code in React client-only lifecycle hook
+
 ### v1.2.17
 7-January-2017
 
