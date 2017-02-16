@@ -1,5 +1,10 @@
 # ChangeLog
 
+### v1.2.19
+16-February-2017
+
+* Fixed an issue with imports when using latest version of react router.
+
 ### v1.2.18
 6-February-2017
 
