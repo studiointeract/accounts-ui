@@ -38,7 +38,7 @@ We support the standard [configuration in the account-ui package](http://docs.me
 
 ### Accounts.ui.config(options)
 
-`import { Accounts } from 'meteor/std:accounts-ui`
+`import { Accounts } from 'meteor/std:accounts-ui'`
 
 Configure the behavior of `<Accounts.ui.LoginForm />`
 
