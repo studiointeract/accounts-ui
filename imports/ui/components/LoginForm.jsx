@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { PropTypes, Component } from 'react';
 import ReactDOM from 'react-dom';
-import Tracker from 'tracker-component';
+import { createContainer } from 'meteor/react-meteor-data';
 import { Accounts } from 'meteor/accounts-base';
 import { T9n } from 'meteor/softwarerero:accounts-t9n';
 import { KEY_PREFIX } from '../../login_session.js';
@@ -18,7 +18,7 @@ import {
   capitalize
 } from '../../helpers.js';
 
-export class LoginForm extends Tracker.Component {
+class LoginForm extends Component {
   constructor(props) {
     super(props);
     let {
@@ -71,22 +71,11 @@ export class LoginForm extends Tracker.Component {
         Session.set(KEY_PREFIX + 'state', null);
         break;
     }
-    
+
     // Add default field values once the form did mount on the client
     this.setState(prevState => ({
       ...this.getDefaultFieldValues(),
     }));
-    
-    // Listen for the user to login/logout.
-    this.autorun(() => {
-      
-      // Add the services list to the user.
-      this.subscribe('servicesList');
-      this.setState({
-        user: Accounts.user()
-      });
-      
-    });
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
@@ -99,9 +88,9 @@ export class LoginForm extends Tracker.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (!prevState.user !== !this.state.user) {
+    if (!prevProps.user !== !this.props.user) {
       this.setState({
-        formState: this.state.user ? STATES.PROFILE : STATES.SIGN_IN
+        formState: this.props.user ? STATES.PROFILE : STATES.SIGN_IN
       });
     }
   }
@@ -309,7 +298,8 @@ export class LoginForm extends Tracker.Component {
       changePasswordPath = Accounts.ui._options.changePasswordPath,
       profilePath = Accounts.ui._options.profilePath,
     } = this.props;
-    const { formState, waiting, user } = this.state;
+    const { user } = this.props;
+    const { formState, waiting } = this.state;
     let loginButtons = [];
 
     if (user && formState == STATES.PROFILE) {
@@ -457,7 +447,7 @@ export class LoginForm extends Tracker.Component {
   }
 
   showForgotPasswordLink() {
-    return !this.state.user
+    return !this.props.user
       && this.state.formState == STATES.SIGN_IN
       && _.contains(
         ["USERNAME_AND_EMAIL", "USERNAME_AND_OPTIONAL_EMAIL", "EMAIL_ONLY"],
@@ -662,7 +652,8 @@ export class LoginForm extends Tracker.Component {
   }
 
   oauthSignIn(serviceName) {
-    const { formState, waiting, user, onSubmitHook } = this.state;
+    const { user } = this.props;
+    const { formState, waiting, onSubmitHook } = this.state;
     //Thanks Josh Owens for this one.
     function capitalService() {
       return serviceName.charAt(0).toUpperCase() + serviceName.slice(1);
@@ -998,5 +989,29 @@ export class LoginForm extends Tracker.Component {
     );
   }
 }
+LoginForm.propTypes = {
+  formState: PropTypes.string,
+  loginPath: PropTypes.string,
+  signUpPath: PropTypes.string,
+  resetPasswordPath: PropTypes.string,
+  profilePath: PropTypes.string,
+  changePasswordPath: PropTypes.string,
+};
+LoginForm.defaultProps = {
+  formState: null,
+  loginPath: null,
+  signUpPath: null,
+  resetPasswordPath: null,
+  profilePath: null,
+  changePasswordPath: null,
+};
 
 Accounts.ui.LoginForm = LoginForm;
+
+export default createContainer(() => {
+  // Listen for the user to login/logout and the services list to the user.
+  Meteor.subscribe('servicesList');
+  return ({
+    user: Accounts.user(),
+  });
+}, LoginForm);
