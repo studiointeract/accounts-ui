@@ -1,5 +1,49 @@
 # ChangeLog
 
+### v1.2.20
+13-March-2017
+
+* Fixed an issue with imports when using react router.
+
+### v1.2.19
+16-February-2017
+
+* Fixed an issue with imports when using latest version of react router.
+
+### v1.2.18
+6-February-2017
+
+* #94 - Better support for Server-Side Rendering & client-only code in React client-only lifecycle hook
+
+### v1.2.17
+7-January-2017
+
+* #55 - Create new form state for Enroll Account
+
+### v1.2.16
+7-January-2017
+
+* Added warning on misconfigured LoginForm usage, that could prevent users from
+resetting their password.
+
+### v1.2.15
+7-January-2017
+
+* #91 - Fixed: localStorage not defined in server side
+* Improving experience on successful reset password.
+* Reset faulty redirect to reset-password.
+
+### v1.2.14
+7-January-2017
+
+* Fixed issue with troublesome redirect in React Router when clicking link to
+reset password.
+
+### v1.2.13
+6-January-2017
+
+* Fixed issue with faulty duplicate use of componentDidMount in LoginForm.
+
 ### v1.2.12
 6-January-2017
 
@@ -10,7 +54,9 @@
 18-December-2016
 
 * #61 - BUG: Error «Need to set a username or email» when email is set
-* Solved #61 by adding functionality to remember entered values in localStorage, which also makes it possible to remember values between routes (i.e. when switching between /login and /register).
+* Solved #61 by adding functionality to remember entered values in localStorage,
+which also makes it possible to remember values between routes (i.e. when
+  switching between /login and /register).
 
 ### v1.2.10
 14-December-2016
@@ -36,7 +82,8 @@
 ### v1.2.7
 19-October-2016
 
-* Make sure `nextProps.formState` actually exists before overwriting `state.formState`.
+* Make sure `nextProps.formState` actually exists before overwriting
+`state.formState`.
 
 ### v1.2.6
 2-June-2016
@@ -67,7 +114,8 @@
 ### v1.1.19
 
 * Improving hooks for server side rendered pages.
-* Improving so that browser pre-filled input values are pushed back to the form state.
+* Improving so that browser pre-filled input values are pushed back to the form
+state.
 
 ### v1.1.18
 
@@ -87,9 +135,12 @@
 
 ### v1.1.14
 
-* @SachaG added tmeasday:check-npm-versions to check for the correct version of npm packages.
-* @ArthurPai updated T9n, which adds the Chinese language for accounts, so we can update it to v1.3.3
-* @ArthurPai fixed a forgotten update T9n translation in the PasswordOrService component.
+* @SachaG added tmeasday:check-npm-versions to check for the correct version of
+npm packages.
+* @ArthurPai updated T9n, which adds the Chinese language for accounts, so we
+can update it to v1.3.3
+* @ArthurPai fixed a forgotten update T9n translation in the PasswordOrService
+component.
 * @PolGuixe fixed the faulty meteor-developer account integration.
 
 ### v1.1.13
@@ -157,7 +208,9 @@ https://github.com/studiointeract/accounts-ui/issues/16
 
 ### v1.0.19
 
-* Added defaultValue to fields, so that when switching formState the form keeps the value it had from the other form. Which has always been a really great experience with Meteor accounts-ui.
+* Added defaultValue to fields, so that when switching formState the form keeps
+the value it had from the other form. Which has always been a really great
+experience with Meteor accounts-ui.
 
 ### v1.0.18
 

@@ -1,6 +1,6 @@
 # React Accounts UI
 
-Current version 1.2.12
+Current version 1.2.20
 
 ## Features
 
@@ -25,9 +25,6 @@ This package does not by standard come with any styling, you can easily [extend 
 * [**Bootstrap 3/4**](https://atmospherejs.com/std/accounts-bootstrap)  `std:accounts-bootstrap`
 * [**Ionic**](https://atmospherejs.com/std/accounts-ionic)  `std:accounts-ionic`
 * [**Material UI**](https://atmospherejs.com/zetoff/accounts-material-ui) `zetoff:accounts-material-ui`
-* Material UI  
-  Help out on this: [http://github.com/studiointeract/accounts-material](http://github.com/studiointeract/accounts-material)
-
 
 * Add your styled version here [Learn how](#create-your-own-styled-version)
 
@@ -41,7 +38,7 @@ We support the standard [configuration in the account-ui package](http://docs.me
 
 ### Accounts.ui.config(options)
 
-`import { Accounts } from 'meteor/std:accounts-ui`
+`import { Accounts } from 'meteor/std:accounts-ui'`
 
 Configure the behavior of `<Accounts.ui.LoginForm />`
 
@@ -68,10 +65,9 @@ Accounts.ui.config({
 ### Version 1.2 also supports passing hooks through props to the component.
 
 ```js
-import { Accounts, STATES } from 'meteor/std:accounts-ui';
+import { Accounts } from 'meteor/std:accounts-ui';
 
 <Accounts.ui.LoginForm
-  state={ STATES.SIGN_IN }
   onSignedInHook={ () => console.log('user signed in') }
 />
 ```
@@ -196,7 +192,7 @@ Meteor.startup( () => {
     <Router history={ browserHistory }>
       <Route path="/" component={ App }>
         <IndexRoute component={ Index } />
-        <Route path="/signin" component={() => <Accounts.ui.LoginForm formState={STATES.SIGN_IN} />} />
+        <Route path="/signin" component={() => <Accounts.ui.LoginForm />} />
         <Route path="/signup" component={() => <Accounts.ui.LoginForm formState={STATES.SIGN_UP} />} />
         <Route path="/hello/:name" component={ Hello } />
       </Route>
@@ -321,7 +317,6 @@ FlowRouter.route("/login", {
   action(params) {
     mount(MainLayout, {
       content: <Accounts.ui.LoginForm {...{
-        formState: STATES.SIGN_IN,
         signUpPath: '/signup'
       }} />
     });
@@ -523,4 +518,5 @@ See example: [Field.jsx#L](imports/ui/components/Field.jsx#L64-L67)
 
 ## Credits
 
-Made by the [creative folks at Studio Interact](http://studiointeract.com)
+Made by the [creative folks at Studio Interact](http://studiointeract.com) and
+[all the wonderful people using and improving this package](https://github.com/studiointeract/accounts-ui/graphs/contributors).

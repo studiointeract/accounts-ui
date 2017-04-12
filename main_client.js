@@ -3,8 +3,10 @@ import './imports/accounts_ui.js';
 import './imports/login_session.js';
 import { STATES } from './imports/helpers.js';
 import './imports/api/client/loginWithoutPassword.js';
+import LoginForm from './imports/ui/components/LoginForm.jsx';
 
-import './imports/ui/components/LoginForm.jsx';
-
-export { Accounts, STATES };
-export default Accounts;
+export {
+  LoginForm as default,
+  Accounts,
+  STATES,
+};

@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { PropTypes, Component } from 'react';
 import ReactDOM from 'react-dom';
-import Tracker from 'tracker-component';
+import { createContainer } from 'meteor/react-meteor-data';
 import { Accounts } from 'meteor/accounts-base';
 import { T9n } from 'meteor/softwarerero:accounts-t9n';
 import { KEY_PREFIX } from '../../login_session.js';
@@ -18,7 +18,7 @@ import {
   capitalize
 } from '../../helpers.js';
 
-export class LoginForm extends Tracker.Component {
+class LoginForm extends Component {
   constructor(props) {
     super(props);
     let {
@@ -29,6 +29,11 @@ export class LoginForm extends Tracker.Component {
       profilePath,
       changePasswordPath
     } = props;
+
+    if (formState === STATES.SIGN_IN && Package['accounts-password']) {
+      console.warn('Do not force the state to SIGN_IN on Accounts.ui.LoginForm, it will make it impossible to reset password in your app, this state is also the default state if logged out, so no need to force it.');
+    }
+
     // Set inital state.
     this.state = {
       messages: [],
@@ -39,39 +44,38 @@ export class LoginForm extends Tracker.Component {
       onSignedOutHook: props.onSignedOutHook || Accounts.ui._options.onSignedOutHook,
       onPreSignUpHook: props.onPreSignUpHook || Accounts.ui._options.onPreSignUpHook,
       onPostSignUpHook: props.onPostSignUpHook || Accounts.ui._options.onPostSignUpHook,
-      // Add default field values.
-      ...this.getDefaultFieldValues(),
     };
-
-    // Listen for the user to login/logout.
-    this.autorun(() => {
-      // Add the services list to the user.
-      this.subscribe('servicesList');
-      this.setState({
-        user: Accounts.user()
-      });
-    });
   }
 
   componentDidMount() {
-    this.setState({ waiting: false, ready: true });
+    this.setState(prevState => ({ waiting: false, ready: true }));
     let changeState = Session.get(KEY_PREFIX + 'state');
     switch (changeState) {
       case 'enrollAccountToken':
+        this.setState(prevState => ({
+          formState: STATES.ENROLL_ACCOUNT
+        }));
+        Session.set(KEY_PREFIX + 'state', null);
+        break;
       case 'resetPasswordToken':
-        this.setState({
+        this.setState(prevState => ({
           formState: STATES.PASSWORD_CHANGE
-        });
+        }));
         Session.set(KEY_PREFIX + 'state', null);
         break;
 
       case 'justVerifiedEmail':
-        this.setState({
+        this.setState(prevState => ({
           formState: STATES.PROFILE
-        });
+        }));
         Session.set(KEY_PREFIX + 'state', null);
         break;
     }
+
+    // Add default field values once the form did mount on the client
+    this.setState(prevState => ({
+      ...this.getDefaultFieldValues(),
+    }));
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
@@ -84,14 +88,15 @@ export class LoginForm extends Tracker.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (!prevState.user !== !this.state.user) {
+    if (!prevProps.user !== !this.props.user) {
       this.setState({
-        formState: this.state.user ? STATES.PROFILE : STATES.SIGN_IN
+        formState: this.props.user ? STATES.PROFILE : STATES.SIGN_IN
       });
     }
   }
 
   validateField(field, value) {
+    const { formState } = this.state;
     switch(field) {
       case 'email':
         return validateEmail(value,
@@ -107,6 +112,7 @@ export class LoginForm extends Tracker.Component {
         return validateUsername(value,
           this.showMessage.bind(this),
           this.clearMessage.bind(this),
+          formState,
         );
     }
   }
@@ -158,6 +164,17 @@ export class LoginForm extends Tracker.Component {
       defaultValue: this.state.password || "",
       onChange: this.handleChange.bind(this, 'password'),
       message: this.getMessageForField('password'),
+    };
+  }
+
+  getSetPasswordField() {
+    return {
+      id: 'newPassword',
+      hint: T9n.get('enterPassword'),
+      label: T9n.get('choosePassword'),
+      type: 'password',
+      required: true,
+      onChange: this.handleChange.bind(this, 'newPassword')
     };
   }
 
@@ -260,11 +277,14 @@ export class LoginForm extends Tracker.Component {
     }
 
     if (this.showPasswordChangeForm()) {
-      if (Meteor.isClient && !Accounts._loginButtonsSession.get('resetPasswordToken')
-        && !Accounts._loginButtonsSession.get('enrollAccountToken')) {
+      if (Meteor.isClient && !Accounts._loginButtonsSession.get('resetPasswordToken')) {
         loginFields.push(this.getPasswordField());
       }
       loginFields.push(this.getNewPasswordField());
+    }
+
+    if (this.showEnrollAccountForm()) {
+      loginFields.push(this.getSetPasswordField());
     }
 
     return _.indexBy(loginFields, 'id');
@@ -278,7 +298,8 @@ export class LoginForm extends Tracker.Component {
       changePasswordPath = Accounts.ui._options.changePasswordPath,
       profilePath = Accounts.ui._options.profilePath,
     } = this.props;
-    const { formState, waiting, user } = this.state;
+    const { user } = this.props;
+    const { formState, waiting } = this.state;
     let loginButtons = [];
 
     if (user && formState == STATES.PROFILE) {
@@ -367,22 +388,31 @@ export class LoginForm extends Tracker.Component {
       });
     }
 
-    if (this.showPasswordChangeForm()) {
+    if (this.showPasswordChangeForm() || this.showEnrollAccountForm()) {
       loginButtons.push({
         id: 'changePassword',
-        label: T9n.get('changePassword'),
+        label: (this.showPasswordChangeForm() ? T9n.get('changePassword') : T9n.get('setPassword')),
         type: 'submit',
         disabled: waiting,
         onClick: this.passwordChange.bind(this)
       });
 
-      loginButtons.push({
-        id: 'switchToSignOut',
-        label: T9n.get('cancel'),
-        type: 'link',
-        href: profilePath,
-        onClick: this.switchToSignOut.bind(this)
-      });
+      if (Accounts.user()) {
+        loginButtons.push({
+          id: 'switchToSignOut',
+          label: T9n.get('cancel'),
+          type: 'link',
+          href: profilePath,
+          onClick: this.switchToSignOut.bind(this)
+        });
+      } else {
+        loginButtons.push({
+          id: 'cancelResetPassword',
+          label: T9n.get('cancel'),
+          type: 'link',
+          onClick: this.cancelResetPassword.bind(this),
+        });
+      }
     }
 
     // Sort the button array so that the submit button always comes first, and
@@ -407,12 +437,17 @@ export class LoginForm extends Tracker.Component {
       && this.state.formState == STATES.PASSWORD_CHANGE);
   }
 
+  showEnrollAccountForm() {
+    return(Package['accounts-password']
+      && this.state.formState == STATES.ENROLL_ACCOUNT);
+  }
+
   showCreateAccountLink() {
     return this.state.formState == STATES.SIGN_IN && !Accounts._options.forbidClientAccountCreation && Package['accounts-password'];
   }
 
   showForgotPasswordLink() {
-    return !this.state.user
+    return !this.props.user
       && this.state.formState == STATES.SIGN_IN
       && _.contains(
         ["USERNAME_AND_EMAIL", "USERNAME_AND_OPTIONAL_EMAIL", "EMAIL_ONLY"],
@@ -425,7 +460,7 @@ export class LoginForm extends Tracker.Component {
   setDefaultFieldValues(defaults) {
     if (typeof defaults !== 'object') {
       throw new Error('Argument to setDefaultFieldValues is not of type object');
-    } else if (localStorage) {
+    } else if (typeof localStorage !== 'undefined' && localStorage) {
       localStorage.setItem('accounts_ui', JSON.stringify({
         passwordSignupFields: passwordSignupFields(),
         ...this.getDefaultFieldValues(),
@@ -438,7 +473,7 @@ export class LoginForm extends Tracker.Component {
    * Helper to get field values when switching states in the form.
    */
   getDefaultFieldValues() {
-    if (localStorage) {
+    if (typeof localStorage !== 'undefined' && localStorage) {
       const defaultFieldValues = JSON.parse(localStorage.getItem('accounts_ui') || null);
       if (defaultFieldValues
         && defaultFieldValues.passwordSignupFields === passwordSignupFields()) {
@@ -451,7 +486,7 @@ export class LoginForm extends Tracker.Component {
    * Helper to clear field values when signing in, up or out.
    */
   clearDefaultFieldValues() {
-    if (localStorage) {
+    if (typeof localStorage !== 'undefined' && localStorage) {
       localStorage.removeItem('accounts_ui');
     }
   }
@@ -498,6 +533,15 @@ export class LoginForm extends Tracker.Component {
       formState: STATES.PROFILE,
     });
     this.clearMessages();
+  }
+
+  cancelResetPassword(event) {
+    event.preventDefault();
+    Accounts._loginButtonsSession.set('resetPasswordToken', null);
+    this.setState({
+      formState: STATES.SIGN_IN,
+      messages: [],
+    });
   }
 
   signOut() {
@@ -608,7 +652,8 @@ export class LoginForm extends Tracker.Component {
   }
 
   oauthSignIn(serviceName) {
-    const { formState, waiting, user, onSubmitHook } = this.state;
+    const { user } = this.props;
+    const { formState, waiting, onSubmitHook } = this.state;
     //Thanks Josh Owens for this one.
     function capitalService() {
       return serviceName.charAt(0).toUpperCase() + serviceName.slice(1);
@@ -821,7 +866,8 @@ export class LoginForm extends Tracker.Component {
       password,
       newPassword,
       formState,
-      onSubmitHook
+      onSubmitHook,
+      onSignedInHook,
     } = this.state;
 
     if (!this.validateField('password', newPassword)){
@@ -845,6 +891,7 @@ export class LoginForm extends Tracker.Component {
           this.setState({ formState: STATES.PROFILE });
           Accounts._loginButtonsSession.set('resetPasswordToken', null);
           Accounts._loginButtonsSession.set('enrollAccountToken', null);
+          onSignedInHook();
         }
       });
     }
@@ -904,14 +951,16 @@ export class LoginForm extends Tracker.Component {
     this.setState({ messages: [] });
   }
 
-  componentDidMount() {
+  componentWillMount() {
     // XXX Check for backwards compatibility.
-    const container = document.createElement('div');
-    ReactDOM.render(<Accounts.ui.Field message="test" />, container);
-    if (container.getElementsByClassName('message').length == 0) {
-      // Found backwards compatibility issue with 1.3.x
-      console.warn(`Implementations of Accounts.ui.Field must render message in v1.2.11.
-        https://github.com/studiointeract/accounts-ui/#deprecations`);
+    if (Meteor.isClient) {
+      const container = document.createElement('div');
+      ReactDOM.render(<Accounts.ui.Field message="test" />, container);
+      if (container.getElementsByClassName('message').length == 0) {
+        // Found backwards compatibility issue with 1.3.x
+        console.warn(`Implementations of Accounts.ui.Field must render message in v1.2.11.
+          https://github.com/studiointeract/accounts-ui/#deprecations`);
+      }
     }
   }
 
@@ -939,6 +988,30 @@ export class LoginForm extends Tracker.Component {
       />
     );
   }
+}
+LoginForm.propTypes = {
+  formState: PropTypes.string,
+  loginPath: PropTypes.string,
+  signUpPath: PropTypes.string,
+  resetPasswordPath: PropTypes.string,
+  profilePath: PropTypes.string,
+  changePasswordPath: PropTypes.string,
+};
+LoginForm.defaultProps = {
+  formState: null,
+  loginPath: null,
+  signUpPath: null,
+  resetPasswordPath: null,
+  profilePath: null,
+  changePasswordPath: null,
 };
 
 Accounts.ui.LoginForm = LoginForm;
+
+export default createContainer(() => {
+  // Listen for the user to login/logout and the services list to the user.
+  Meteor.subscribe('servicesList');
+  return ({
+    user: Accounts.user(),
+  });
+}, LoginForm);

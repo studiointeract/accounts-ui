@@ -4,8 +4,10 @@ import './imports/login_session.js';
 import { redirect, STATES } from './imports/helpers.js';
 import './imports/api/server/loginWithoutPassword.js';
 import './imports/api/server/servicesListPublication.js';
+import LoginForm from './imports/ui/components/LoginForm.jsx';
 
-import './imports/ui/components/LoginForm.jsx';
-
-export { Accounts, redirect, STATES };
-export default Accounts;
+export {
+  LoginForm as default,
+  Accounts,
+  STATES,
+};

@@ -1,6 +1,6 @@
 Package.describe({
   name: 'std:accounts-ui',
-  version: '1.2.12',
+  version: '1.2.20',
   summary: 'Accounts UI for React in Meteor 1.3+',
   git: 'https://github.com/studiointeract/accounts-ui',
   documentation: 'README.md'
@@ -16,6 +16,7 @@ Package.onUse(function(api) {
   api.use('random');
   api.use('email');
   api.use('session');
+  api.use('react-meteor-data');
   api.use('softwarerero:accounts-t9n');
   api.use('tmeasday:check-npm-versions@0.3.0');
 

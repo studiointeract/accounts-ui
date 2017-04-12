@@ -1,10 +1,13 @@
+let browserHistory
+try { browserHistory = require('react-router').browserHistory } catch(e) {}
 export const loginButtonsSession = Accounts._loginButtonsSession;
 export const STATES = {
   SIGN_IN: Symbol('SIGN_IN'),
   SIGN_UP: Symbol('SIGN_UP'),
   PROFILE: Symbol('PROFILE'),
   PASSWORD_CHANGE: Symbol('PASSWORD_CHANGE'),
-  PASSWORD_RESET: Symbol('PASSWORD_RESET')
+  PASSWORD_RESET: Symbol('PASSWORD_RESET'),
+  ENROLL_ACCOUNT: Symbol('ENROLL_ACCOUNT')
 };
 
 export function getLoginServices() {
@@ -79,11 +82,12 @@ export function validatePassword(password = '', showMessage, clearMessage){
   }
 };
 
-export function validateUsername(username, showMessage, clearMessage) {
+export function validateUsername(username, showMessage, clearMessage, formState) {
   if ( username ) {
     return true;
   } else {
-    showMessage(T9n.get("error.usernameRequired"), 'warning', false, 'username');
+    const fieldName = (passwordSignupFields() === 'USERNAME_ONLY' || formState === STATES.SIGN_UP) ? 'username' : 'usernameOrEmail';
+    showMessage(T9n.get("error.usernameRequired"), 'warning', false, fieldName);
     return false;
   }
 }
@@ -91,15 +95,18 @@ export function validateUsername(username, showMessage, clearMessage) {
 export function redirect(redirect) {
   if (Meteor.isClient) {
     if (window.history) {
+      // Run after all app specific redirects, i.e. to the login screen.
       Meteor.setTimeout(() => {
         if (Package['kadira:flow-router']) {
           Package['kadira:flow-router'].FlowRouter.go(redirect);
         } else if (Package['kadira:flow-router-ssr']) {
           Package['kadira:flow-router-ssr'].FlowRouter.go(redirect);
+        } else if (browserHistory) {
+          browserHistory.push(redirect);
         } else {
           window.history.pushState( {} , 'redirect', redirect );
         }
-      }, 500);
+      }, 100);
     }
   }
 }
