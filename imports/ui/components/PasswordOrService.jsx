@@ -4,6 +4,10 @@ import { T9n } from 'meteor/softwarerero:accounts-t9n';
 import { hasPasswordService } from '../../helpers.js';
 
 export class PasswordOrService extends React.Component {
+  propTypes: {
+    oauthServices: React.PropTypes.object
+  }
+
   constructor(props) {
     super(props);
     this.state = {
@@ -32,8 +36,5 @@ export class PasswordOrService extends React.Component {
     return null;
   }
 }
-PasswordOrService.propTypes = {
-  oauthServices: React.PropTypes.object
-};
 
 Accounts.ui.PasswordOrService = PasswordOrService;

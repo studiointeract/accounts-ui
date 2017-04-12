@@ -2,6 +2,10 @@ import React from 'react';
 import { Accounts } from 'meteor/accounts-base';
 
 export class Field extends React.Component {
+  propTypes: {
+    onChange: React.PropTypes.func
+  }
+
   constructor(props) {
     super(props);
     this.state = {
@@ -68,8 +72,5 @@ export class Field extends React.Component {
     ) : null;
   }
 }
-Field.propTypes = {
-  onChange: React.PropTypes.func
-};
 
 Accounts.ui.Field = Field;
