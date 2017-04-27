@@ -9,6 +9,14 @@ import './SocialButtons.jsx';
 import './FormMessages.jsx';
 
 export class Form extends React.Component {
+  propTypes: {
+    oauthServices: React.PropTypes.object,
+    fields: React.PropTypes.object.isRequired,
+    buttons: React.PropTypes.object.isRequired,
+    error: React.PropTypes.string,
+    ready: React.PropTypes.bool
+  };
+
   componentDidMount() {
     let form = this.form;
     if (form) {
@@ -45,12 +53,5 @@ export class Form extends React.Component {
     );
   }
 }
-Form.propTypes = {
-  oauthServices: React.PropTypes.object,
-  fields: React.PropTypes.object.isRequired,
-  buttons: React.PropTypes.object.isRequired,
-  error: React.PropTypes.string,
-  ready: React.PropTypes.bool
-};
 
 Accounts.ui.Form = Form;
