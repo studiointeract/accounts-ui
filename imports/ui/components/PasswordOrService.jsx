@@ -1,5 +1,6 @@
 import React from 'react';
 import { Accounts } from 'meteor/accounts-base';
+import PropTypes from 'prop-types'
 import { T9n } from 'meteor/softwarerero:accounts-t9n';
 import { hasPasswordService } from '../../helpers.js';
 

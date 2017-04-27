@@ -1,5 +1,7 @@
 import React from 'react';
 import { Accounts } from 'meteor/accounts-base';
+import PropTypes from 'prop-types'
+
 let Link;
 try { Link = require('react-router').Link; } catch(e) {}
 

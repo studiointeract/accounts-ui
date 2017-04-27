@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Accounts } from 'meteor/accounts-base';
+import PropTypes from 'prop-types'
+
 import './Fields.jsx';
 import './Buttons.jsx';
 import './FormMessage.jsx';
