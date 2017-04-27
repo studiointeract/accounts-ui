@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 
 export class Field extends React.Component {
   propTypes: {
-    onChange: React.PropTypes.func
+    onChange: PropTypes.func
   }
 
   constructor(props) {

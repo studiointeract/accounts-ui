@@ -7,7 +7,7 @@ try { Link = require('react-router').Link; } catch(e) {}
 
 export class Button extends React.Component {
   propTypes: {
-    onClick: React.PropTypes.func
+    onClick: PropTypes.func
   }
 
   render () {

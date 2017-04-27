@@ -6,7 +6,7 @@ import { hasPasswordService } from '../../helpers.js';
 
 export class PasswordOrService extends React.Component {
   propTypes: {
-    oauthServices: React.PropTypes.object
+    oauthServices: PropTypes.object
   }
 
   constructor(props) {
