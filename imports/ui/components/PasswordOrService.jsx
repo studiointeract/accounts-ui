@@ -16,7 +16,6 @@ export class PasswordOrService extends React.Component {
   }
 
   translate(text) {
-    console.log(this);
     if (this.props.translate) {
       return this.props.translate(text);
     }
