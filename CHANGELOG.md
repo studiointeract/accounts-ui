@@ -1,5 +1,10 @@
 # ChangeLog
 
+### v1.2.21
+26-May-2017
+
+* Added functionality to include your own translation function.
+
 ### v1.2.20
 13-March-2017
 

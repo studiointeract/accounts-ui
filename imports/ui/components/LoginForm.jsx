@@ -45,6 +45,7 @@ export class LoginForm extends Tracker.Component {
       onPreSignUpHook: props.onPreSignUpHook || Accounts.ui._options.onPreSignUpHook,
       onPostSignUpHook: props.onPostSignUpHook || Accounts.ui._options.onPostSignUpHook,
     };
+    this.translate = this.translate.bind(this);
   }
 
   componentDidMount() {
@@ -71,21 +72,21 @@ export class LoginForm extends Tracker.Component {
         Session.set(KEY_PREFIX + 'state', null);
         break;
     }
-    
+
     // Add default field values once the form did mount on the client
     this.setState(prevState => ({
       ...this.getDefaultFieldValues(),
     }));
-    
+
     // Listen for the user to login/logout.
     this.autorun(() => {
-      
+
       // Add the services list to the user.
       this.subscribe('servicesList');
       this.setState({
         user: Accounts.user()
       });
-      
+
     });
   }
 
@@ -104,6 +105,13 @@ export class LoginForm extends Tracker.Component {
         formState: this.state.user ? STATES.PROFILE : STATES.SIGN_IN
       });
     }
+  }
+
+  translate(text) {
+    // if (this.props.t) {
+    //   return this.props.t(text);
+    // }
+    return T9n.get(text);
   }
 
   validateField(field, value) {
@@ -131,8 +139,8 @@ export class LoginForm extends Tracker.Component {
   getUsernameOrEmailField() {
     return {
       id: 'usernameOrEmail',
-      hint: T9n.get('enterUsernameOrEmail'),
-      label: T9n.get('usernameOrEmail'),
+      hint: this.translate('enterUsernameOrEmail'),
+      label: this.translate('usernameOrEmail'),
       required: true,
       defaultValue: this.state.username || "",
       onChange: this.handleChange.bind(this, 'usernameOrEmail'),
@@ -143,8 +151,8 @@ export class LoginForm extends Tracker.Component {
   getUsernameField() {
     return {
       id: 'username',
-      hint: T9n.get('enterUsername'),
-      label: T9n.get('username'),
+      hint: this.translate('enterUsername'),
+      label: this.translate('username'),
       required: true,
       defaultValue: this.state.username || "",
       onChange: this.handleChange.bind(this, 'username'),
@@ -155,8 +163,8 @@ export class LoginForm extends Tracker.Component {
   getEmailField() {
     return {
       id: 'email',
-      hint: T9n.get('enterEmail'),
-      label: T9n.get('email'),
+      hint: this.translate('enterEmail'),
+      label: this.translate('email'),
       type: 'email',
       required: true,
       defaultValue: this.state.email || "",
@@ -168,8 +176,8 @@ export class LoginForm extends Tracker.Component {
   getPasswordField() {
     return {
       id: 'password',
-      hint: T9n.get('enterPassword'),
-      label: T9n.get('password'),
+      hint: this.translate('enterPassword'),
+      label: this.translate('password'),
       type: 'password',
       required: true,
       defaultValue: this.state.password || "",
@@ -181,8 +189,8 @@ export class LoginForm extends Tracker.Component {
   getSetPasswordField() {
     return {
       id: 'newPassword',
-      hint: T9n.get('enterPassword'),
-      label: T9n.get('choosePassword'),
+      hint: this.translate('enterPassword'),
+      label: this.translate('choosePassword'),
       type: 'password',
       required: true,
       onChange: this.handleChange.bind(this, 'newPassword')
@@ -192,8 +200,8 @@ export class LoginForm extends Tracker.Component {
   getNewPasswordField() {
     return {
       id: 'newPassword',
-      hint: T9n.get('enterNewPassword'),
-      label: T9n.get('newPassword'),
+      hint: this.translate('enterNewPassword'),
+      label: this.translate('newPassword'),
       type: 'password',
       required: true,
       onChange: this.handleChange.bind(this, 'newPassword'),
@@ -315,7 +323,7 @@ export class LoginForm extends Tracker.Component {
     if (user && formState == STATES.PROFILE) {
       loginButtons.push({
         id: 'signOut',
-        label: T9n.get('signOut'),
+        label: this.translate('signOut'),
         disabled: waiting,
         onClick: this.signOut.bind(this)
       });
@@ -324,7 +332,7 @@ export class LoginForm extends Tracker.Component {
     if (this.showCreateAccountLink()) {
       loginButtons.push({
         id: 'switchToSignUp',
-        label: T9n.get('signUp'),
+        label: this.translate('signUp'),
         type: 'link',
         href: signUpPath,
         onClick: this.switchToSignUp.bind(this)
@@ -334,7 +342,7 @@ export class LoginForm extends Tracker.Component {
     if (formState == STATES.SIGN_UP || formState == STATES.PASSWORD_RESET) {
       loginButtons.push({
         id: 'switchToSignIn',
-        label: T9n.get('signIn'),
+        label: this.translate('signIn'),
         type: 'link',
         href: loginPath,
         onClick: this.switchToSignIn.bind(this)
@@ -344,7 +352,7 @@ export class LoginForm extends Tracker.Component {
     if (this.showForgotPasswordLink()) {
       loginButtons.push({
         id: 'switchToPasswordReset',
-        label: T9n.get('forgotPassword'),
+        label: this.translate('forgotPassword'),
         type: 'link',
         href: resetPasswordPath,
         onClick: this.switchToPasswordReset.bind(this)
@@ -359,7 +367,7 @@ export class LoginForm extends Tracker.Component {
       && (user.services && 'password' in user.services)) {
       loginButtons.push({
         id: 'switchToChangePassword',
-        label: T9n.get('changePassword'),
+        label: this.translate('changePassword'),
         type: 'link',
         href: changePasswordPath,
         onClick: this.switchToChangePassword.bind(this)
@@ -369,7 +377,7 @@ export class LoginForm extends Tracker.Component {
     if (formState == STATES.SIGN_UP) {
       loginButtons.push({
         id: 'signUp',
-        label: T9n.get('signUp'),
+        label: this.translate('signUp'),
         type: hasPasswordService() ? 'submit' : 'link',
         className: 'active',
         disabled: waiting,
@@ -380,7 +388,7 @@ export class LoginForm extends Tracker.Component {
     if (this.showSignInLink()) {
       loginButtons.push({
         id: 'signIn',
-        label: T9n.get('signIn'),
+        label: this.translate('signIn'),
         type: hasPasswordService() ? 'submit' : 'link',
         className: 'active',
         disabled: waiting,
@@ -391,7 +399,7 @@ export class LoginForm extends Tracker.Component {
     if (formState == STATES.PASSWORD_RESET) {
       loginButtons.push({
         id: 'emailResetLink',
-        label: T9n.get('resetYourPassword'),
+        label: this.translate('resetYourPassword'),
         type: 'submit',
         disabled: waiting,
         onClick: this.passwordReset.bind(this)
@@ -401,7 +409,7 @@ export class LoginForm extends Tracker.Component {
     if (this.showPasswordChangeForm() || this.showEnrollAccountForm()) {
       loginButtons.push({
         id: 'changePassword',
-        label: (this.showPasswordChangeForm() ? T9n.get('changePassword') : T9n.get('setPassword')),
+        label: (this.showPasswordChangeForm() ? this.translate('changePassword') : this.translate('setPassword')),
         type: 'submit',
         disabled: waiting,
         onClick: this.passwordChange.bind(this)
@@ -410,7 +418,7 @@ export class LoginForm extends Tracker.Component {
       if (Accounts.user()) {
         loginButtons.push({
           id: 'switchToSignOut',
-          label: T9n.get('cancel'),
+          label: this.translate('cancel'),
           type: 'link',
           href: profilePath,
           onClick: this.switchToSignOut.bind(this)
@@ -418,7 +426,7 @@ export class LoginForm extends Tracker.Component {
       } else {
         loginButtons.push({
           id: 'cancelResetPassword',
-          label: T9n.get('cancel'),
+          label: this.translate('cancel'),
           type: 'link',
           onClick: this.cancelResetPassword.bind(this),
         });
@@ -627,7 +635,7 @@ export class LoginForm extends Tracker.Component {
       Meteor.loginWithPassword(loginSelector, password, (error, result) => {
         onSubmitHook(error,formState);
         if (error) {
-          this.showMessage(T9n.get(`error.accounts.${error.reason}`) || T9n.get("Unknown error"), 'error');
+          this.showMessage(`error.accounts.${error.reason}` || "unknown_error", 'error');
         }
         else {
           loginResultCallback(() => this.state.onSignedInHook());
@@ -683,10 +691,11 @@ export class LoginForm extends Tracker.Component {
       options.forceApprovalPrompt = Accounts.ui._options.forceApprovalPrompt[serviceName];
 
     this.clearMessages();
+    const self = this
     loginWithService(options, (error) => {
       onSubmitHook(error,formState);
       if (error) {
-        this.showMessage(T9n.get(`error.accounts.${error.reason}`) || T9n.get("Unknown error"));
+        this.showMessage(`error.accounts.${error.reason}` || "unknown_error");
       } else {
         this.setState({ formState: STATES.PROFILE });
         this.clearDefaultFieldValues();
@@ -753,12 +762,12 @@ export class LoginForm extends Tracker.Component {
     const SignUp = function(_options) {
       Accounts.createUser(_options, (error) => {
         if (error) {
-          this.showMessage(T9n.get(`error.accounts.${error.reason}`) || T9n.get("Unknown error"), 'error');
-          if (T9n.get(`error.accounts.${error.reason}`)) {
+          this.showMessage(`error.accounts.${error.reason}` || "unknown_error", 'error');
+          if (this.translate(`error.accounts.${error.reason}`)) {
             onSubmitHook(`error.accounts.${error.reason}`, formState);
           }
           else {
-            onSubmitHook("Unknown error", formState);
+            onSubmitHook("unknown_error", formState);
           }
         }
         else {
@@ -804,10 +813,10 @@ export class LoginForm extends Tracker.Component {
 
       Accounts.loginWithoutPassword({ email: email }, (error) => {
         if (error) {
-          this.showMessage(T9n.get(`error.accounts.${error.reason}`) || T9n.get("Unknown error"), 'error');
+          this.showMessage(`error.accounts.${error.reason}` || "unknown_error", 'error');
         }
         else {
-          this.showMessage(T9n.get("info.emailSent"), 'success', 5000);
+          this.showMessage(this.translate("info.emailSent"), 'success', 5000);
           this.clearDefaultFieldValues();
         }
         onSubmitHook(error, formState);
@@ -818,10 +827,10 @@ export class LoginForm extends Tracker.Component {
 
       Accounts.loginWithoutPassword({ email: usernameOrEmail, username: usernameOrEmail }, (error) => {
         if (error) {
-          this.showMessage(T9n.get(`error.accounts.${error.reason}`) || T9n.get("Unknown error"), 'error');
+          this.showMessage(`error.accounts.${error.reason}` || "unknown_error", 'error');
         }
         else {
-          this.showMessage(T9n.get("info.emailSent"), 'success', 5000);
+          this.showMessage(this.translate("info.emailSent"), 'success', 5000);
           this.clearDefaultFieldValues();
         }
         onSubmitHook(error, formState);
@@ -830,10 +839,10 @@ export class LoginForm extends Tracker.Component {
     } else {
       let errMsg = null;
       if (_.contains([ "USERNAME_AND_EMAIL_NO_PASSWORD" ], passwordSignupFields())) {
-        errMsg = T9n.get("error.accounts.Invalid email or username");
+        errMsg = this.translate("error.accounts.invalid_email");
       }
       else {
-        errMsg = T9n.get("error.accounts.Invalid email");
+        errMsg = this.translate("error.accounts.invalid_email");
       }
       this.showMessage(errMsg,'warning');
       onSubmitHook(errMsg, formState);
@@ -858,10 +867,10 @@ export class LoginForm extends Tracker.Component {
 
       Accounts.forgotPassword({ email: email }, (error) => {
         if (error) {
-          this.showMessage(T9n.get(`error.accounts.${error.reason}`) || T9n.get("Unknown error"), 'error');
+          this.showMessage(`error.accounts.${error.reason}` || "unknown_error", 'error');
         }
         else {
-          this.showMessage(T9n.get("info.emailSent"), 'success', 5000);
+          this.showMessage(this.translate("info.emailSent"), 'success', 5000);
           this.clearDefaultFieldValues();
         }
         onSubmitHook(error, formState);
@@ -891,11 +900,11 @@ export class LoginForm extends Tracker.Component {
     if (token) {
       Accounts.resetPassword(token, newPassword, (error) => {
         if (error) {
-          this.showMessage(T9n.get(`error.accounts.${error.reason}`) || T9n.get("Unknown error"), 'error');
+          this.showMessage(`error.accounts.${error.reason}` || "unknown_error", 'error');
           onSubmitHook(error, formState);
         }
         else {
-          this.showMessage(T9n.get('info.passwordChanged'), 'success', 5000);
+          this.showMessage(this.translate('info.passwordChanged'), 'success', 5000);
           onSubmitHook(null, formState);
           this.setState({ formState: STATES.PROFILE });
           Accounts._loginButtonsSession.set('resetPasswordToken', null);
@@ -907,11 +916,11 @@ export class LoginForm extends Tracker.Component {
     else {
       Accounts.changePassword(password, newPassword, (error) => {
         if (error) {
-          this.showMessage(T9n.get(`error.accounts.${error.reason}`) || T9n.get("Unknown error"), 'error');
+          this.showMessage(`error.accounts.${error.reason}` || "unknown_error", 'error');
           onSubmitHook(error, formState);
         }
         else {
-          this.showMessage(T9n.get('info.passwordChanged'), 'success', 5000);
+          this.showMessage('info.passwordChanged', 'success', 5000);
           onSubmitHook(null, formState);
           this.setState({ formState: STATES.PROFILE });
           this.clearDefaultFieldValues();
@@ -921,7 +930,7 @@ export class LoginForm extends Tracker.Component {
   }
 
   showMessage(message, type, clearTimeout, field){
-    message = message.trim();
+    message = this.translate(message).trim();
     if (message) {
       this.setState(({ messages = [] }) => {
         messages.push({
@@ -994,6 +1003,7 @@ export class LoginForm extends Tracker.Component {
         buttons={this.buttons()}
         {...this.state}
         message={message}
+        translate={this.translate}
       />
     );
   }
