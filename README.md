@@ -399,14 +399,15 @@ To install the dependencies added in your package.json run:
 // main.jsx
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Accounts, STATES } from 'meteor/std:accounts-ui';
 
 /**
  * Form.propTypes = {
- *   fields: React.PropTypes.object.isRequired,
- *   buttons: React.PropTypes.object.isRequired,
- *   error: React.PropTypes.string,
- *   ready: React.PropTypes.bool
+ *   fields: PropTypes.object.isRequired,
+ *   buttons: PropTypes.object.isRequired,
+ *   error: PropTypes.string,
+ *   ready: PropTypes.bool
  * };
  */
 class Form extends Accounts.ui.Form {
@@ -480,6 +481,11 @@ class NewLogin extends Accounts.ui.LoginForm {
       };
     }
     return super.fields();
+  }
+
+  translate(text) {
+    // Here you specify your own translation function, e.g.
+    return this.props.t(text);
   }
 
   signUp(options = {}) {

@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import PropTypes from 'prop-types';
 import { Accounts } from 'meteor/accounts-base';
 import './Fields.jsx';
 import './Buttons.jsx';
@@ -26,6 +27,7 @@ export class Form extends React.Component {
       buttons,
       error,
       messages,
+      translate,
       ready = true,
       className
     } = this.props;
@@ -38,7 +40,7 @@ export class Form extends React.Component {
       >
         <Accounts.ui.Fields fields={ fields } />
         <Accounts.ui.Buttons buttons={ buttons } />
-        <Accounts.ui.PasswordOrService oauthServices={ oauthServices } />
+        <Accounts.ui.PasswordOrService oauthServices={ oauthServices } translate={ translate } />
         <Accounts.ui.SocialButtons oauthServices={ oauthServices } />
         <Accounts.ui.FormMessages messages={messages} />
       </form>
@@ -46,11 +48,12 @@ export class Form extends React.Component {
   }
 }
 Form.propTypes = {
-  oauthServices: React.PropTypes.object,
-  fields: React.PropTypes.object.isRequired,
-  buttons: React.PropTypes.object.isRequired,
-  error: React.PropTypes.string,
-  ready: React.PropTypes.bool
+  oauthServices: PropTypes.object,
+  fields: PropTypes.object.isRequired,
+  buttons: PropTypes.object.isRequired,
+  translate: PropTypes.func.isRequired,
+  error: PropTypes.string,
+  ready: PropTypes.bool
 };
 
 Accounts.ui.Form = Form;
