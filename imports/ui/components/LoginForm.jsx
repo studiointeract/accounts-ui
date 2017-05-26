@@ -994,7 +994,7 @@ class LoginForm extends Component {
         buttons={this.buttons()}
         {...this.state}
         message={message}
-        translate={this.translate}
+        translate={text => this.translate(text)}
       />
     );
   }
