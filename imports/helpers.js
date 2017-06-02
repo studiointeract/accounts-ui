@@ -18,7 +18,7 @@ export function getLoginServices() {
   // backwards-compatibility.
   services.sort();
 
-  return _.map(services, function(name){
+  return services.map(function(name){
     return {name: name};
   });
 };

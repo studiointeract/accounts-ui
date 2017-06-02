@@ -18,6 +18,14 @@ import {
   capitalize
 } from '../../helpers.js';
 
+function indexBy(array, key) {
+  const result = {};
+  array.forEach(function(obj) {
+    result[obj[key]] = obj;
+  });
+  return result;
+}
+
 class LoginForm extends Component {
   constructor(props) {
     super(props);
@@ -222,11 +230,11 @@ class LoginForm extends Component {
     }
 
     if (hasPasswordService() && formState == STATES.SIGN_IN) {
-      if (_.contains([
+      if ([
         "USERNAME_AND_EMAIL",
         "USERNAME_AND_OPTIONAL_EMAIL",
         "USERNAME_AND_EMAIL_NO_PASSWORD"
-      ], passwordSignupFields())) {
+      ].includes(passwordSignupFields())) {
         loginFields.push(this.getUsernameOrEmailField());
       }
 
@@ -234,48 +242,48 @@ class LoginForm extends Component {
         loginFields.push(this.getUsernameField());
       }
 
-      if (_.contains([
+      if ([
         "EMAIL_ONLY",
         "EMAIL_ONLY_NO_PASSWORD"
-      ], passwordSignupFields())) {
+      ].includes(passwordSignupFields())) {
         loginFields.push(this.getEmailField());
       }
 
-      if (!_.contains([
+      if (![
         "EMAIL_ONLY_NO_PASSWORD",
         "USERNAME_AND_EMAIL_NO_PASSWORD"
-      ], passwordSignupFields())) {
+      ].includes(passwordSignupFields())) {
         loginFields.push(this.getPasswordField());
       }
     }
 
     if (hasPasswordService() && formState == STATES.SIGN_UP) {
-      if (_.contains([
+      if ([
         "USERNAME_AND_EMAIL",
         "USERNAME_AND_OPTIONAL_EMAIL",
         "USERNAME_ONLY",
         "USERNAME_AND_EMAIL_NO_PASSWORD"
-      ], passwordSignupFields())) {
+      ].includes(passwordSignupFields())) {
         loginFields.push(this.getUsernameField());
       }
 
-      if (_.contains([
+      if ([
         "USERNAME_AND_EMAIL",
         "EMAIL_ONLY",
         "EMAIL_ONLY_NO_PASSWORD",
         "USERNAME_AND_EMAIL_NO_PASSWORD"
-      ], passwordSignupFields())) {
+      ].includes(passwordSignupFields())) {
         loginFields.push(this.getEmailField());
       }
 
-      if (_.contains(["USERNAME_AND_OPTIONAL_EMAIL"], passwordSignupFields())) {
+      if (["USERNAME_AND_OPTIONAL_EMAIL"].includes(passwordSignupFields())) {
         loginFields.push(Object.assign(this.getEmailField(), {required: false}));
       }
 
-      if (!_.contains([
+      if (![
         "EMAIL_ONLY_NO_PASSWORD",
         "USERNAME_AND_EMAIL_NO_PASSWORD"
-      ], passwordSignupFields())) {
+      ].includes(passwordSignupFields())) {
         loginFields.push(this.getPasswordField());
       }
     }
@@ -294,8 +302,7 @@ class LoginForm extends Component {
     if (this.showEnrollAccountForm()) {
       loginFields.push(this.getSetPasswordField());
     }
-
-    return _.indexBy(loginFields, 'id');
+    return indexBy(loginFields, 'id');
   }
 
   buttons() {
@@ -349,10 +356,10 @@ class LoginForm extends Component {
       });
     }
 
-    if (user && !_.contains([
+    if (user && ![
         "EMAIL_ONLY_NO_PASSWORD",
         "USERNAME_AND_EMAIL_NO_PASSWORD"
-      ], passwordSignupFields())
+      ].includes(passwordSignupFields())
       && formState == STATES.PROFILE
       && (user.services && 'password' in user.services)) {
       loginButtons.push({
@@ -433,7 +440,7 @@ class LoginForm extends Component {
           b.type != undefined);
     });
 
-    return _.indexBy(loginButtons, 'id');
+    return indexBy(loginButtons, 'id');
   }
 
   showSignInLink(){
@@ -457,9 +464,7 @@ class LoginForm extends Component {
   showForgotPasswordLink() {
     return !this.props.user
       && this.state.formState == STATES.SIGN_IN
-      && _.contains(
-        ["USERNAME_AND_EMAIL", "USERNAME_AND_OPTIONAL_EMAIL", "EMAIL_ONLY"],
-        passwordSignupFields());
+      && ["USERNAME_AND_EMAIL", "USERNAME_AND_OPTIONAL_EMAIL", "EMAIL_ONLY"].includes(passwordSignupFields());
   }
 
   /**
@@ -585,7 +590,7 @@ class LoginForm extends Component {
         error = true;
       }
       else {
-        if (_.contains([ "USERNAME_AND_EMAIL_NO_PASSWORD" ], passwordSignupFields())) {
+        if (["USERNAME_AND_EMAIL_NO_PASSWORD"].includes(passwordSignupFields())) {
           this.loginWithoutPassword();
           return;
         } else {
@@ -608,7 +613,7 @@ class LoginForm extends Component {
         error = true;
       }
       else {
-        if (_.contains([ "EMAIL_ONLY_NO_PASSWORD" ], passwordSignupFields())) {
+        if (["EMAIL_ONLY_NO_PASSWORD"].includes(passwordSignupFields())) {
           this.loginWithoutPassword();
           error = true;
         } else {
@@ -616,7 +621,7 @@ class LoginForm extends Component {
         }
       }
     }
-    if (!_.contains([ "EMAIL_ONLY_NO_PASSWORD" ], passwordSignupFields())
+    if (!["EMAIL_ONLY_NO_PASSWORD"].includes(passwordSignupFields())
       && !this.validateField('password', password)) {
       error = true;
     }
@@ -656,7 +661,7 @@ class LoginForm extends Component {
         });
       }
     }
-    return _.indexBy(oauthButtons, 'id');
+    return indexBy(oauthButtons, 'id');
   }
 
   oauthSignIn(serviceName) {
@@ -720,10 +725,10 @@ class LoginForm extends Component {
         options.username = username;
       }
     } else {
-      if (_.contains([
+      if ([
         "USERNAME_AND_EMAIL",
         "USERNAME_AND_EMAIL_NO_PASSWORD"
-      ], passwordSignupFields()) && !this.validateField('username', username) ) {
+      ].includes(passwordSignupFields()) && !this.validateField('username', username) ) {
         if (this.state.formState == STATES.SIGN_UP) {
           this.state.onSubmitHook("error.accounts.usernameRequired", this.state.formState);
         }
@@ -737,10 +742,10 @@ class LoginForm extends Component {
       options.email = email;
     }
 
-    if (_.contains([
+    if ([
       "EMAIL_ONLY_NO_PASSWORD",
       "USERNAME_AND_EMAIL_NO_PASSWORD"
-    ], passwordSignupFields())) {
+    ].includes(passwordSignupFields())) {
       // Generate a random password.
       options.password = Meteor.uuid();
     } else if (!this.validateField('password', password)) {
@@ -829,7 +834,7 @@ class LoginForm extends Component {
       });
     } else {
       let errMsg = null;
-      if (_.contains([ "USERNAME_AND_EMAIL_NO_PASSWORD" ], passwordSignupFields())) {
+      if (["USERNAME_AND_EMAIL_NO_PASSWORD"].includes(passwordSignupFields())) {
         errMsg = this.translate("error.accounts.invalid_email");
       }
       else {

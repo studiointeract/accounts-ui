@@ -10,7 +10,6 @@ Package.onUse(function(api) {
   api.versionsFrom('1.3');
   api.use('ecmascript');
   api.use('tracker');
-  api.use('underscore');
   api.use('accounts-base');
   api.use('check');
   api.use('random');

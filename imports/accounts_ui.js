@@ -73,21 +73,21 @@ Accounts.ui.config = function(options) {
     'emailPattern',
   ];
 
-  _.each(_.keys(options), function (key) {
-    if (!_.contains(VALID_KEYS, key))
+  Object.keys(options).forEach(function (key) {
+    if (!VALID_KEYS.includes(key))
       throw new Error("Accounts.ui.config: Invalid key: " + key);
   });
 
   // Deal with `passwordSignupFields`
   if (options.passwordSignupFields) {
-    if (_.contains([
+    if ([
       "USERNAME_AND_EMAIL",
       "USERNAME_AND_OPTIONAL_EMAIL",
       "USERNAME_ONLY",
       "EMAIL_ONLY",
       "EMAIL_ONLY_NO_PASSWORD",
       "USERNAME_AND_EMAIL_NO_PASSWORD"
-    ], options.passwordSignupFields)) {
+    ].includes(options.passwordSignupFields)) {
       Accounts.ui._options.passwordSignupFields = options.passwordSignupFields;
     }
     else {
@@ -97,7 +97,7 @@ Accounts.ui.config = function(options) {
 
   // Deal with `requestPermissions`
   if (options.requestPermissions) {
-    _.each(options.requestPermissions, function (scope, service) {
+    options.requestPermissions.forEach(function (scope, service) {
       if (Accounts.ui._options.requestPermissions[service]) {
         throw new Error("Accounts.ui.config: Can't set `requestPermissions` more than once for " + service);
       }
@@ -112,7 +112,7 @@ Accounts.ui.config = function(options) {
 
   // Deal with `requestOfflineToken`
   if (options.requestOfflineToken) {
-    _.each(options.requestOfflineToken, function (value, service) {
+    options.requestOfflineToken.forEach(function (value, service) {
       if (service !== 'google')
         throw new Error("Accounts.ui.config: `requestOfflineToken` only supported for Google login at the moment.");
 
@@ -127,7 +127,7 @@ Accounts.ui.config = function(options) {
 
   // Deal with `forceApprovalPrompt`
   if (options.forceApprovalPrompt) {
-    _.each(options.forceApprovalPrompt, function (value, service) {
+    options.forceApprovalPrompt.forEach(function (value, service) {
       if (service !== 'google')
         throw new Error("Accounts.ui.config: `forceApprovalPrompt` only supported for Google login at the moment.");
 
