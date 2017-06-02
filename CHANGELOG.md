@@ -1,5 +1,11 @@
 # ChangeLog
 
+### v1.2.22
+01-Jun-2017
+
+* Removed lodash dependency.
+* Removed tracker dependency.
+
 ### v1.2.21
 26-May-2017
 
