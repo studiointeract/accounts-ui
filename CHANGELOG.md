@@ -1,8 +1,10 @@
 # ChangeLog
 
 ### v1.2.22
-01-Jun-2017
+15-Jun-2017
 
+* Fixed issue with faulty formState proptype.
+* Fixed issue with faulty object iteration.
 * Removed lodash dependency.
 * Removed tracker dependency.
 
