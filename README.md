@@ -355,7 +355,6 @@ To install the dependencies added in your package.json run:
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Accounts, STATES } from 'meteor/std:accounts-ui';
-import PropTypes from 'prop-types'
 
 /**
  * Form.propTypes = {
