@@ -69,6 +69,7 @@ export class Field extends React.Component {
     ) : null;
   }
 }
+
 Field.propTypes = {
   onChange: PropTypes.func
 };

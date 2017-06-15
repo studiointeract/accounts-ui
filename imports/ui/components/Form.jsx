@@ -1,7 +1,8 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
+import ReactDOM from 'react-dom';
 import { Accounts } from 'meteor/accounts-base';
+
 import './Fields.jsx';
 import './Buttons.jsx';
 import './FormMessage.jsx';
@@ -47,6 +48,7 @@ export class Form extends React.Component {
     );
   }
 }
+
 Form.propTypes = {
   oauthServices: PropTypes.object,
   fields: PropTypes.object.isRequired,

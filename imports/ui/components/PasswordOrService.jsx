@@ -40,6 +40,7 @@ export class PasswordOrService extends React.Component {
     return null;
   }
 }
+
 PasswordOrService.propTypes = {
   oauthServices: PropTypes.object
 };
