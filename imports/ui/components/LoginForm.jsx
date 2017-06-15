@@ -1005,7 +1005,7 @@ class LoginForm extends Component {
   }
 }
 LoginForm.propTypes = {
-  formState: PropTypes.string,
+  formState: PropTypes.symbol,
   loginPath: PropTypes.string,
   signUpPath: PropTypes.string,
   resetPasswordPath: PropTypes.string,
