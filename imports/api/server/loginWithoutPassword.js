@@ -58,12 +58,11 @@ Accounts.sendLoginEmail = function (userId, address) {
     throw new Error("Can't find user");
   // pick the first unverified address if we weren't passed an address.
   if (!address) {
-    var email = _.find(user.emails || [],
-                       function (e) { return !e.verified; });
+    var email = (user.emails || []).find(({ verified }) => !verified);
     address = (email || {}).address;
   }
   // make sure we have a valid address
-  if (!address || !_.contains(_.pluck(user.emails || [], 'address'), address))
+  if (!address || !(user.emails || []).map(({ address }) => address).includes(address))
     throw new Error("No such email address for user.");
 
 

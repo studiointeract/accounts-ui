@@ -1,5 +1,19 @@
 # ChangeLog
 
+### v1.2.22
+15-Jun-2017
+
+* Fixed issue with faulty formState proptype.
+* Fixed issue with faulty object iteration.
+* Removed lodash dependency.
+* Removed tracker dependency.
+
+### v1.2.21
+26-May-2017
+
+* Added functionality to include your own translation function.
+* Replaced dependency on tracker-component with react-meteor-data.
+
 ### v1.2.20
 13-March-2017
 

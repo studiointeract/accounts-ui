@@ -1,6 +1,6 @@
 # React Accounts UI
 
-Current version 1.2.20
+Current version 1.2.22
 
 ## Features
 
@@ -206,52 +206,6 @@ Meteor.startup( () => {
 });
 ```
 
-As a bonus, here's a component that redirects to the signin route if you're not
-logged in, using [`Tracker.Component`](https://www.npmjs.com/package/tracker-component).
-
-`npm i --save tracker-component`
-
-```javascript
-import React from 'react';
-import Tracker from 'tracker-component';
-import { Meteor } from 'meteor/meteor';
-import { browserHistory } from 'react-router';
-
-const AdminPage = () => (
-  <h3>Admin</h3>
-);
-
-export class Admin extends Tracker.Component {
-  constructor(props) {
-    super(props);
-    this.autorun(() => {
-      this.setState({
-        isAuthenticated: Meteor.user()
-      });
-    });
-  }
-
-  componentWillMount() {
-    // Check that the user is logged in before the component mounts
-    if (!this.state.isAuthenticated) {
-      browserHistory.push(null, '/signin');
-    }
-  }
-
-  componentDidUpdate() {
-    // Navigate to a sign in page if the user isn't authenticated when data changes
-    if (!this.state.isAuthenticated) {
-      browserHistory.push(null, '/signin');
-    }
-  }
-
-  render() {
-    return <AdminPage {...this.state} />;
-  }
-}
-
-```
-
 You can learn more about the remaining components here in the tutorial on [React Router Basics](https://themeteorchef.com/snippets/react-router-basics/) by the Meteor Chef.
 
 
@@ -399,6 +353,7 @@ To install the dependencies added in your package.json run:
 // main.jsx
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Accounts, STATES } from 'meteor/std:accounts-ui';
 import PropTypes from 'prop-types'
 
@@ -481,6 +436,11 @@ class NewLogin extends Accounts.ui.LoginForm {
       };
     }
     return super.fields();
+  }
+
+  translate(text) {
+    // Here you specify your own translation function, e.g.
+    return this.props.t(text);
   }
 
   signUp(options = {}) {
