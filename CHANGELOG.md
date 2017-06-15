@@ -1,5 +1,10 @@
 # ChangeLog
 
+### v1.2.23
+15-Jun-2017
+
+* Removed manual calls to React.PropTypes #111 @jLouzado
+
 ### v1.2.22
 15-Jun-2017
 
