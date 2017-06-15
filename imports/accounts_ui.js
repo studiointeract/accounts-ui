@@ -97,7 +97,8 @@ Accounts.ui.config = function(options) {
 
   // Deal with `requestPermissions`
   if (options.requestPermissions) {
-    options.requestPermissions.forEach(function (scope, service) {
+    Object.keys(options.requestPermissions).forEach(service => {
+      const score = options.requestPermissions[service];
       if (Accounts.ui._options.requestPermissions[service]) {
         throw new Error("Accounts.ui.config: Can't set `requestPermissions` more than once for " + service);
       }
@@ -112,7 +113,8 @@ Accounts.ui.config = function(options) {
 
   // Deal with `requestOfflineToken`
   if (options.requestOfflineToken) {
-    options.requestOfflineToken.forEach(function (value, service) {
+    Object.keys(options.requestOfflineToken).forEach(service => {
+      const value = options.requestOfflineToken[service];
       if (service !== 'google')
         throw new Error("Accounts.ui.config: `requestOfflineToken` only supported for Google login at the moment.");
 
@@ -127,7 +129,8 @@ Accounts.ui.config = function(options) {
 
   // Deal with `forceApprovalPrompt`
   if (options.forceApprovalPrompt) {
-    options.forceApprovalPrompt.forEach(function (value, service) {
+    Object.keys(options.forceApprovalPrompt).forEach(service => {
+      const value = options.forceApprovalPrompt[service];
       if (service !== 'google')
         throw new Error("Accounts.ui.config: `forceApprovalPrompt` only supported for Google login at the moment.");
 
