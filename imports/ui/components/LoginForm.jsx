@@ -1024,10 +1024,12 @@ LoginForm.defaultProps = {
 
 Accounts.ui.LoginForm = LoginForm;
 
-export default createContainer(() => {
+const LoginFormContainer = createContainer(() => {
   // Listen for the user to login/logout and the services list to the user.
   Meteor.subscribe('servicesList');
   return ({
     user: Accounts.user(),
   });
 }, LoginForm);
+Accounts.ui.LoginForm = LoginFormContainer;
+export default LoginFormContainer
