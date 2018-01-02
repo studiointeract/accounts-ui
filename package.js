@@ -14,7 +14,7 @@ Package.onUse(function(api) {
   api.use('random');
   api.use('email');
   api.use('session');
-  api.use('react-meteor-data@0.2.11');
+  api.use('react-meteor-data@0.2.15');
   api.use('softwarerero:accounts-t9n');
   api.use('tmeasday:check-npm-versions@0.3.0');
 
