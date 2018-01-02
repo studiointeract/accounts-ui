@@ -98,7 +98,7 @@ Accounts.ui.config = function(options) {
   // Deal with `requestPermissions`
   if (options.requestPermissions) {
     Object.keys(options.requestPermissions).forEach(service => {
-      const score = options.requestPermissions[service];
+      const scope = options.requestPermissions[service];
       if (Accounts.ui._options.requestPermissions[service]) {
         throw new Error("Accounts.ui.config: Can't set `requestPermissions` more than once for " + service);
       }
