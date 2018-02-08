@@ -970,7 +970,7 @@ class LoginForm extends Component {
     // XXX Check for backwards compatibility.
     if (Meteor.isClient) {
       const container = document.createElement('div');
-      ReactDOM.render(<Accounts.ui.Field message="test" />, container);
+      ReactDOM.unstable_renderSubtreeIntoContainer(this, <Accounts.ui.Field message="test" />, container);
       if (container.getElementsByClassName('message').length == 0) {
         // Found backwards compatibility issue with 1.3.x
         console.warn(`Implementations of Accounts.ui.Field must render message in v1.2.11.
