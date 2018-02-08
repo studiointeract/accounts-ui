@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
-import { createContainer } from 'meteor/react-meteor-data';
+import { withTracker } from 'meteor/react-meteor-data';
 import { Accounts } from 'meteor/accounts-base';
 import { T9n } from 'meteor/softwarerero:accounts-t9n';
 import { KEY_PREFIX } from '../../login_session.js';
@@ -1024,10 +1024,10 @@ LoginForm.defaultProps = {
 
 Accounts.ui.LoginForm = LoginForm;
 
-export default createContainer(() => {
+export default withTracker(() => {
   // Listen for the user to login/logout and the services list to the user.
   Meteor.subscribe('servicesList');
   return ({
     user: Accounts.user(),
   });
-}, LoginForm);
+})(LoginForm);
