@@ -1030,6 +1030,6 @@ const LoginFormContainer = withTracker(() => {
   return ({
     user: Accounts.user(),
   });
-}, LoginForm);
+})(LoginForm);
 Accounts.ui.LoginForm = LoginFormContainer;
 export default LoginFormContainer
