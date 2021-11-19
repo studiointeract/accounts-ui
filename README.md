@@ -1,6 +1,8 @@
 # React Accounts UI
 
-Current version 1.3.0
+## No longer maintained
+
+This package is no longer maintained, use https://atmospherejs.com/epotek/accounts-ui instead.
 
 ## Features
 
